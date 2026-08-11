@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Մոդուլ 1 · Ծնողական վերահսկողություն — Ուղեցույց</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   КОНЦЕПТ A — «ՈՒՂԵՑՈՒՅՑ» / Справочник · строго бренд UNICEF
+   Логика: 12 страниц с блокировкой. Следующая открывается только после
+   раскрытия каждого гайда, отметки и контрольного вопроса.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --cyan:#1CABE2; --blue:#374EA2; --ink:#0F2C4C; --ink-2:#3D566E; --ink-3:#6B8299;
+  --line:#DCE6EE; --line-2:#EDF3F7; --bg:#FFF; --bg-2:#F5F9FC;
+  --yellow:#FFC20E; --green:#00833D; --red:#E2231A;
+  --hy:'Noto Sans Armenian','Mshtakan','Sylfaen',system-ui,sans-serif;
+  --lat:'Inter',system-ui,sans-serif;
+  --wrap:820px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{
+  animation-duration:.01ms!important;transition-duration:.01ms!important}}
+body{margin:0;background:var(--bg-2);color:var(--ink);font-family:var(--hy);
+  font-size:17px;line-height:1.72;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{line-height:1.22;margin:0;font-weight:700;letter-spacing:-.015em}
+p{margin:0 0 1em}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:3px;border-radius:3px}
+button{font-family:inherit}
+
+/* ── Шапка со степпером ──────────────────────────────────────────── */
+.topbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line)}
+.topbar-in{max-width:var(--wrap);margin:0 auto;padding:11px 22px;
+  display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:14px;white-space:nowrap}
+.brand svg{width:24px;height:24px;flex:none}
+.brand-sub{color:var(--ink-3);font-weight:500;font-size:13px}
+.topbar-spacer{flex:1}
+.step-count{font-family:var(--lat);font-size:13px;font-weight:700;color:var(--ink-3);
+  white-space:nowrap}
+@media(max-width:600px){.brand-sub{display:none}}
+
+/* Степпер — точки шагов, замок на закрытых */
+.stepper{border-bottom:1px solid var(--line);background:#fff}
+.stepper-in{max-width:var(--wrap);margin:0 auto;padding:0 22px 12px;
+  display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+.stepper-in::-webkit-scrollbar{display:none}
+.dot{flex:none;width:32px;height:6px;border-radius:3px;background:var(--line);
+  border:0;padding:0;cursor:not-allowed;transition:background .2s;position:relative}
+.dot.done{background:var(--green);cursor:pointer}
+.dot.cur{background:var(--cyan);cursor:pointer}
+.dot.open{background:#B6E4F5;cursor:pointer}
+@media(max-width:600px){.dot{width:22px}}
+
+/* ── Страница ────────────────────────────────────────────────────── */
+.page-wrap{max-width:var(--wrap);margin:0 auto;padding:0 22px 40px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;
+  padding:38px 40px 34px;margin-top:24px}
+@media(max-width:640px){.card{padding:26px 20px 24px;border-radius:10px}}
+.page-eyebrow{font-size:11.5px;letter-spacing:.14em;font-weight:800;
+  text-transform:uppercase;color:var(--cyan);margin-bottom:9px}
+.page-title{font-size:clamp(25px,4.2vw,36px);font-weight:800;letter-spacing:-.025em;
+  max-width:20ch;margin-bottom:6px}
+.page-sum{color:var(--ink-3);font-size:16px;max-width:56ch;margin-bottom:26px}
+.body p{font-size:17px;color:var(--ink-2)}
+.body p strong{color:var(--ink)}
+h3.sub{font-size:21px;font-weight:700;margin:34px 0 12px;max-width:28ch;color:var(--ink)}
+
+/* Обложка модуля */
+.hero-num{display:inline-block;background:var(--cyan);color:#fff;font-weight:800;
+  font-size:12px;letter-spacing:.13em;padding:7px 14px;border-radius:2px;margin-bottom:22px}
+.hero h1{font-size:clamp(34px,6vw,54px);font-weight:800;letter-spacing:-.03em;
+  max-width:15ch;margin-bottom:18px}
+.hero-tag{font-size:clamp(16px,2vw,19px);color:var(--ink-2);max-width:54ch;line-height:1.6}
+.hero-meta{display:flex;flex-wrap:wrap;gap:0;margin:30px 0 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.hero-meta div{padding:14px 22px 14px 0;margin-right:22px;border-right:1px solid var(--line)}
+.hero-meta div:last-child{border-right:0;margin-right:0}
+.hero-meta dt{font-size:11px;letter-spacing:.1em;color:var(--ink-3);font-weight:700;
+  text-transform:uppercase;margin-bottom:2px}
+.hero-meta dd{margin:0;font-size:15px;font-weight:700}
+
+.keyq{margin:28px 0 0;border-left:5px solid var(--cyan);background:var(--bg-2);
+  padding:24px 26px;border-radius:0 6px 6px 0}
+.keyq-label{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:8px}
+.keyq-q{font-size:clamp(18px,2.3vw,22px);font-weight:700;line-height:1.45;
+  margin-bottom:12px;max-width:42ch}
+.keyq-a{font-size:16px;color:var(--ink-2);margin:0}
+
+/* Врезки */
+.callout{display:flex;gap:14px;padding:20px 22px;border-radius:8px;margin:24px 0;
+  background:#FFF9E6;border:1px solid #FFE9A8}
+.callout-icon{font-size:18px;flex:none;line-height:1.5}
+.callout-label{font-weight:800;font-size:15px;margin-bottom:4px}
+.callout p{margin:0;font-size:15.5px;line-height:1.62;color:var(--ink-2)}
+.callout.gold{background:#EAF7FC;border-color:#B6E4F5}
+.callout.gold .callout-label{color:var(--blue)}
+
+/* ── Раскрываемый блок — база механики «раскрыл → отметил» ───────── */
+.disc{border:1px solid var(--line);border-radius:9px;margin-bottom:10px;overflow:hidden;
+  transition:border-color .2s}
+.disc.opened{border-color:#B6E4F5}
+.disc.marked{border-color:var(--green)}
+.disc-head{width:100%;background:#fff;border:0;padding:16px 18px;display:flex;
+  align-items:center;gap:13px;cursor:pointer;text-align:left;transition:background .15s}
+.disc-head:hover{background:var(--bg-2)}
+.disc-logo{width:36px;height:36px;flex:none;border-radius:8px;display:grid;place-items:center;
+  background:var(--bg-2);border:1px solid var(--line);font-family:var(--lat);
+  font-weight:700;font-size:13px;color:var(--ink-2)}
+.disc-txt{flex:1;min-width:0}
+.disc-name{font-weight:700;font-size:16.5px;line-height:1.3;color:var(--ink)}
+.disc-meta{font-family:var(--lat);font-size:12.5px;color:var(--ink-3);margin-top:2px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.disc-min{font-family:var(--lat);font-size:12px;color:var(--ink-3);font-weight:600;flex:none}
+.disc-chev{width:10px;height:10px;flex:none;border-right:2px solid var(--ink-3);
+  border-bottom:2px solid var(--ink-3);transform:rotate(45deg);margin-top:-4px;
+  transition:transform .2s}
+.disc.opened .disc-chev{transform:rotate(-135deg);margin-top:2px}
+.disc-body{display:none;padding:4px 18px 18px}
+.disc.opened .disc-body{display:block}
+.disc-tick{width:20px;height:20px;flex:none;border-radius:50%;background:var(--green);
+  display:none;place-items:center}
+.disc.marked .disc-tick{display:grid}
+.disc.marked .disc-chev{display:none}
+
+ol.steps{list-style:none;counter-reset:s;margin:0;padding:0}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 15px 42px;
+  font-size:16px;line-height:1.62;color:var(--ink-2)}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:26px;height:26px;
+  border-radius:50%;background:var(--cyan);color:#fff;display:grid;place-items:center;
+  font-family:var(--lat);font-weight:700;font-size:12.5px}
+.g-note{margin-top:12px;padding:13px 15px;background:#EAF7FC;border-radius:7px;
+  font-size:15px;line-height:1.6;color:var(--ink-2)}
+.g-src{margin-top:12px;font-size:12.5px;color:var(--ink-3);font-family:var(--lat)}
+
+/* Отметка «сделано / не применимо» — появляется только после раскрытия */
+.marks{display:flex;gap:9px;margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+.mark{flex:1;padding:11px 14px;border:1.5px solid var(--line);border-radius:8px;
+  background:#fff;font-size:14.5px;font-weight:600;cursor:pointer;color:var(--ink-2);
+  display:flex;align-items:center;justify-content:center;gap:8px;transition:all .16s}
+.mark:hover{border-color:var(--cyan)}
+.mark.on{background:var(--green);border-color:var(--green);color:#fff}
+.mark.na.on{background:var(--ink-3);border-color:var(--ink-3)}
+@media(max-width:520px){.marks{flex-direction:column}}
+
+/* Название настройки */
+.setting{font-family:var(--lat);font-weight:600;color:var(--ink);background:#EAF7FC;
+  padding:1px 5px;border-radius:3px;font-size:.94em;white-space:nowrap}
+.setting-ru{font-family:var(--lat);color:var(--ink-3);font-size:.89em}
+.fn{font-family:var(--lat);font-size:.72em;vertical-align:super;color:var(--cyan);
+  font-weight:700;text-decoration:none}
+
+/* ── Возрастные стадии ───────────────────────────────────────────── */
+.stage-age{font-family:var(--lat);font-size:12px;font-weight:700;color:#fff;
+  background:var(--blue);padding:3px 9px;border-radius:3px;margin-right:10px}
+.disc:nth-of-type(2) .stage-age{background:var(--cyan)}
+.disc:nth-of-type(3) .stage-age{background:#7A4FA3}
+.stage-k{font-size:11px;letter-spacing:.1em;font-weight:800;text-transform:uppercase;
+  color:var(--ink-3);margin:14px 0 6px}
+.stage-risks{list-style:none;margin:0;padding:0}
+.stage-risks li{font-size:15px;line-height:1.5;padding-left:16px;position:relative;
+  margin-bottom:4px;color:var(--ink-2)}
+.stage-risks li::before{content:'';position:absolute;left:0;top:9px;width:6px;height:6px;
+  border-radius:50%;background:var(--red);opacity:.55}
+.stage-v{font-size:15px;line-height:1.55;color:var(--ink-2)}
+
+/* ── Чеклист ─────────────────────────────────────────────────────── */
+.cl-item{border:1px solid var(--line);border-radius:9px;margin-bottom:9px;overflow:hidden}
+.cl-item.opened{border-color:#B6E4F5}
+.cl-item.marked{border-color:var(--green)}
+.cl-head{width:100%;background:#fff;border:0;padding:15px 17px;display:flex;gap:12px;
+  align-items:center;cursor:pointer;text-align:left}
+.cl-head:hover{background:var(--bg-2)}
+.cl-n{font-family:var(--lat);font-weight:800;font-size:13px;color:var(--cyan);flex:none;
+  width:20px}
+.cl-short{flex:1;font-weight:700;font-size:16px;color:var(--ink)}
+.cl-body{display:none;padding:0 17px 17px 49px}
+.cl-item.opened .cl-body{display:block}
+.cl-body p{font-size:15.5px;color:var(--ink-2);margin:0 0 14px}
+
+/* ── Скрипты ─────────────────────────────────────────────────────── */
+.scol-head{padding:12px 18px;font-weight:800;font-size:15px;display:flex;gap:9px;
+  align-items:center;color:#fff;border-radius:8px 8px 0 0;margin-top:22px}
+.scol-head.do{background:var(--green)}
+.scol-head.dont{background:var(--red)}
+.scol-head .mk{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.25);
+  display:grid;place-items:center;font-size:12px}
+.sitem{border:1px solid var(--line);border-top:0;padding:0}
+.sitem:last-of-type{border-radius:0 0 8px 8px}
+.s-head{width:100%;background:#fff;border:0;padding:15px 18px;display:flex;gap:12px;
+  align-items:flex-start;cursor:pointer;text-align:left}
+.s-head:hover{background:var(--bg-2)}
+.s-q{flex:1;font-size:16px;line-height:1.55;font-weight:600;color:var(--ink)}
+.s-why{display:none;padding:0 18px 16px 18px;font-size:15px;color:var(--ink-2);
+  line-height:1.6;border-left:3px solid var(--line);margin:0 18px 14px}
+.sitem.opened .s-why{display:block}
+.s-plus{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);
+  display:grid;place-items:center;font-size:14px;color:var(--ink-3);font-weight:700;
+  transition:all .18s}
+.sitem.opened .s-plus{background:var(--cyan);border-color:var(--cyan);color:#fff}
+
+/* ── Принципы ────────────────────────────────────────────────────── */
+.pr{display:flex;gap:14px;padding:18px 0;border-bottom:1px solid var(--line-2)}
+.pr:last-child{border-bottom:0}
+.pr-n{font-family:var(--lat);font-weight:800;font-size:13px;color:var(--cyan);flex:none;
+  padding-top:3px}
+.pr h4{font-size:16.5px;margin-bottom:4px}
+.pr p{margin:0;font-size:15.5px;color:var(--ink-2);line-height:1.6}
+
+/* ── Контрольный вопрос ──────────────────────────────────────────── */
+.gatecheck{margin-top:30px;padding:26px 28px;border-radius:10px;background:var(--bg-2);
+  border:2px solid var(--cyan)}
+@media(max-width:640px){.gatecheck{padding:20px 18px}}
+.gc-label{font-size:11px;letter-spacing:.13em;font-weight:800;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:9px}
+.gc-q{font-size:18px;font-weight:700;line-height:1.5;margin-bottom:16px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:11px;align-items:flex-start;padding:12px 15px;
+  border:1.5px solid var(--line);border-radius:8px;cursor:pointer;font-size:15.5px;
+  line-height:1.5;transition:all .16s;background:#fff;text-align:left;color:inherit;width:100%}
+.opt:hover:not(:disabled){border-color:var(--cyan)}
+.opt:disabled{cursor:default}
+.opt-mk{width:20px;height:20px;flex:none;border:2px solid var(--ink-3);border-radius:50%;
+  margin-top:1px;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff}
+.q.multi .opt-mk{border-radius:5px}
+.opt.sel{border-color:var(--cyan);background:#EAF7FC}
+.opt.sel .opt-mk{background:var(--cyan);border-color:var(--cyan)}
+.opt.right{border-color:var(--green);background:#EAF7EE}
+.opt.right .opt-mk{background:var(--green);border-color:var(--green)}
+.opt.wrong{border-color:var(--red);background:#FDECEB}
+.opt.wrong .opt-mk{background:var(--red);border-color:var(--red)}
+.q-check{margin-top:12px;background:var(--ink);color:#fff;border:0;padding:9px 20px;
+  border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer}
+.q-check:disabled{background:var(--line);color:var(--ink-3);cursor:default}
+.q-explain{margin-top:13px;padding:14px 16px;border-radius:8px;font-size:15px;
+  line-height:1.6;display:none;border-left:4px solid var(--cyan);background:#fff}
+.q-explain.show{display:block}
+.q-verdict{font-weight:800;display:block;margin-bottom:4px}
+.q-explain.ok .q-verdict{color:var(--green)}
+.q-explain.no .q-verdict{color:var(--red)}
+.q-retry{margin-top:11px;background:transparent;border:1.5px solid var(--ink);
+  color:var(--ink);padding:7px 16px;border-radius:7px;font-weight:700;font-size:14px;
+  cursor:pointer}
+
+/* Финальный тест */
+.q{padding:24px 0;border-bottom:1px solid var(--line)}
+.q:last-of-type{border-bottom:0}
+.q-n{font-family:var(--lat);font-size:11.5px;font-weight:800;letter-spacing:.1em;
+  color:var(--ink-3);margin-bottom:7px}
+.q-text{font-size:17.5px;font-weight:700;line-height:1.5;margin-bottom:6px}
+.q-hint{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.testresult{margin-top:24px;padding:26px;border-radius:10px;background:var(--bg-2);
+  border:2px solid var(--line);display:none;text-align:center}
+.testresult.show{display:block}
+.tr-score{font-family:var(--lat);font-size:44px;font-weight:800;line-height:1;
+  margin-bottom:4px;color:var(--cyan)}
+.testresult.fail .tr-score{color:var(--red)}
+.testresult.pass .tr-score{color:var(--green)}
+.tr-of{font-family:var(--lat);font-size:13px;color:var(--ink-3);font-weight:600;
+  margin-bottom:14px}
+.testresult h3{font-size:22px;margin-bottom:7px}
+.testresult p{margin:0 auto;max-width:46ch;color:var(--ink-2);font-size:15.5px}
+
+/* ── Экстренная помощь ───────────────────────────────────────────── */
+.sos{background:var(--ink);color:#fff;border-radius:10px;padding:32px 30px;margin-top:26px}
+@media(max-width:640px){.sos{padding:24px 20px}}
+.sos-eyebrow{font-size:11px;letter-spacing:.15em;font-weight:800;color:var(--yellow);
+  text-transform:uppercase;margin-bottom:8px}
+.sos h2{font-size:26px;font-weight:800;margin-bottom:8px;color:#fff}
+.sos-lead{color:#B9CBDA;font-size:16px;max-width:48ch;margin-bottom:22px}
+.sos-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+  border-radius:8px;padding:18px 20px;text-decoration:none;color:#fff;display:block;
+  margin-bottom:11px;transition:background .18s}
+.sos-card:hover{background:rgba(255,255,255,.14)}
+.sos-card.urgent{border-color:var(--yellow)}
+.sos-name{font-size:17px;font-weight:700}
+.sos-for{font-size:12.5px;color:#8FA9BE;margin-bottom:9px}
+.sos-contact{font-family:var(--lat);font-size:15px;font-weight:700;color:var(--cyan);
+  margin-bottom:8px;word-break:break-word}
+.sos-card.urgent .sos-contact{color:var(--yellow)}
+.sos-txt{font-size:14px;color:#C6D6E3;line-height:1.55;margin:0}
+
+/* ── Материалы и источники ───────────────────────────────────────── */
+.media-card{border:1px solid var(--line);border-radius:9px;padding:19px;
+  text-decoration:none;color:inherit;display:block;margin-bottom:10px;transition:border-color .18s}
+.media-card:hover{border-color:var(--cyan)}
+.media-type{font-size:11px;letter-spacing:.1em;font-weight:800;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:8px}
+.media-card h4{font-size:16.5px;line-height:1.4;margin-bottom:5px}
+.media-author{font-size:13.5px;color:var(--ink-3);margin-bottom:10px}
+.media-cta{font-size:14px;font-weight:700;color:var(--cyan)}
+.readgroup h4{font-size:11.5px;letter-spacing:.13em;font-weight:800;text-transform:uppercase;
+  color:var(--ink-3);padding-bottom:9px;border-bottom:1px solid var(--line);margin:26px 0 0}
+.read-item{padding:14px 0;border-bottom:1px solid var(--line-2)}
+.read-item a{font-weight:700;font-size:16px;text-decoration:none;color:var(--ink)}
+.read-item a:hover{color:var(--cyan)}
+.read-item p{margin:4px 0 5px;font-size:14.5px;color:var(--ink-2)}
+.read-url{font-family:var(--lat);font-size:12.5px;color:var(--cyan)}
+ol.srclist{list-style:none;counter-reset:src;margin:18px 0 0;padding:0}
+ol.srclist li{counter-increment:src;position:relative;padding:0 0 11px 28px;
+  font-size:14px;line-height:1.5}
+ol.srclist li::before{content:counter(src);position:absolute;left:0;top:1px;
+  font-family:var(--lat);font-weight:800;font-size:11.5px;color:var(--cyan)}
+.src-org{font-weight:700}
+.srclist a{color:var(--cyan);font-family:var(--lat);font-size:12.5px;word-break:break-word}
+
+/* ── Финальный экран ─────────────────────────────────────────────── */
+.done-card{text-align:center;padding:20px 0 8px}
+.done-mark{width:70px;height:70px;margin:0 auto 20px;border-radius:50%;
+  background:var(--green);display:grid;place-items:center}
+.done-card h2{font-size:30px;font-weight:800;margin-bottom:10px}
+.done-card p{color:var(--ink-2);max-width:44ch;margin:0 auto 8px;font-size:16px}
+
+/* ── Панель перехода ─────────────────────────────────────────────── */
+.navbar{position:sticky;bottom:0;z-index:45;background:#fff;
+  border-top:1px solid var(--line);margin-top:0}
+.navbar-in{max-width:var(--wrap);margin:0 auto;padding:14px 22px;
+  display:flex;align-items:center;gap:14px}
+.btn-back{background:transparent;border:1.5px solid var(--line);color:var(--ink-2);
+  padding:11px 18px;border-radius:8px;font-weight:700;font-size:15px;cursor:pointer}
+.btn-back:hover{border-color:var(--ink-3)}
+.btn-back:disabled{opacity:.4;cursor:default}
+.gate-msg{flex:1;font-size:13.5px;color:var(--ink-3);line-height:1.4;text-align:right}
+.gate-msg.ready{color:var(--green);font-weight:700}
+.btn-next{background:var(--cyan);border:0;color:#fff;padding:13px 26px;border-radius:8px;
+  font-weight:700;font-size:15.5px;cursor:pointer;white-space:nowrap;
+  display:flex;align-items:center;gap:9px;transition:background .18s}
+.btn-next:hover:not(:disabled){background:#128FC0}
+.btn-next:disabled{background:var(--line);color:var(--ink-3);cursor:not-allowed}
+.btn-next .lock{width:13px;height:13px}
+@media(max-width:600px){
+  .navbar-in{flex-wrap:wrap;gap:10px;padding:12px 18px}
+  .gate-msg{order:-1;flex:100%;text-align:left;font-size:12.5px}
+  .btn-next{flex:1;justify-content:center}
+}
+/* Маркер конца страницы для гейта «дочитать» */
+.page-end{height:1px}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="11" fill="#1CABE2"/>
+        <path d="M12 5.5c-2.4 0-4 1.6-4 3.9v3.4c0 2.6 1.7 4.4 4 4.4s4-1.8 4-4.4V9.4c0-2.3-1.6-3.9-4-3.9Z" fill="#fff" opacity=".95"/>
+      </svg>
+      <span>UNICEF</span><span class="brand-sub">· Մոդուլ 1</span>
+    </div>
+    <div class="topbar-spacer"></div>
+    <div class="step-count" id="stepcount"></div>
+  </div>
+</header>
+<div class="stepper"><div class="stepper-in" id="stepper"></div></div>
+
+<div class="page-wrap"><div class="card" id="page"></div></div>
+
+<nav class="navbar">
+  <div class="navbar-in">
+    <button class="btn-back" id="btn-back" type="button">← Հետ</button>
+    <div class="gate-msg" id="gatemsg"></div>
+    <button class="btn-next" id="btn-next" type="button">
+      <svg class="lock" viewBox="0 0 16 16" fill="none" id="lockicon">
+        <rect x="3" y="7" width="10" height="7" rx="1.6" fill="currentColor"/>
+        <path d="M5.5 7V5a2.5 2.5 0 015 0v2" stroke="currentColor" stroke-width="1.7" fill="none"/>
+      </svg>
+      <span id="nextlabel">Առաջ</span>
+    </button>
+  </div>
+</nav>
+
+<script src="../../shared/module-01.js"></script>
+<script>
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+const M = MODULE_01, $ = s=>document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function md(t){
+  return esc(t)
+    .replace(/\[\[([^\|\]]+)\|([^\]]+)\]\]/g,
+      (_,en,ru)=>`<span class="setting">${en}</span> <span class="setting-ru">· «${ru}»</span>`)
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\{\{(\d+)\}\}/g,(_,n)=>`<sup class="fn">${n}</sup>`);
+}
+const Q = Object.fromEntries(M.quiz.questions.map(q=>[q.id,q]));
+
+/* ── Хранилище ──────────────────────────────────────────────────── */
+const KEY='unicef-m01-a';
+let S = (()=>{ try{ return JSON.parse(localStorage.getItem(KEY))||{} }catch(e){ return {} } })();
+S.marks = S.marks||{}; S.gates = S.gates||{}; S.unlocked = S.unlocked||0;
+const save = ()=>{ try{ localStorage.setItem(KEY,JSON.stringify(S)) }catch(e){} };
+
+/* ── Конструкторы блоков ────────────────────────────────────────── */
+
+/* Гайд: раскрыть → прочитать → отметить. Отметка недоступна до раскрытия. */
+function guideBlock(g){
+  return `
+  <div class="disc" data-req="${g.id}" data-kind="guide">
+    <button class="disc-head" type="button" data-toggle>
+      <div class="disc-logo">${esc(g.abbr)}</div>
+      <div class="disc-txt">
+        <div class="disc-name">${esc(g.name)}</div>
+        <div class="disc-meta">${esc(g.feature)} · «${esc(g.featureRu)}»</div>
+      </div>
+      <div class="disc-min">${g.minutes} ր</div>
+      <div class="disc-tick"><svg viewBox="0 0 16 16" width="11" height="11"><path d="M3 8.5l3.2 3.2L13 4.8" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="disc-chev"></div>
+    </button>
+    <div class="disc-body">
+      <ol class="steps">${g.steps.map(s=>`<li>${md(s)}</li>`).join('')}</ol>
+      ${g.note?`<div class="g-note">${md(g.note)}</div>`:''}
+      ${g.sources.length?`<div class="g-src">Աղբյուր՝ ${g.sources.join(', ')}</div>`:''}
+      <div class="marks">
+        <button class="mark done" type="button" data-mark="done">✓ Կատարված է</button>
+        <button class="mark na"   type="button" data-mark="na">Չի վերաբերում</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* Страница с гайдами одной группы */
+function guidePage(groupId){
+  const g = M.guideGroups.find(x=>x.id===groupId);
+  const list = M.guides.filter(x=>x.group===groupId).sort((a,b)=>a.order-b.order);
+  return {
+    id:'grp-'+groupId,
+    eyebrow:`Մաս 2 · Բաժին ${g.letter}`,
+    title:g.title,
+    sum:`${list.length} ուղեցույց։ Բացեք յուրաքանչյուրը և նշեք՝ կատարվա՞ծ է, թե՞ չի վերաբերում ձեզ։`,
+    html:`${groupId==='social'?`<div class="body"><p>${md(M.tools.socialNote)}</p></div>`:''}
+          ${list.map(guideBlock).join('')}`,
+    gate:{ marks:list.map(x=>x.id) }
+  };
+}
+
+/* ── Страницы ───────────────────────────────────────────────────── */
+const PAGES = [
+
+/* 1 — Обложка */
+{
+  id:'intro', eyebrow:M.meta.numberLabel, title:'', bare:true,
+  html:`
+  <div class="hero">
+    <div class="hero-num">${esc(M.meta.numberLabel)}</div>
+    <h1>${esc(M.meta.title)}</h1>
+    <p class="hero-tag">${esc(M.meta.tagline)}</p>
+    <dl class="hero-meta">
+      <div><dt>Թիրախային խումբ</dt><dd>${esc(M.meta.audience)}</dd></div>
+      <div><dt>Տևողությունը</dt><dd>~${M.meta.readingMinutes} րոպե</dd></div>
+      <div><dt>Ուղեցույցներ</dt><dd>${M.guides.length} հարթակ</dd></div>
+    </dl>
+  </div>
+  <div class="body" style="margin-top:26px"><p>${esc(M.intro.lead)}</p></div>
+  <div class="keyq">
+    <div class="keyq-label">${esc(M.intro.keyQuestion.label)}</div>
+    <div class="keyq-q">${esc(M.intro.keyQuestion.text)}</div>
+    <p class="keyq-a">${md(M.intro.keyQuestion.answer)}</p>
+  </div>
+  <div class="body">
+    <h3 class="sub">Նպատակ</h3>
+    <p>${md(M.intro.goal)}</p>
+  </div>
+  <div class="callout">
+    <div class="callout-icon">${M.intro.howToUse.icon}</div>
+    <div><div class="callout-label">${esc(M.intro.howToUse.label)}</div>
+    <p>${md(M.intro.howToUse.text)}</p></div>
+  </div>`,
+  gate:{ read:true }
+},
+
+/* 2 — Возрастные стадии */
+{
+  id:'stages', eyebrow:'Մաս 1', title:M.why.stagesTitle,
+  sum:'Բացեք երեք փուլերն էլ՝ շարունակելու համար։',
+  html:`
+  <div class="body"><p>${md(M.why.stagesLead)}</p></div>
+  ${M.why.stages.map(s=>`
+    <div class="disc" data-req="stage-${s.id}" data-kind="plain">
+      <button class="disc-head" type="button" data-toggle>
+        <div class="disc-txt">
+          <div class="disc-name"><span class="stage-age">${esc(s.ageLabel)}</span>${esc(s.stage)}</div>
+        </div>
+        <div class="disc-chev"></div>
+      </button>
+      <div class="disc-body">
+        <div class="stage-k">Հիմնական ռիսկեր</div>
+        <ul class="stage-risks">${s.risks.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>
+        <div class="stage-k">Ուշադրության կենտրոնը</div>
+        <div class="stage-v">${esc(s.focus)}</div>
+        <div class="stage-k">Գործիքի շեշտը</div>
+        <div class="stage-v">${esc(s.tool)}</div>
+      </div>
+    </div>`).join('')}`,
+  gate:{ expand:M.why.stages.map(s=>'stage-'+s.id), quiz:'q3' }
+},
+
+/* 3 — Вызовы среды */
+{
+  id:'challenges', eyebrow:'Մաս 1', title:M.why.challengesTitle,
+  html:`
+  <div class="body">${M.why.challenges.map(c=>`<p>${md(c)}</p>`).join('')}</div>
+  <div class="callout">
+    <div class="callout-icon">${M.why.callout.icon}</div>
+    <div><div class="callout-label">${esc(M.why.callout.label)}</div>
+    <p>${md(M.why.callout.text)}</p></div>
+  </div>`,
+  gate:{ read:true, quiz:'q2' }
+},
+
+/* 4 — Введение в инструменты */
+{
+  id:'tools-intro', eyebrow:'Մաս 2', title:M.chapters[1].title,
+  sum:M.chapters[1].summary,
+  html:`<div class="body"><p>${md(M.tools.lead)}</p></div>
+  <div class="body">
+    <h3 class="sub">Ինչ է սպասվում առաջիկա չորս էջերում</h3>
+    ${M.guideGroups.map(g=>{
+      const n=M.guides.filter(x=>x.group===g.id).length;
+      return `<div class="pr"><div class="pr-n">${esc(g.letter)}</div>
+        <div><h4>${esc(g.title)}</h4><p>${n} ուղեցույց · ${
+          M.guides.filter(x=>x.group===g.id).map(x=>esc(x.name)).join(', ')}</p></div></div>`;
+    }).join('')}
+  </div>`,
+  gate:{ read:true }
+},
+
+/* 5–8 — Гайды по группам */
+guidePage('os'), guidePage('social'), guidePage('games'), guidePage('messenger'),
+
+/* 9 — Чеклист */
+{
+  id:'checklist', eyebrow:`Մաս 2 · Բաժին ${M.checklist.letter}`, title:M.checklist.title,
+  sum:'Բացեք ամեն կետ և նշեք այն։ Չբացված կետը նշել հնարավոր չէ։',
+  html:`${M.checklist.items.map((it,i)=>`
+    <div class="cl-item disc" data-req="cl-${i}" data-kind="guide">
+      <button class="cl-head" type="button" data-toggle>
+        <span class="cl-n">${i+1}</span>
+        <span class="cl-short">${esc(it.short)}</span>
+        <span class="disc-tick"><svg viewBox="0 0 16 16" width="11" height="11"><path d="M3 8.5l3.2 3.2L13 4.8" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="disc-chev"></span>
+      </button>
+      <div class="cl-body">
+        <p>${md(it.text)}</p>
+        <div class="marks" style="margin-top:0;padding-top:0;border:0">
+          <button class="mark done" type="button" data-mark="done">✓ Կատարված է</button>
+          <button class="mark na" type="button" data-mark="na">Չի վերաբերում</button>
+        </div>
+      </div>
+    </div>`).join('')}`,
+  gate:{ marks:M.checklist.items.map((_,i)=>'cl-'+i) }
+},
+
+/* 10 — Исследование и скрипты */
+{
+  id:'trust', eyebrow:'Մաս 3', title:M.balance.researchTitle,
+  sum:'Բացեք բոլոր արտահայտությունները՝ տեսնելու, թե ինչու են դրանք աշխատում կամ չեն աշխատում։',
+  html:`
+  <div class="body">${M.balance.research.map(p=>`<p>${md(p)}</p>`).join('')}</div>
+  <div class="body"><h3 class="sub">${esc(M.balance.scriptsTitle)}</h3></div>
+  <div class="scol-head do"><span class="mk">✓</span> Ինչ ասել</div>
+  ${M.balance.scriptsDo.map((s,i)=>`
+    <div class="sitem disc" data-req="sd-${i}" data-kind="plain">
+      <button class="s-head" type="button" data-toggle>
+        <span class="s-q">${esc(s.text)}</span><span class="s-plus">+</span>
+      </button>
+      <div class="s-why">${esc(s.why)}</div>
+    </div>`).join('')}
+  <div class="scol-head dont"><span class="mk">✕</span> Ինչ չասել</div>
+  ${M.balance.scriptsDont.map((s,i)=>`
+    <div class="sitem disc" data-req="sn-${i}" data-kind="plain">
+      <button class="s-head" type="button" data-toggle>
+        <span class="s-q">${esc(s.text)}</span><span class="s-plus">+</span>
+      </button>
+      <div class="s-why">${esc(s.why)}</div>
+    </div>`).join('')}
+  <div class="body"><p style="margin-top:20px">${md(M.balance.scriptsNote)}</p></div>`,
+  gate:{
+    expand:[...M.balance.scriptsDo.map((_,i)=>'sd-'+i), ...M.balance.scriptsDont.map((_,i)=>'sn-'+i)],
+    quiz:'q8'
+  }
+},
+
+/* 11 — Границы, принципы, золотое правило */
+{
+  id:'boundaries', eyebrow:'Մաս 3', title:M.balance.boundariesTitle,
+  html:`
+  <div class="body"><p>${md(M.balance.boundariesLead)}</p></div>
+  ${M.balance.principles.map((p,i)=>`
+    <div class="pr"><div class="pr-n">0${i+1}</div>
+    <div><h4>${esc(p.title)}</h4><p>${md(p.text)}</p></div></div>`).join('')}
+  <div class="body">
+    <h3 class="sub">${esc(M.balance.freedomTitle)}</h3>
+    <p>${md(M.balance.freedom)}</p>
+  </div>
+  <div class="callout gold">
+    <div class="callout-icon">${M.balance.goldenRule.icon}</div>
+    <div><div class="callout-label">${esc(M.balance.goldenRule.label)}</div>
+    <p>${md(M.balance.goldenRule.text)}</p>
+    <p style="margin-top:9px">${md(M.balance.goldenRule.extra)}</p></div>
+  </div>`,
+  gate:{ read:true, quiz:'q9' }
+},
+
+/* 12 — Финальный тест */
+{
+  id:'test', eyebrow:'Եզրափակիչ', title:M.quiz.title,
+  sum:M.quiz.intro,
+  test:['q1','q4','q5','q6','q7','q10','q11','q12'],
+  html:'',
+  gate:{ test:true }
+},
+
+/* 13 — Финал: помощь, материалы, источники */
+{
+  id:'finish', eyebrow:'Ավարտ', title:'', bare:true,
+  html:`
+  <div class="done-card">
+    <div class="done-mark"><svg viewBox="0 0 24 24" width="32" height="32"><path d="M5 12.5l4.6 4.6L19 7.5" stroke="#fff" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h2>Մոդուլն ավարտված է</h2>
+    <p>Դուք անցել եք բոլոր բաժինները և կատարել գործնական քայլերը։ Ստորև՝ ինչ պահել ձեռքի տակ։</p>
+  </div>
+  <div class="sos">
+    <div class="sos-eyebrow">${esc(M.emergency.eyebrow)}</div>
+    <h2>${esc(M.emergency.title)}</h2>
+    <p class="sos-lead">${esc(M.emergency.lead)}</p>
+    ${M.emergency.contacts.map(c=>`
+      <a class="sos-card${c.urgent?' urgent':''}" href="${esc(c.url)}" target="_blank" rel="noopener">
+        <div class="sos-name">${esc(c.name)}</div>
+        <div class="sos-for">${esc(c.forWhom)}</div>
+        <div class="sos-contact">${esc(c.contact)}${c.phone&&c.phone!==c.contact?` · ${esc(c.phone)}`:''}</div>
+        <p class="sos-txt">${esc(c.text)}</p>
+      </a>`).join('')}
+  </div>
+  <div class="body"><h3 class="sub">${esc(M.reading.title)}</h3></div>
+  ${M.reading.media.map(m=>`
+    <a class="media-card" href="${esc(m.url)}" target="_blank" rel="noopener">
+      <div class="media-type">${m.icon} ${esc(m.type)}</div>
+      <h4>${esc(m.title)}</h4>
+      <div class="media-author">${esc(m.author)}</div>
+      <div class="media-cta">${esc(m.cta)} →</div>
+    </a>`).join('')}
+  ${M.reading.groups.map(g=>`
+    <div class="readgroup"><h4>${esc(g.lang)}</h4>
+    ${g.items.map(it=>`
+      <div class="read-item">
+        <a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a>
+        <p>${esc(it.text)}</p><div class="read-url">${esc(it.label)}</div>
+      </div>`).join('')}</div>`).join('')}
+  <div class="callout" style="margin-top:24px">
+    <div class="callout-icon">${M.reading.note.icon}</div>
+    <div><div class="callout-label">${esc(M.reading.note.label)}</div>
+    <p>${esc(M.reading.note.text)}</p></div>
+  </div>
+  <div class="body"><h3 class="sub">${esc(M.sourcesTitle)}</h3>
+  <p style="font-size:15px">${esc(M.sourcesLead)}</p></div>
+  <ol class="srclist">
+    ${M.sources.map(s=>`<li><span class="src-org">${esc(s.org)}</span> — ${esc(s.title)}
+      <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`).join('')}
+  </ol>
+  <div class="body" style="margin-top:26px;padding-top:18px;border-top:1px solid var(--line)">
+    <p style="font-size:13.5px;color:var(--ink-3)">${esc(M.meta.disclaimer)}</p>
+  </div>`,
+  gate:{}
+}
+];
+
+/* ── Рендер контрольного вопроса ────────────────────────────────── */
+function gateQuizHtml(qid){
+  const q=Q[qid];
+  return `
+  <div class="gatecheck q ${q.type==='multi'?'multi':''}" data-q="${qid}">
+    <div class="gc-label">Ստուգիչ հարց</div>
+    <div class="gc-q">${esc(q.q)}</div>
+    ${q.type==='multi'?`<div class="q-hint">Հնարավոր է մեկից ավելի ճիշտ պատասխան</div>`:''}
+    <div class="opts">${q.options.map((o,j)=>`
+      <button class="opt" type="button" data-o="${j}">
+        <span class="opt-mk">${q.type==='multi'?'✓':''}</span><span>${esc(o)}</span>
+      </button>`).join('')}</div>
+    ${q.type==='multi'?`<button class="q-check" type="button" data-check>Ստուգել</button>`:''}
+    <div class="q-explain"><span class="q-verdict"></span><span class="q-body"></span>
+      <div><button class="q-retry" type="button" data-retry style="display:none">Փորձել կրկին</button></div>
+    </div>
+  </div>`;
+}
+
+/* ── Состояние страницы ─────────────────────────────────────────── */
+let cur = 0;
+let pageState = {};
+
+function renderPage(i){
+  cur = i;
+  const p = PAGES[i];
+  pageState = { opened:new Set(), marked:new Set(), read:false, quizOk:false, testDone:false };
+
+  let inner = '';
+  if(!p.bare){
+    inner += `<div class="page-eyebrow">${esc(p.eyebrow)}</div>
+              <div class="page-title">${esc(p.title)}</div>
+              ${p.sum?`<div class="page-sum">${esc(p.sum)}</div>`:''}`;
+  }
+  inner += p.html;
+
+  if(p.test){
+    inner += p.test.map((qid,n)=>{
+      const q=Q[qid];
+      return `<div class="q ${q.type==='multi'?'multi':''}" data-q="${qid}">
+        <div class="q-n">ՀԱՐՑ ${n+1} / ${p.test.length}</div>
+        <div class="q-text">${esc(q.q)}</div>
+        ${q.type==='multi'?`<div class="q-hint">Հնարավոր է մեկից ավելի ճիշտ պատասխան</div>`:''}
+        <div class="opts">${q.options.map((o,j)=>`
+          <button class="opt" type="button" data-o="${j}">
+            <span class="opt-mk">${q.type==='multi'?'✓':''}</span><span>${esc(o)}</span>
+          </button>`).join('')}</div>
+        ${q.type==='multi'?`<button class="q-check" type="button" data-check>Ստուգել</button>`:''}
+        <div class="q-explain"><span class="q-verdict"></span><span class="q-body"></span></div>
+      </div>`;
+    }).join('');
+    inner += `<div class="testresult" id="testresult">
+      <div class="tr-score" id="tr-score">0</div>
+      <div class="tr-of">${p.test.length}-ից</div>
+      <h3 id="tr-title"></h3><p id="tr-text"></p>
+      <button class="q-retry" id="tr-again" type="button" style="margin-top:16px">Անցնել նորից</button>
+    </div>`;
+  }
+
+  if(p.gate && p.gate.quiz) inner += gateQuizHtml(p.gate.quiz);
+  inner += `<div class="page-end"></div>`;
+
+  $('#page').innerHTML = inner;
+  scrollTo({top:0,behavior:'instant'});
+  wirePage(p);
+  paintStepper();
+  updateGate();
+}
+
+/* ── Проводка интерактива страницы ──────────────────────────────── */
+function wirePage(p){
+  /* Раскрытие блоков */
+  $('#page').querySelectorAll('[data-toggle]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const box = btn.closest('.disc');
+      box.classList.toggle('opened');
+      if(box.classList.contains('opened')) pageState.opened.add(box.dataset.req);
+      updateGate();
+    });
+  });
+
+  /* Отметки — работают только внутри раскрытого блока */
+  $('#page').querySelectorAll('[data-mark]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const box = btn.closest('.disc');
+      /* Отметить можно только раскрытый блок — иначе отметка не имеет смысла */
+      if(!box.classList.contains('opened')) return;
+      const val = btn.dataset.mark;
+      const already = S.marks[box.dataset.req]===val;
+      box.querySelectorAll('[data-mark]').forEach(b=>b.classList.remove('on'));
+      if(already){
+        delete S.marks[box.dataset.req];
+        box.classList.remove('marked');
+        pageState.marked.delete(box.dataset.req);
+      } else {
+        S.marks[box.dataset.req]=val;
+        btn.classList.add('on');
+        box.classList.add('marked');
+        pageState.marked.add(box.dataset.req);
+      }
+      save(); updateGate();
+    });
+  });
+
+  /* Восстановление ранее сделанных отметок */
+  $('#page').querySelectorAll('.disc[data-kind="guide"]').forEach(box=>{
+    const v = S.marks[box.dataset.req];
+    if(v){
+      box.classList.add('marked');
+      const b = box.querySelector(`[data-mark="${v}"]`);
+      if(b) b.classList.add('on');
+      pageState.marked.add(box.dataset.req);
+      pageState.opened.add(box.dataset.req);
+    }
+  });
+
+  /* Вопросы */
+  $('#page').querySelectorAll('.q').forEach(qEl=>wireQuestion(qEl,p));
+
+  /* Гейт «дочитать» */
+  if(p.gate && p.gate.read){
+    const end = $('#page').querySelector('.page-end');
+    /* Короткая страница целиком помещается на экран — считаем прочитанной */
+    if(document.body.scrollHeight <= innerHeight + 40){ pageState.read = true; }
+    const ob = new IntersectionObserver(es=>{
+      es.forEach(e=>{ if(e.isIntersecting){ pageState.read=true; updateGate(); ob.disconnect(); } });
+    },{threshold:1});
+    ob.observe(end);
+  }
+
+  const again = document.getElementById('tr-again');
+  if(again) again.addEventListener('click',()=>renderPage(cur));
+}
+
+function wireQuestion(qEl,p){
+  const qid = qEl.dataset.q, q = Q[qid];
+  const isGate = qEl.classList.contains('gatecheck');
+  let picks = [], done = false;
+  const opts = [...qEl.querySelectorAll('.opt')];
+  const ex = qEl.querySelector('.q-explain');
+  const chk = qEl.querySelector('[data-check]');
+  const retry = qEl.querySelector('[data-retry]');
+  const same = (a,b)=>a.length===b.length&&a.every(v=>b.includes(v));
+
+  function reveal(){
+    const ok = same(picks,q.correct);
+    done = true;
+    opts.forEach((b,j)=>{
+      b.disabled=true; b.classList.remove('sel');
+      if(q.correct.includes(j)) b.classList.add('right');
+      else if(picks.includes(j)) b.classList.add('wrong');
+    });
+    ex.classList.add('show', ok?'ok':'no');
+    ex.querySelector('.q-verdict').textContent = ok?'Ճիշտ է ✓':'Ոչ ճիշտ ✕';
+    ex.querySelector('.q-body').innerHTML = ' '+md(q.explain);
+    if(chk) chk.disabled = true;
+    if(isGate){
+      pageState.quizOk = ok;
+      if(retry) retry.style.display = ok ? 'none' : 'inline-block';
+    } else {
+      qEl.dataset.result = ok ? 'ok' : 'no';
+      checkTestDone(p);
+    }
+    updateGate();
+  }
+
+  opts.forEach((b,j)=>b.addEventListener('click',()=>{
+    if(done) return;
+    if(q.type==='multi'){
+      const k=picks.indexOf(j); if(k>-1) picks.splice(k,1); else picks.push(j);
+      b.classList.toggle('sel',picks.includes(j));
+    } else { picks=[j]; reveal(); }
+  }));
+  if(chk) chk.addEventListener('click',()=>{ if(picks.length) reveal(); });
+  if(retry) retry.addEventListener('click',()=>{
+    picks=[]; done=false;
+    opts.forEach(b=>{b.disabled=false;b.className='opt'});
+    ex.className='q-explain';
+    if(chk) chk.disabled=false;
+    retry.style.display='none';
+    pageState.quizOk=false; updateGate();
+  });
+}
+
+function checkTestDone(p){
+  if(!p.test) return;
+  const qs = [...$('#page').querySelectorAll('.q[data-q]')].filter(e=>!e.classList.contains('gatecheck'));
+  if(!qs.every(e=>e.dataset.result)) return;
+  const n = qs.filter(e=>e.dataset.result==='ok').length;
+  const pass = n >= Math.ceil(p.test.length*0.7);
+  const r = pass ? (n===p.test.length ? M.quiz.results.high : M.quiz.results.mid) : M.quiz.results.low;
+  const box = document.getElementById('testresult');
+  box.classList.add('show', pass?'pass':'fail');
+  document.getElementById('tr-score').textContent = n;
+  document.getElementById('tr-title').textContent = pass ? r.title : 'Անհրաժեշտ է կրկնել';
+  document.getElementById('tr-text').textContent  = pass ? r.text
+    : `Մոդուլն ավարտելու համար անհրաժեշտ է ${Math.ceil(p.test.length*0.7)} ճիշտ պատասխան ${p.test.length}-ից։ ${M.quiz.results.low.text}`;
+  document.getElementById('tr-again').style.display = pass ? 'none' : 'inline-block';
+  pageState.testDone = pass;
+  updateGate();
+}
+
+/* ── Гейт: пересчёт и объяснение ────────────────────────────────── */
+function gateStatus(){
+  /* Уже пройденную страницу не заставляем проходить заново при возврате */
+  if(cur < S.unlocked) return {ok:true, msg:'Բաժինն արդեն անցված է'};
+  const g = PAGES[cur].gate || {};
+  if(g.read && !pageState.read)
+    return {ok:false, msg:'Ոլորեք մինչև էջի վերջը՝ շարունակելու համար'};
+  if(g.expand){
+    const left = g.expand.filter(k=>!pageState.opened.has(k)).length;
+    if(left) return {ok:false, msg:`Բացեք ևս ${left} բաժին`};
+  }
+  if(g.marks){
+    const notOpen = g.marks.filter(k=>!pageState.opened.has(k)).length;
+    if(notOpen) return {ok:false, msg:`Բացեք ևս ${notOpen} ուղեցույց`};
+    const left = g.marks.filter(k=>!pageState.marked.has(k)).length;
+    if(left) return {ok:false, msg:`Նշեք ևս ${left} կետ՝ «Կատարված է» կամ «Չի վերաբերում»`};
+  }
+  if(g.quiz && !pageState.quizOk)
+    return {ok:false, msg:'Պատասխանեք ստուգիչ հարցին ճիշտ'};
+  if(g.test && !pageState.testDone)
+    return {ok:false, msg:'Անցեք եզրափակիչ թեստը'};
+  return {ok:true, msg:'Բաժինն ավարտված է'};
+}
+
+function updateGate(){
+  const st = gateStatus();
+  const isLast = cur===PAGES.length-1;
+  const next = $('#btn-next'), lock = $('#lockicon'), msg = $('#gatemsg');
+  next.disabled = !st.ok || isLast;
+  lock.style.display = (st.ok||isLast) ? 'none' : 'block';
+  $('#nextlabel').textContent = isLast ? 'Ավարտված է' : 'Առաջ';
+  msg.textContent = isLast ? '' : st.msg;
+  msg.classList.toggle('ready', st.ok);
+  $('#btn-back').disabled = cur===0;
+  if(st.ok && cur+1 > S.unlocked){ S.unlocked = cur+1; save(); paintStepper(); }
+}
+
+/* ── Степпер ────────────────────────────────────────────────────── */
+function paintStepper(){
+  $('#stepper').innerHTML = PAGES.map((p,i)=>{
+    const cls = i===cur ? 'cur' : i<S.unlocked ? 'done' : i<=S.unlocked ? 'open' : '';
+    const locked = i>S.unlocked;
+    return `<button class="dot ${cls}" data-go="${i}" ${locked?'disabled':''}
+      title="${esc(p.title||p.eyebrow||'')}" aria-label="Քայլ ${i+1}"></button>`;
+  }).join('');
+  $('#stepper').querySelectorAll('[data-go]').forEach(b=>{
+    b.addEventListener('click',()=>{ const i=+b.dataset.go; if(i<=S.unlocked) renderPage(i); });
+  });
+  $('#stepcount').textContent = `${cur+1} / ${PAGES.length}`;
+}
+
+/* ── Навигация ──────────────────────────────────────────────────── */
+$('#btn-next').addEventListener('click',()=>{ if(cur<PAGES.length-1) renderPage(cur+1) });
+$('#btn-back').addEventListener('click',()=>{ if(cur>0) renderPage(cur-1) });
+
+renderPage(Math.min(S.unlocked, PAGES.length-1));
+</script>
+</body>
+</html>

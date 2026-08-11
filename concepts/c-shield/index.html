@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Մոդուլ 1 · Ծնողական վերահսկողություն — Վահան</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   КОНЦЕПТ C — «ՎԱՀԱՆ» / Щит
+   Собственный визуальный язык: тёмная панель-инструмент, а не статья.
+   Тёмная тема оправдана сценарием — родитель настраивает вечером,
+   когда дети уже легли.
+   Сигнатура: сначала собираешь свой дом из карточек устройств,
+   дальше модуль показывает только твои гайды.
+   Гейт: каждый ШАГ инструкции отмечается отдельно. Индикатор защиты.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --bg:#0E1420; --panel:#161E2E; --panel2:#1C2637; --panel3:#232F44;
+  --line:#2B3749; --line2:#374558;
+  --tx:#E7EDF6; --tx2:#9CACC4; --tx3:#697A94;
+  --amber:#F2A93B; --teal:#3DD6B0; --red:#FF6B6B; --blue:#5AB8E8;
+  --hy:'Noto Sans Armenian','Mshtakan','Sylfaen',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  --wrap:1000px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{
+  animation-duration:.01ms!important;transition-duration:.01ms!important}}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:var(--hy);
+  font-size:16.5px;line-height:1.7;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;line-height:1.22;font-weight:700;letter-spacing:-.015em}
+p{margin:0 0 1em}
+a{color:var(--blue)}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:4px}
+
+/* ── Шапка: строка состояния ─────────────────────────────────────── */
+.top{position:sticky;top:0;z-index:50;background:rgba(14,20,32,.92);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:var(--wrap);margin:0 auto;padding:11px 22px;display:flex;
+  align-items:center;gap:16px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:14px;white-space:nowrap}
+.logo svg{width:22px;height:22px}
+.logo .m{font-family:var(--mono);font-size:11px;color:var(--tx3);font-weight:500}
+.sp{flex:1}
+/* Индикатор защищённости — сигнатурный показатель */
+.shield{display:flex;align-items:center;gap:10px;white-space:nowrap}
+.shield-bar{display:block;width:88px;height:7px;background:var(--panel3);border-radius:4px;overflow:hidden}
+.shield-fill{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--amber),var(--teal));
+  transition:width .45s cubic-bezier(.4,0,.2,1)}
+.shield-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--teal);
+  min-width:38px;text-align:right}
+.shield-lb{font-size:11px;color:var(--tx3);letter-spacing:.05em}
+@media(max-width:680px){.shield-lb,.logo .m{display:none}.shield-bar{width:58px}}
+
+/* ── Полоса шагов ────────────────────────────────────────────────── */
+.rail{background:var(--panel);border-bottom:1px solid var(--line)}
+.rail-in{max-width:var(--wrap);margin:0 auto;padding:9px 22px;display:flex;gap:7px;
+  overflow-x:auto;scrollbar-width:none}
+.rail-in::-webkit-scrollbar{display:none}
+.rstep{flex:none;font-family:var(--mono);font-size:11px;font-weight:500;padding:5px 11px;
+  border-radius:5px;background:var(--panel2);color:var(--tx3);border:1px solid var(--line);
+  cursor:not-allowed;white-space:nowrap;transition:all .2s}
+.rstep.done{background:rgba(61,214,176,.13);color:var(--teal);border-color:rgba(61,214,176,.35);
+  cursor:pointer}
+.rstep.cur{background:var(--amber);color:#0E1420;border-color:var(--amber);font-weight:700;
+  cursor:pointer}
+
+/* ── Экран ───────────────────────────────────────────────────────── */
+.main{max-width:var(--wrap);margin:0 auto;padding:30px 22px 34px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:11px}
+h2.title{font-size:clamp(25px,4vw,36px);letter-spacing:-.025em;max-width:20ch;margin-bottom:11px}
+.sum{color:var(--tx2);font-size:16.5px;max-width:56ch;margin-bottom:26px}
+.body{max-width:68ch}
+.body p{color:var(--tx2)}
+.body p strong{color:var(--tx);font-weight:700}
+h3.sub{font-size:20px;margin:30px 0 12px;max-width:28ch}
+
+/* Обложка */
+.cover-tag{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--amber);
+  border:1px solid rgba(242,169,59,.4);padding:5px 12px;border-radius:5px;
+  display:inline-block;margin-bottom:22px}
+.cover h1{font-size:clamp(32px,5.6vw,52px);letter-spacing:-.032em;max-width:15ch;
+  margin-bottom:18px;line-height:1.08}
+.cover-lead{font-size:clamp(16px,2vw,19px);color:var(--tx2);max-width:52ch;line-height:1.6}
+
+/* ── ВЫБОР УСТРОЙСТВ — сигнатурный экран ─────────────────────────── */
+.pickgroup{margin-top:26px}
+.pickgroup-h{font-family:var(--mono);font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--tx3);padding-bottom:9px;border-bottom:1px solid var(--line);margin-bottom:14px;
+  display:flex;justify-content:space-between}
+.picks{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:10px}
+.pick{background:var(--panel);border:1.5px solid var(--line);border-radius:11px;
+  padding:15px 16px;cursor:pointer;text-align:left;color:var(--tx);transition:all .18s;
+  display:flex;align-items:center;gap:12px}
+.pick:hover{border-color:var(--line2);background:var(--panel2)}
+.pick.on{border-color:var(--teal);background:rgba(61,214,176,.09)}
+.pick-ab{width:36px;height:36px;flex:none;border-radius:9px;background:var(--panel3);
+  display:grid;place-items:center;font-family:var(--mono);font-size:11.5px;font-weight:700;
+  color:var(--tx2);transition:all .18s}
+.pick.on .pick-ab{background:var(--teal);color:#0E1420}
+.pick-tx{display:block;flex:1;min-width:0}
+.pick-nm{display:block;font-weight:700;font-size:15.5px;line-height:1.25}
+.pick-ft{display:block;font-family:var(--mono);font-size:10.5px;color:var(--tx3);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pick-box{width:20px;height:20px;flex:none;border:1.5px solid var(--line2);border-radius:6px;
+  display:grid;place-items:center}
+.pick.on .pick-box{background:var(--teal);border-color:var(--teal)}
+.pick-box svg{opacity:0}.pick.on .pick-box svg{opacity:1}
+.picksum{margin-top:24px;background:var(--panel);border:1px solid var(--line);
+  border-radius:11px;padding:18px 20px;display:flex;gap:16px;align-items:center}
+.picksum-n{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--amber);
+  line-height:1}
+.picksum-tx{flex:1;font-size:14.5px;color:var(--tx2);line-height:1.5}
+
+/* ── Гайд как список шагов с отметками ───────────────────────────── */
+.guide{background:var(--panel);border:1px solid var(--line);border-radius:13px;
+  margin-bottom:13px;overflow:hidden}
+.guide.full{border-color:rgba(61,214,176,.45)}
+.g-head{width:100%;background:none;border:0;padding:16px 18px;display:flex;gap:13px;
+  align-items:center;cursor:pointer;text-align:left;color:var(--tx)}
+.g-head:hover{background:var(--panel2)}
+.g-ab{width:38px;height:38px;flex:none;border-radius:10px;background:var(--panel3);
+  display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:700;
+  color:var(--tx2)}
+.guide.full .g-ab{background:var(--teal);color:#0E1420}
+.g-tx{display:block;flex:1;min-width:0}
+.g-nm{display:block;font-weight:700;font-size:16.5px;line-height:1.25}
+.g-ft{display:block;font-family:var(--mono);font-size:11px;color:var(--tx3);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g-cnt{font-family:var(--mono);font-size:11.5px;color:var(--tx3);font-weight:500;flex:none}
+.guide.full .g-cnt{color:var(--teal)}
+.g-ch{width:9px;height:9px;flex:none;border-right:2px solid var(--tx3);
+  border-bottom:2px solid var(--tx3);transform:rotate(45deg);margin-top:-4px;
+  transition:transform .2s}
+.guide.opened .g-ch{transform:rotate(-135deg);margin-top:2px}
+.g-body{display:none;padding:0 18px 16px}
+.guide.opened .g-body{display:block}
+
+/* Шаг = отдельная отметка. Это и есть доказательство работы. */
+.stp{display:flex;gap:13px;padding:11px 0;border-bottom:1px solid var(--line);
+  cursor:pointer;align-items:flex-start}
+.stp:last-child{border-bottom:0}
+.stp-box{display:grid;width:22px;height:22px;flex:none;border:1.5px solid var(--line2);border-radius:7px;
+  display:grid;place-items:center;margin-top:2px;transition:all .18s;background:var(--panel2)}
+.stp.on .stp-box{background:var(--teal);border-color:var(--teal)}
+.stp-box svg{opacity:0;transition:opacity .18s}
+.stp.on .stp-box svg{opacity:1}
+.stp-n{display:block;font-family:var(--mono);font-size:11px;color:var(--tx3);flex:none;padding-top:4px;
+  min-width:17px}
+.stp-tx{display:block;flex:1;font-size:15.5px;line-height:1.6;color:var(--tx2);transition:color .18s}
+.stp.on .stp-tx{color:var(--tx3)}
+.g-note{margin-top:13px;padding:13px 15px;background:var(--panel2);border-radius:9px;
+  font-size:14.5px;line-height:1.6;color:var(--tx2);border-left:3px solid var(--blue)}
+.g-skip{margin-top:13px;display:flex;gap:9px}
+.skipbtn{flex:1;padding:10px;background:var(--panel2);border:1.5px solid var(--line);
+  border-radius:9px;color:var(--tx2);font-size:14px;font-weight:600;cursor:pointer}
+.skipbtn:hover{border-color:var(--line2)}
+.skipbtn.on{background:var(--panel3);border-color:var(--tx3);color:var(--tx)}
+
+/* Название настройки — моно-чип с русским по наведению */
+.setting{font-family:var(--mono);font-size:.86em;font-weight:500;color:var(--blue);
+  background:rgba(90,184,232,.11);padding:1.5px 6px;border-radius:5px;white-space:nowrap;
+  border:1px solid rgba(90,184,232,.22);cursor:help;position:relative}
+.setting:hover::after,.setting:focus::after{content:attr(data-ru);position:absolute;
+  bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);background:var(--panel3);
+  color:var(--tx);padding:6px 11px;border-radius:7px;font-size:12px;white-space:nowrap;
+  border:1px solid var(--line2);z-index:20;font-family:var(--hy);pointer-events:none;
+  box-shadow:0 8px 22px rgba(0,0,0,.5)}
+.fn{font-family:var(--mono);font-size:.68em;vertical-align:super;color:var(--amber)}
+
+/* ── Компактные карточки (риски, принципы) ───────────────────────── */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;
+  margin-top:20px}
+.mini{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 19px}
+.mini-age{font-family:var(--mono);font-size:11px;font-weight:700;color:#0E1420;
+  background:var(--amber);padding:3px 9px;border-radius:5px;display:inline-block;
+  margin-bottom:11px}
+.mini:nth-child(2) .mini-age{background:var(--blue)}
+.mini:nth-child(3) .mini-age{background:var(--red)}
+.mini h4{font-size:16px;margin-bottom:11px}
+.mini-k{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--tx3);margin:12px 0 5px}
+.mini ul{list-style:none;margin:0;padding:0}
+.mini li{font-size:14.5px;line-height:1.5;padding-left:15px;position:relative;color:var(--tx2);
+  margin-bottom:3px}
+.mini li::before{content:'';position:absolute;left:0;top:9px;width:5px;height:5px;
+  border-radius:50%;background:var(--red)}
+.mini-v{font-size:14.5px;color:var(--tx2);line-height:1.55}
+
+.callout{background:rgba(242,169,59,.09);border:1px solid rgba(242,169,59,.3);
+  border-radius:12px;padding:19px 21px;margin:22px 0;display:flex;gap:13px}
+.callout .ic{font-size:17px;flex:none}
+.callout .lb{font-weight:700;font-size:15px;margin-bottom:4px;color:var(--amber)}
+.callout p{margin:0;font-size:15px;line-height:1.6;color:var(--tx2)}
+.callout.key{background:rgba(90,184,232,.09);border-color:rgba(90,184,232,.3)}
+.callout.key .lb{color:var(--blue)}
+
+/* Скрипты */
+.sc{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:9px;
+  overflow:hidden}
+.sc-head{width:100%;background:none;border:0;padding:14px 17px;display:flex;gap:12px;
+  align-items:flex-start;cursor:pointer;text-align:left;color:var(--tx)}
+.sc-head:hover{background:var(--panel2)}
+.sc-mk{display:grid;flex:none;width:22px;height:22px;border-radius:6px;display:grid;place-items:center;
+  font-size:12px;font-weight:700;margin-top:1px}
+.sc.do .sc-mk{background:rgba(61,214,176,.18);color:var(--teal)}
+.sc.dont .sc-mk{background:rgba(255,107,107,.18);color:var(--red)}
+.sc-q{display:block;flex:1;font-size:15.5px;line-height:1.55;font-weight:600}
+.sc-pl{flex:none;font-family:var(--mono);color:var(--tx3);font-size:15px}
+.sc.opened .sc-pl{color:var(--amber)}
+.sc-why{display:none;padding:0 17px 15px 51px;font-size:14.5px;color:var(--tx2);line-height:1.6}
+.sc.opened .sc-why{display:block}
+
+.pr{display:flex;gap:14px;padding:15px 0;border-bottom:1px solid var(--line)}
+.pr:last-child{border-bottom:0}
+.pr-n{font-family:var(--mono);font-size:12px;color:var(--amber);flex:none;padding-top:3px}
+.pr h4{font-size:16px;margin-bottom:3px}
+.pr p{margin:0;font-size:15px;color:var(--tx2);line-height:1.6}
+
+/* ── СТРЕСС-ТЕСТ: сценарии ───────────────────────────────────────── */
+.sce{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:24px 26px;margin-bottom:14px}
+@media(max-width:640px){.sce{padding:19px 17px}}
+.sce-n{font-family:var(--mono);font-size:11px;letter-spacing:.11em;color:var(--amber);
+  margin-bottom:10px}
+.sce-q{font-size:17.5px;font-weight:700;line-height:1.5;margin-bottom:17px}
+.sce-opts{display:grid;gap:9px}
+.so{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;border-radius:10px;
+  background:var(--panel2);border:1.5px solid var(--line);cursor:pointer;text-align:left;
+  color:var(--tx);font-size:15px;line-height:1.5;width:100%;transition:all .16s}
+.so:hover:not(:disabled){border-color:var(--line2);background:var(--panel3)}
+.so:disabled{cursor:default}
+.so-mk{width:19px;height:19px;flex:none;border:1.5px solid var(--line2);border-radius:50%;
+  margin-top:2px;display:grid;place-items:center;font-size:10px;font-weight:700;
+  font-family:var(--mono)}
+.so.best{border-color:var(--teal);background:rgba(61,214,176,.11)}
+.so.best .so-mk{background:var(--teal);border-color:var(--teal);color:#0E1420}
+.so.mid{border-color:var(--amber);background:rgba(242,169,59,.1)}
+.so.mid .so-mk{background:var(--amber);border-color:var(--amber);color:#0E1420}
+.so.bad{border-color:var(--red);background:rgba(255,107,107,.1)}
+.so.bad .so-mk{background:var(--red);border-color:var(--red);color:#0E1420}
+.so.dim{opacity:.42}
+.sce-fb{margin-top:14px;padding:15px 17px;border-radius:10px;background:var(--panel2);
+  font-size:15px;line-height:1.6;color:var(--tx2);display:none;border-left:3px solid var(--teal)}
+.sce-fb.show{display:block}
+.sce-fb.warn{border-left-color:var(--amber)}
+.sce-fb.bad{border-left-color:var(--red)}
+.sce-vd{display:block;font-weight:700;margin-bottom:4px;color:var(--teal)}
+.sce-fb.warn .sce-vd{color:var(--amber)}
+.sce-fb.bad .sce-vd{color:var(--red)}
+
+/* ── Итог ────────────────────────────────────────────────────────── */
+.report{background:var(--panel);border:1px solid var(--line);border-radius:16px;
+  padding:30px 32px;margin-bottom:16px}
+@media(max-width:640px){.report{padding:22px 19px}}
+.rep-big{font-family:var(--mono);font-size:60px;font-weight:700;line-height:1;
+  color:var(--teal);margin-bottom:4px}
+.rep-lb{font-family:var(--mono);font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--tx3);margin-bottom:22px}
+.rep-row{display:flex;justify-content:space-between;gap:14px;padding:11px 0;
+  border-bottom:1px solid var(--line);font-size:15px}
+.rep-row:last-child{border-bottom:0}
+.rep-row span:last-child{font-family:var(--mono);color:var(--tx);font-weight:500;
+  white-space:nowrap}
+.rep-row.pending span:last-child{color:var(--amber)}
+.todo{background:rgba(242,169,59,.08);border:1px solid rgba(242,169,59,.28);
+  border-radius:12px;padding:19px 21px;margin-bottom:16px}
+.todo h4{font-size:16px;color:var(--amber);margin-bottom:11px}
+.todo li{font-size:15px;color:var(--tx2);line-height:1.55;margin-bottom:5px}
+
+.sos-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:18px 20px;display:block;text-decoration:none;color:var(--tx);margin-bottom:10px}
+.sos-card:hover{border-color:var(--line2);background:var(--panel2)}
+.sos-card.urgent{border-color:rgba(255,107,107,.45)}
+.sos-nm{font-size:16.5px;font-weight:700}
+.sos-for{font-size:12px;color:var(--tx3);margin-bottom:8px}
+.sos-ct{font-family:var(--mono);font-size:14.5px;font-weight:700;color:var(--blue);
+  margin-bottom:7px;word-break:break-word}
+.sos-card.urgent .sos-ct{color:var(--red)}
+.sos-tx{font-size:14px;color:var(--tx2);margin:0;line-height:1.55}
+.media-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:18px;display:block;text-decoration:none;color:var(--tx);margin-bottom:10px}
+.media-card:hover{border-color:var(--line2)}
+.media-tp{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--tx3);margin-bottom:7px}
+.media-card h4{font-size:16px;line-height:1.4;margin-bottom:4px}
+.media-au{font-size:13px;color:var(--tx3);margin-bottom:9px}
+.media-cta{font-size:13.5px;font-weight:700;color:var(--amber)}
+.rg h4{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--tx3);padding-bottom:9px;border-bottom:1px solid var(--line);margin:22px 0 0}
+.ritem{padding:13px 0;border-bottom:1px solid var(--line)}
+.ritem a{font-weight:700;font-size:15.5px;text-decoration:none;color:var(--tx)}
+.ritem a:hover{color:var(--amber)}
+.ritem p{margin:4px 0 4px;font-size:14px;color:var(--tx2)}
+.rurl{font-family:var(--mono);font-size:12px;color:var(--blue)}
+ol.srcs{list-style:none;counter-reset:s;margin:14px 0 0;padding:0}
+ol.srcs li{counter-increment:s;position:relative;padding:0 0 10px 28px;font-size:13.5px;
+  line-height:1.5;color:var(--tx2)}
+ol.srcs li::before{content:counter(s);position:absolute;left:0;top:0;font-family:var(--mono);
+  font-size:11px;color:var(--amber)}
+.srcs strong{color:var(--tx)}
+.srcs a{font-family:var(--mono);font-size:12px;word-break:break-word}
+
+/* ── Панель перехода ─────────────────────────────────────────────── */
+.nav{position:sticky;bottom:0;z-index:45;background:rgba(22,30,46,.96);
+  backdrop-filter:blur(12px);border-top:1px solid var(--line)}
+.nav-in{max-width:var(--wrap);margin:0 auto;padding:13px 22px;display:flex;
+  align-items:center;gap:14px}
+.b-back{background:none;border:1.5px solid var(--line);color:var(--tx2);padding:11px 17px;
+  border-radius:9px;font-weight:600;font-size:14.5px;cursor:pointer}
+.b-back:hover{border-color:var(--line2);color:var(--tx)}
+.b-back:disabled{opacity:.35;cursor:default}
+.gmsg{flex:1;font-family:var(--mono);font-size:12px;color:var(--tx3);text-align:right;
+  line-height:1.45}
+.gmsg.ready{color:var(--teal)}
+.b-next{background:var(--amber);border:0;color:#0E1420;padding:13px 24px;border-radius:9px;
+  font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:9px;
+  white-space:nowrap;transition:background .18s}
+.b-next:hover:not(:disabled){background:#FFBC55}
+.b-next:disabled{background:var(--panel3);color:var(--tx3);cursor:not-allowed}
+.b-next .lk{width:13px;height:13px}
+@media(max-width:600px){
+  .nav-in{flex-wrap:wrap;gap:9px;padding:11px 17px}
+  .gmsg{order:-1;flex:100%;text-align:left;font-size:11.5px}
+  .b-next{flex:1;justify-content:center}
+}
+.end{height:1px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 2.5 4 6v6.2c0 4.6 3.2 8 8 9.3 4.8-1.3 8-4.7 8-9.3V6l-8-3.5Z"
+          fill="none" stroke="#F2A93B" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M8.4 12.2l2.5 2.5 4.7-4.9" stroke="#3DD6B0" stroke-width="1.8"
+          fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>ՎԱՀԱՆ</span><span class="m">/ UNICEF · M01</span>
+    </div>
+    <div class="sp"></div>
+    <div class="shield">
+      <span class="shield-lb">Պաշտպանվածություն</span>
+      <span class="shield-bar"><span class="shield-fill" id="sfill"></span></span>
+      <span class="shield-num" id="snum">0%</span>
+    </div>
+  </div>
+</header>
+<div class="rail"><div class="rail-in" id="rail"></div></div>
+
+<main class="main" id="screen"></main>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="b-back" id="back" type="button">← Հետ</button>
+    <div class="gmsg" id="gmsg"></div>
+    <button class="b-next" id="next" type="button">
+      <svg class="lk" viewBox="0 0 16 16" fill="none" id="lk">
+        <rect x="3" y="7" width="10" height="7" rx="1.6" fill="currentColor"/>
+        <path d="M5.5 7V5a2.5 2.5 0 015 0v2" stroke="currentColor" stroke-width="1.7" fill="none"/>
+      </svg>
+      <span id="nextlb">Առաջ</span>
+    </button>
+  </div>
+</nav>
+
+<script src="../../shared/module-01.js"></script>
+<script>
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+const M=MODULE_01, $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* Концепт C: моно-чип, русский — в тултипе */
+function md(t){
+  return esc(t)
+    .replace(/\[\[([^\|\]]+)\|([^\]]+)\]\]/g,
+      (_,en,ru)=>`<span class="setting" data-ru="${ru}" tabindex="0">${en}</span>`)
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\{\{(\d+)\}\}/g,(_,n)=>`<sup class="fn">${n}</sup>`);
+}
+const TICK=`<svg viewBox="0 0 16 16" width="11" height="11"><path d="M3 8.5l3.2 3.2L13 4.8" stroke="#0E1420" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+const KEY='unicef-m01-c';
+let S=(()=>{ try{ return JSON.parse(localStorage.getItem(KEY))||{} }catch(e){ return {} } })();
+S.own=S.own||{}; S.steps=S.steps||{}; S.skip=S.skip||{}; S.cl=S.cl||{}; S.unlocked=S.unlocked||0;
+const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(S)) }catch(e){} };
+const owned = ()=>M.guides.filter(g=>S.own[g.id]);
+
+/* ── Индикатор защищённости ─────────────────────────────────────── */
+function shieldPct(){
+  const gs=owned();
+  let tot=0,done=0;
+  gs.forEach(g=>{
+    if(S.skip[g.id]){ tot+=g.steps.length; done+=g.steps.length; return; }
+    tot+=g.steps.length;
+    g.steps.forEach((_,i)=>{ if(S.steps[g.id+':'+i]) done++; });
+  });
+  M.checklist.items.forEach((_,i)=>{ tot+=1; if(S.cl[i]) done++; });
+  return tot? Math.round(done/tot*100) : 0;
+}
+function paintShield(){
+  const p=shieldPct();
+  $('#sfill').style.width=p+'%'; $('#snum').textContent=p+'%';
+}
+
+/* ── Экраны ─────────────────────────────────────────────────────── */
+function guideCard(g){
+  const skipped=!!S.skip[g.id];
+  const doneN=g.steps.filter((_,i)=>S.steps[g.id+':'+i]).length;
+  const full=skipped||doneN===g.steps.length;
+  return `
+  <div class="guide ${full?'full':''}" data-g="${g.id}">
+    <button class="g-head" type="button" data-toggle>
+      <span class="g-ab">${esc(g.abbr)}</span>
+      <span class="g-tx"><span class="g-nm">${esc(g.name)}</span>
+      <span class="g-ft">${esc(g.feature)}</span></span>
+      <span class="g-cnt" data-cnt>${skipped?'բաց թողնված':doneN+'/'+g.steps.length}</span>
+      <span class="g-ch"></span>
+    </button>
+    <div class="g-body">
+      ${g.steps.map((s,i)=>`
+        <div class="stp ${S.steps[g.id+':'+i]?'on':''}" data-step="${g.id}:${i}"
+             role="checkbox" aria-checked="${!!S.steps[g.id+':'+i]}" tabindex="0">
+          <span class="stp-box">${TICK}</span>
+          <span class="stp-n">${String(i+1).padStart(2,'0')}</span>
+          <span class="stp-tx">${md(s)}</span>
+        </div>`).join('')}
+      ${g.note?`<div class="g-note">${md(g.note)}</div>`:''}
+      <div class="g-skip">
+        <button class="skipbtn ${skipped?'on':''}" type="button" data-skip="${g.id}">
+          Այս սարքը մեզ մոտ չկա — բաց թողնել
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function groupScreen(gid){
+  const gr=M.guideGroups.find(x=>x.id===gid);
+  return {
+    id:'g-'+gid, nav:gr.short,
+    dynamic:()=>{
+      const list=owned().filter(g=>g.group===gid);
+      return {
+        eyebrow:'Բաժին '+gr.letter, title:gr.title,
+        sum:`Նշեք ամեն քայլ, երբ կատարում եք այն։ ${list.length} ուղեցույց ձեր ընտրածներից։`,
+        html:(gid==='social'?`<div class="body"><p>${md(M.tools.socialNote)}</p></div>`:'')
+             + list.map(guideCard).join('')
+      };
+    },
+    skipIf:()=>owned().filter(g=>g.group===gid).length===0,
+    gate:{steps:()=>owned().filter(g=>g.group===gid)}
+  };
+}
+
+const SCREENS=[
+{
+  id:'start', nav:'Մեկնարկ',
+  dynamic:()=>({eyebrow:M.meta.numberLabel, title:'', html:`
+    <div class="cover">
+      <span class="cover-tag">${esc(M.meta.numberLabel)}</span>
+      <h1>${esc(M.meta.title)}</h1>
+      <p class="cover-lead">${esc(M.meta.tagline)}</p>
+    </div>
+    <div class="body" style="margin-top:26px"><p>${esc(M.intro.lead)}</p></div>
+    <div class="callout key"><div class="ic">?</div>
+      <div><div class="lb">${esc(M.intro.keyQuestion.label)}</div>
+      <p style="margin-bottom:8px;color:var(--tx)"><strong>${esc(M.intro.keyQuestion.text)}</strong></p>
+      <p>${md(M.intro.keyQuestion.answer)}</p></div></div>
+    <div class="body"><h3 class="sub">Ինչպես է աշխատում այս մոդուլը</h3>
+      <p>${md(M.intro.goal)}</p>
+      <p>Հաջորդ քայլում նշեք, թե <strong>ինչ սարքեր ու հավելվածներ կան ձեր ընտանիքում</strong>։
+         Մոդուլը ցույց կտա միայն ձեզ պետք եղած ուղեցույցները և կհետևի, թե որ քայլերն եք արդեն կատարել։</p></div>
+    <div class="callout"><div class="ic">${M.intro.howToUse.icon}</div>
+      <div><div class="lb">${esc(M.intro.howToUse.label)}</div>
+      <p>${md(M.intro.howToUse.text)}</p></div></div>`}),
+  gate:{read:true}
+},
+{
+  id:'setup', nav:'Ձեր սարքերը',
+  dynamic:()=>({
+    eyebrow:'Կարգավորում', title:'Ի՞նչ կա ձեր ընտանիքում',
+    sum:'Նշեք բոլոր սարքերն ու հավելվածները, որոնք օգտագործում է ձեր երեխան։ Մոդուլը կհարմարվի ձեր ընտրությանը։',
+    html:M.guideGroups.map(gr=>{
+      const list=M.guides.filter(g=>g.group===gr.id).sort((a,b)=>a.order-b.order);
+      return `<div class="pickgroup">
+        <div class="pickgroup-h"><span>${esc(gr.letter)} · ${esc(gr.title)}</span>
+        <span>${list.length}</span></div>
+        <div class="picks">${list.map(g=>`
+          <button class="pick ${S.own[g.id]?'on':''}" type="button" data-own="${g.id}">
+            <span class="pick-ab">${esc(g.abbr)}</span>
+            <span class="pick-tx"><span class="pick-nm">${esc(g.name)}</span>
+            <span class="pick-ft">${esc(g.feature)}</span></span>
+            <span class="pick-box">${TICK}</span>
+          </button>`).join('')}</div>
+      </div>`;
+    }).join('')
+    + `<div class="picksum"><span class="picksum-n" id="picknum">0</span>
+       <span class="picksum-tx" id="picktx"></span></div>`
+  }),
+  gate:{picked:true}
+},
+{
+  id:'why', nav:'Ռիսկերը',
+  dynamic:()=>({
+    eyebrow:'Համատեքստ', title:M.why.stagesTitle, sum:M.chapters[0].summary,
+    html:`<div class="body"><p>${md(M.why.stagesLead)}</p></div>
+    <div class="grid2">${M.why.stages.map(s=>`
+      <div class="mini">
+        <span class="mini-age">${esc(s.ageLabel)}</span>
+        <h4>${esc(s.stage)}</h4>
+        <div class="mini-k">Ռիսկեր</div>
+        <ul>${s.risks.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>
+        <div class="mini-k">Ֆոկուս</div><div class="mini-v">${esc(s.focus)}</div>
+        <div class="mini-k">Գործիք</div><div class="mini-v">${esc(s.toolShort)}</div>
+      </div>`).join('')}</div>
+    <div class="body" style="margin-top:26px">
+      <h3 class="sub">${esc(M.why.challengesTitle)}</h3>
+      ${M.why.challenges.map(c=>`<p>${md(c)}</p>`).join('')}</div>
+    <div class="callout"><div class="ic">${M.why.callout.icon}</div>
+      <div><div class="lb">${esc(M.why.callout.label)}</div>
+      <p>${md(M.why.callout.text)}</p></div></div>`}),
+  gate:{read:true}
+},
+groupScreen('os'), groupScreen('social'), groupScreen('games'), groupScreen('messenger'),
+{
+  id:'base', nav:'Բազային քայլեր',
+  dynamic:()=>({
+    eyebrow:'Բաժին '+M.checklist.letter, title:M.checklist.title,
+    sum:'Այս յոթ քայլը վերաբերում է բոլորին՝ անկախ սարքից։ Նշեք կատարվածները։',
+    html:`<div class="guide opened" data-g="__cl">
+      <div class="g-body" style="padding-top:14px">
+      ${M.checklist.items.map((it,i)=>`
+        <div class="stp ${S.cl[i]?'on':''}" data-cl="${i}" role="checkbox"
+             aria-checked="${!!S.cl[i]}" tabindex="0">
+          <span class="stp-box">${TICK}</span>
+          <span class="stp-n">${String(i+1).padStart(2,'0')}</span>
+          <span class="stp-tx"><strong style="color:var(--tx)">${esc(it.short)}</strong><br>${md(it.text)}</span>
+        </div>`).join('')}
+      </div></div>`}),
+  gate:{checklist:true}
+},
+{
+  id:'trust', nav:'Վստահություն',
+  dynamic:()=>({
+    eyebrow:'Մաս 3', title:M.balance.researchTitle,
+    sum:'Բացեք բոլոր արտահայտությունները՝ տեսնելու պատճառը։',
+    html:`<div class="body">${M.balance.research.map(p=>`<p>${md(p)}</p>`).join('')}</div>
+    <div class="body"><h3 class="sub">${esc(M.balance.scriptsTitle)}</h3></div>
+    ${M.balance.scriptsDo.map((s,i)=>`
+      <div class="sc do" data-req="sd-${i}">
+        <button class="sc-head" type="button" data-toggle>
+          <span class="sc-mk">✓</span><span class="sc-q">${esc(s.text)}</span>
+          <span class="sc-pl">+</span></button>
+        <div class="sc-why">${esc(s.why)}</div></div>`).join('')}
+    ${M.balance.scriptsDont.map((s,i)=>`
+      <div class="sc dont" data-req="sn-${i}">
+        <button class="sc-head" type="button" data-toggle>
+          <span class="sc-mk">✕</span><span class="sc-q">${esc(s.text)}</span>
+          <span class="sc-pl">+</span></button>
+        <div class="sc-why">${esc(s.why)}</div></div>`).join('')}
+    <div class="body"><p style="margin-top:18px">${md(M.balance.scriptsNote)}</p>
+      <h3 class="sub">${esc(M.balance.boundariesTitle)}</h3>
+      <p>${md(M.balance.boundariesLead)}</p></div>
+    ${M.balance.principles.map((p,i)=>`<div class="pr"><div class="pr-n">0${i+1}</div>
+      <div><h4>${esc(p.title)}</h4><p>${md(p.text)}</p></div></div>`).join('')}
+    <div class="body" style="margin-top:22px"><h3 class="sub">${esc(M.balance.freedomTitle)}</h3>
+      <p>${md(M.balance.freedom)}</p></div>
+    <div class="callout key"><div class="ic">${M.balance.goldenRule.icon}</div>
+      <div><div class="lb">${esc(M.balance.goldenRule.label)}</div>
+      <p>${md(M.balance.goldenRule.text)}</p>
+      <p style="margin-top:8px">${md(M.balance.goldenRule.extra)}</p></div></div>`}),
+  gate:{expand:[...M.balance.scriptsDo.map((_,i)=>'sd-'+i),
+                ...M.balance.scriptsDont.map((_,i)=>'sn-'+i)]}
+},
+{
+  id:'stress', nav:'Սթրես-թեստ',
+  dynamic:()=>({
+    eyebrow:'Ստուգում', title:'Սթրես-թեստ',
+    sum:'Ոչ թե հիշողության թեստ, այլ իրական իրավիճակներ։ Ընտրեք, թե ինչ կանեիք։ Բոլոր տարբերակներից հետո կտեսնեք վերլուծությունը։',
+    html:M.quiz.scenarios.map((sc,i)=>`
+      <div class="sce" data-sce="${i}">
+        <div class="sce-n">ԻՐԱՎԻՃԱԿ ${String(i+1).padStart(2,'0')} / ${String(M.quiz.scenarios.length).padStart(2,'0')}</div>
+        <div class="sce-q">${esc(sc.situation)}</div>
+        <div class="sce-opts">${sc.options.map((o,j)=>`
+          <button class="so" type="button" data-o="${j}">
+            <span class="so-mk">${String.fromCharCode(65+j)}</span>
+            <span>${esc(o.text)}</span></button>`).join('')}</div>
+        <div class="sce-fb"><span class="sce-vd"></span><span class="sce-bd"></span></div>
+      </div>`).join('')}),
+  gate:{stress:true}
+},
+{
+  id:'report', nav:'Հաշվետվություն',
+  dynamic:()=>{
+    const gs=owned();
+    const rows=gs.map(g=>{
+      const skipped=!!S.skip[g.id];
+      const d=g.steps.filter((_,i)=>S.steps[g.id+':'+i]).length;
+      return {nm:g.name, txt:skipped?'բաց թողնված':`${d}/${g.steps.length}`,
+              pending:!skipped&&d<g.steps.length};
+    });
+    const clDone=M.checklist.items.filter((_,i)=>S.cl[i]).length;
+    const todo=[];
+    gs.forEach(g=>{ if(S.skip[g.id]) return;
+      g.steps.forEach((s,i)=>{ if(!S.steps[g.id+':'+i])
+        todo.push(`${g.name} — քայլ ${i+1}`); }); });
+    M.checklist.items.forEach((it,i)=>{ if(!S.cl[i]) todo.push(it.short); });
+    return {
+      eyebrow:'Արդյունք', title:'Ձեր պաշտպանության հաշվետվությունը',
+      html:`
+      <div class="report">
+        <div class="rep-big">${shieldPct()}%</div>
+        <div class="rep-lb">Ընդհանուր պաշտպանվածություն</div>
+        ${rows.map(r=>`<div class="rep-row ${r.pending?'pending':''}">
+          <span>${esc(r.nm)}</span><span>${esc(r.txt)}</span></div>`).join('')}
+        <div class="rep-row ${clDone<M.checklist.items.length?'pending':''}">
+          <span>${esc(M.checklist.title)}</span>
+          <span>${clDone}/${M.checklist.items.length}</span></div>
+      </div>
+      ${todo.length?`<div class="todo"><h4>Մնացել է անել՝ ${todo.length} կետ</h4>
+        <ul style="margin:0;padding-left:18px">${todo.slice(0,12).map(t=>`<li>${esc(t)}</li>`).join('')}
+        ${todo.length>12?`<li>… և ևս ${todo.length-12}</li>`:''}</ul></div>`
+        :`<div class="callout key" style="margin-top:0"><div class="ic">✓</div>
+          <div><div class="lb">Ամեն ինչ կատարված է</div>
+          <p>Դուք անցել եք բոլոր քայլերը ձեր ընտրած սարքերի համար։ Վերանայեք կարգավորումները տարին մեկ-երկու անգամ։</p></div></div>`}
+      <div class="body" style="margin-top:26px"><h3 class="sub">${esc(M.emergency.title)}</h3>
+        <p>${esc(M.emergency.lead)}</p></div>
+      ${M.emergency.contacts.map(c=>`
+        <a class="sos-card${c.urgent?' urgent':''}" href="${esc(c.url)}" target="_blank" rel="noopener">
+          <div class="sos-nm">${esc(c.name)}</div><div class="sos-for">${esc(c.forWhom)}</div>
+          <div class="sos-ct">${esc(c.contact)}${c.phone&&c.phone!==c.contact?` · ${esc(c.phone)}`:''}</div>
+          <p class="sos-tx">${esc(c.text)}</p></a>`).join('')}
+      <div class="body" style="margin-top:26px"><h3 class="sub">${esc(M.reading.title)}</h3></div>
+      ${M.reading.media.map(m=>`
+        <a class="media-card" href="${esc(m.url)}" target="_blank" rel="noopener">
+          <div class="media-tp">${m.icon} ${esc(m.type)}</div><h4>${esc(m.title)}</h4>
+          <div class="media-au">${esc(m.author)}</div>
+          <div class="media-cta">${esc(m.cta)} →</div></a>`).join('')}
+      ${M.reading.groups.map(g=>`<div class="rg"><h4>${esc(g.lang)}</h4>
+        ${g.items.map(it=>`<div class="ritem">
+          <a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a>
+          <p>${esc(it.text)}</p><div class="rurl">${esc(it.label)}</div></div>`).join('')}</div>`).join('')}
+      <div class="callout" style="margin-top:20px"><div class="ic">${M.reading.note.icon}</div>
+        <div><div class="lb">${esc(M.reading.note.label)}</div>
+        <p>${esc(M.reading.note.text)}</p></div></div>
+      <div class="body" style="margin-top:24px"><h3 class="sub">${esc(M.sourcesTitle)}</h3></div>
+      <ol class="srcs">${M.sources.map(s=>`<li><strong>${esc(s.org)}</strong> — ${esc(s.title)}
+        <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`).join('')}</ol>
+      <div class="body" style="margin-top:22px;padding-top:16px;border-top:1px solid var(--line)">
+        <p style="font-size:13px;color:var(--tx3)">${esc(M.meta.disclaimer)}</p></div>`
+    };
+  },
+  gate:{}
+}
+];
+
+/* Активные экраны — пустые группы выпадают из маршрута */
+function active(){ return SCREENS.filter(s=>!(s.skipIf&&s.skipIf())); }
+
+let cur=0, PS={};
+
+function render(i){
+  const list=active();
+  cur=Math.max(0,Math.min(i,list.length-1));
+  const s=list[cur];
+  PS={opened:new Set(), read:false, stress:new Set()};
+  const d=s.dynamic();
+  $('#screen').innerHTML =
+    (d.eyebrow?`<div class="eyebrow">${esc(d.eyebrow)}</div>`:'') +
+    (d.title?`<h2 class="title">${esc(d.title)}</h2>`:'') +
+    (d.sum?`<p class="sum">${esc(d.sum)}</p>`:'') +
+    d.html + `<div class="end"></div>`;
+  scrollTo({top:0,behavior:'instant'});
+  wire(s); paintRail(); paintShield(); updateGate();
+}
+
+function wire(s){
+  const sc=$('#screen');
+  sc.querySelectorAll('[data-toggle]').forEach(b=>b.addEventListener('click',()=>{
+    const box=b.closest('.guide,.sc');
+    box.classList.toggle('opened');
+    if(box.classList.contains('opened') && box.dataset.req) PS.opened.add(box.dataset.req);
+    updateGate();
+  }));
+  /* Выбор устройств */
+  sc.querySelectorAll('[data-own]').forEach(b=>b.addEventListener('click',()=>{
+    const id=b.dataset.own;
+    if(S.own[id]) delete S.own[id]; else S.own[id]=1;
+    b.classList.toggle('on',!!S.own[id]);
+    save(); paintPickSum(); paintRail(); paintShield(); updateGate();
+  }));
+  paintPickSum();
+  /* Отметка шага */
+  const tog=el=>{
+    const k=el.dataset.step;
+    if(S.steps[k]) delete S.steps[k]; else S.steps[k]=1;
+    el.classList.toggle('on',!!S.steps[k]);
+    el.setAttribute('aria-checked',!!S.steps[k]);
+    const card=el.closest('.guide'); const gid=k.split(':')[0];
+    const g=M.guides.find(x=>x.id===gid);
+    const n=g.steps.filter((_,i)=>S.steps[gid+':'+i]).length;
+    card.querySelector('[data-cnt]').textContent = S.skip[gid]?'բաց թողնված':n+'/'+g.steps.length;
+    card.classList.toggle('full', n===g.steps.length||!!S.skip[gid]);
+    save(); paintShield(); updateGate();
+  };
+  sc.querySelectorAll('[data-step]').forEach(el=>{
+    el.addEventListener('click',()=>tog(el));
+    el.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();tog(el);}});
+  });
+  /* Пропуск гайда */
+  sc.querySelectorAll('[data-skip]').forEach(b=>b.addEventListener('click',()=>{
+    const id=b.dataset.skip;
+    if(S.skip[id]) delete S.skip[id]; else S.skip[id]=1;
+    b.classList.toggle('on',!!S.skip[id]);
+    const card=b.closest('.guide'); const g=M.guides.find(x=>x.id===id);
+    const n=g.steps.filter((_,i)=>S.steps[id+':'+i]).length;
+    card.querySelector('[data-cnt]').textContent = S.skip[id]?'բաց թողնված':n+'/'+g.steps.length;
+    card.classList.toggle('full', !!S.skip[id]||n===g.steps.length);
+    save(); paintShield(); updateGate();
+  }));
+  /* Базовый чеклист */
+  const togCl=el=>{
+    const i=+el.dataset.cl;
+    if(S.cl[i]) delete S.cl[i]; else S.cl[i]=1;
+    el.classList.toggle('on',!!S.cl[i]); el.setAttribute('aria-checked',!!S.cl[i]);
+    save(); paintShield(); updateGate();
+  };
+  sc.querySelectorAll('[data-cl]').forEach(el=>{
+    el.addEventListener('click',()=>togCl(el));
+    el.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();togCl(el);}});
+  });
+  /* Сценарии стресс-теста */
+  sc.querySelectorAll('[data-sce]').forEach(box=>{
+    const idx=+box.dataset.sce, scn=M.quiz.scenarios[idx];
+    const opts=[...box.querySelectorAll('.so')], fb=box.querySelector('.sce-fb');
+    opts.forEach((b,j)=>b.addEventListener('click',()=>{
+      if(box.dataset.done) return;
+      box.dataset.done='1';
+      const o=scn.options[j];
+      opts.forEach((x,k)=>{
+        x.disabled=true;
+        const sk=scn.options[k].score;
+        x.classList.add(sk===2?'best':sk===1?'mid':'bad');
+        if(k!==j) x.classList.add('dim');
+      });
+      fb.classList.add('show', o.score===2?'':o.score===1?'warn':'bad');
+      fb.querySelector('.sce-vd').textContent =
+        o.score===2?'Ուժեղ որոշում':o.score===1?'Մասամբ ճիշտ':'Ռիսկային որոշում';
+      fb.querySelector('.sce-bd').textContent=' '+o.feedback;
+      PS.stress.add(idx); updateGate();
+    }));
+  });
+  if(s.gate.read){
+    const end=sc.querySelector('.end');
+    if(document.body.scrollHeight<=innerHeight+40) PS.read=true;
+    const ob=new IntersectionObserver(es=>{es.forEach(e=>{
+      if(e.isIntersecting){PS.read=true;updateGate();ob.disconnect();}})},{threshold:1});
+    ob.observe(end);
+  }
+}
+
+function paintPickSum(){
+  const n=owned().length, el=document.getElementById('picknum');
+  if(!el) return;
+  el.textContent=n;
+  document.getElementById('picktx').textContent = n===0
+    ? 'Ընտրեք առնվազն մեկ սարք կամ հավելված՝ շարունակելու համար։'
+    : `ընտրված հարթակ։ Մոդուլը ցույց կտա ${owned().reduce((a,g)=>a+g.steps.length,0)} քայլ՝ միայն ձեզ պետք եղածը։`;
+}
+
+/* ── Гейт ───────────────────────────────────────────────────────── */
+function gate(){
+  const list=active();
+  if(cur<S.unlocked) return {ok:true,msg:'// անցված է'};
+  const g=list[cur].gate||{};
+  if(g.read && !PS.read) return {ok:false,msg:'// ոլորեք մինչև վերջ'};
+  if(g.picked && owned().length===0) return {ok:false,msg:'// ընտրեք առնվազն 1 սարք'};
+  if(g.expand){
+    const n=g.expand.filter(k=>!PS.opened.has(k)).length;
+    if(n) return {ok:false,msg:`// բացեք ևս ${n} կետ`};
+  }
+  if(g.steps){
+    let left=0;
+    g.steps().forEach(gd=>{
+      if(S.skip[gd.id]) return;
+      gd.steps.forEach((_,i)=>{ if(!S.steps[gd.id+':'+i]) left++; });
+    });
+    if(left) return {ok:false,msg:`// մնաց ${left} քայլ`};
+  }
+  if(g.checklist){
+    const left=M.checklist.items.filter((_,i)=>!S.cl[i]).length;
+    if(left) return {ok:false,msg:`// մնաց ${left} կետ`};
+  }
+  if(g.stress && PS.stress.size<M.quiz.scenarios.length)
+    return {ok:false,msg:`// մնաց ${M.quiz.scenarios.length-PS.stress.size} իրավիճակ`};
+  return {ok:true,msg:'// պատրաստ է'};
+}
+function updateGate(){
+  const list=active(), st=gate(), last=cur===list.length-1;
+  $('#next').disabled=!st.ok||last;
+  $('#lk').style.display=(st.ok||last)?'none':'block';
+  $('#nextlb').textContent = last?'Ավարտված':'Առաջ';
+  $('#gmsg').textContent = last?'':st.msg;
+  $('#gmsg').classList.toggle('ready',st.ok);
+  $('#back').disabled=cur===0;
+  if(st.ok && cur+1>S.unlocked){ S.unlocked=cur+1; save(); paintRail(); }
+}
+
+function paintRail(){
+  const list=active();
+  $('#rail').innerHTML=list.map((s,i)=>
+    `<button class="rstep ${i===cur?'cur':i<S.unlocked?'done':''}" data-go="${i}"
+      ${i>S.unlocked?'disabled':''} type="button">${String(i+1).padStart(2,'0')} ${esc(s.nav)}</button>`
+  ).join('');
+  $('#rail').querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.dataset.go; if(i<=S.unlocked) render(i);
+  }));
+  const c=$('#rail').querySelector('.cur');
+  if(c) c.scrollIntoView({block:'nearest',inline:'center'});
+}
+
+$('#next').addEventListener('click',()=>{ if(cur<active().length-1) render(cur+1) });
+$('#back').addEventListener('click',()=>{ if(cur>0) render(cur-1) });
+render(Math.min(S.unlocked,active().length-1));
+</script>
+</body>
+</html>

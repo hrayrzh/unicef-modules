@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Մոդուլ 1 · Ծնողական վերահսկողություն — Զրույց</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   КОНЦЕПТ D — «ԶՐՈՒՅՑ» / Разговор
+   Собственный визуальный язык. Сознательно уходит от «кремовой бумаги
+   с серифом и терракотой»: холодно-белый лист, сливовые чернила,
+   крупный гротеск с широким интерлиньяжем, без серифов.
+   Сигнатура: возрастной слайдер 5→17 — перестраивает риски, фокус
+   и инструменты под возраст конкретного ребёнка.
+   Гейт: применить слайдер к своему случаю + рефлексия «что бы вы сказали».
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --paper:#FCFCFA; --card:#FFF; --ink:#241C2E; --ink2:#5A4E68; --ink3:#8B819A;
+  --violet:#6B4E9E; --vsoft:#F0EAF8; --vline:#DDD2EE;
+  --teal:#2F8F7F; --tsoft:#E4F2EF;
+  --clay:#B8503F; --csoft:#FBEBE8;
+  --line:#E7E3EE; --line2:#F2EFF6;
+  --hy:'Noto Sans Armenian','Mshtakan','Sylfaen',system-ui,sans-serif;
+  --lat:'Bricolage Grotesque',system-ui,sans-serif;
+  --wrap:1040px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{
+  animation-duration:.01ms!important;transition-duration:.01ms!important}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--hy);
+  font-size:17.5px;line-height:1.82;font-weight:400;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;font-weight:700;line-height:1.16;letter-spacing:-.028em}
+p{margin:0 0 1.15em}
+a{color:var(--violet)}
+button{font-family:inherit}
+:focus-visible{outline:2.5px solid var(--violet);outline-offset:4px;border-radius:4px}
+
+/* ── Шапка ───────────────────────────────────────────────────────── */
+.top{position:sticky;top:0;z-index:50;background:rgba(252,252,250,.93);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top-in{max-width:var(--wrap);margin:0 auto;padding:15px 26px;display:flex;
+  align-items:center;gap:16px}
+.mark{font-family:var(--lat);font-weight:800;font-size:15px;letter-spacing:-.02em}
+.mark em{font-style:normal;color:var(--violet)}
+.sub{font-size:12.5px;color:var(--ink3)}
+.sp{flex:1}
+.chapt{font-size:12.5px;color:var(--ink3);white-space:nowrap}
+.chapt b{color:var(--ink);font-weight:600}
+@media(max-width:620px){.sub{display:none}}
+/* Тонкая нить прогресса вместо полосы */
+.thread{height:2px;background:var(--line2);position:relative}
+.thread i{position:absolute;left:0;top:0;height:100%;background:var(--violet);
+  width:0;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* ── Разворот ────────────────────────────────────────────────────── */
+.spread{max-width:var(--wrap);margin:0 auto;padding:52px 26px 40px}
+@media(max-width:640px){.spread{padding:34px 20px 30px}}
+.kicker{font-family:var(--lat);font-size:12px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--violet);margin-bottom:18px}
+h2.head{font-size:clamp(30px,5.4vw,50px);max-width:17ch;margin-bottom:18px;
+  line-height:1.08}
+.stand{font-size:clamp(17px,2.1vw,20px);color:var(--ink2);max-width:52ch;
+  line-height:1.65;font-weight:300}
+.prose{max-width:60ch;margin-top:34px}
+.prose p{color:var(--ink2);font-weight:400}
+.prose p strong{color:var(--ink);font-weight:600}
+h3.sub2{font-size:clamp(22px,2.8vw,28px);margin:44px 0 16px;max-width:24ch}
+
+/* Обложка */
+.cover-n{font-family:var(--lat);font-size:12px;font-weight:700;letter-spacing:.18em;
+  color:var(--clay);margin-bottom:26px}
+.cover h1{font-size:clamp(38px,7.4vw,74px);max-width:12ch;line-height:1.02;
+  margin-bottom:26px;letter-spacing:-.038em}
+.cover-lead{font-size:clamp(18px,2.4vw,23px);color:var(--ink2);max-width:44ch;
+  line-height:1.55;font-weight:300}
+.cover-facts{display:flex;flex-wrap:wrap;gap:34px;margin-top:44px;padding-top:26px;
+  border-top:1px solid var(--line)}
+.fact dt{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);
+  font-weight:600;margin-bottom:3px}
+.fact dd{margin:0;font-family:var(--lat);font-size:19px;font-weight:700;letter-spacing:-.02em}
+
+/* Крупная цитата — ключевой вопрос */
+.pull{margin:44px 0 0;padding-left:26px;border-left:3px solid var(--violet)}
+.pull-k{font-family:var(--lat);font-size:11.5px;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--violet);margin-bottom:14px}
+.pull-q{font-size:clamp(21px,3.1vw,29px);font-weight:600;line-height:1.35;
+  max-width:26ch;margin-bottom:18px;letter-spacing:-.022em}
+.pull-a{font-size:17px;color:var(--ink2);max-width:50ch;margin:0;font-weight:300}
+
+/* Врезки */
+.note{background:var(--vsoft);border-radius:18px;padding:28px 30px;margin:34px 0;
+  max-width:62ch}
+.note-k{font-family:var(--lat);font-size:11.5px;font-weight:700;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--violet);margin-bottom:9px}
+.note p{margin:0;font-size:16.5px;line-height:1.7;color:var(--ink2)}
+.note.warm{background:var(--csoft)}
+.note.warm .note-k{color:var(--clay)}
+
+/* ── СИГНАТУРА: возрастной слайдер ───────────────────────────────── */
+.ager{background:var(--card);border:1px solid var(--line);border-radius:24px;
+  padding:38px 40px 34px;margin-top:32px;box-shadow:0 1px 3px rgba(36,28,46,.04)}
+@media(max-width:640px){.ager{padding:26px 22px 24px;border-radius:18px}}
+.ager-q{font-size:clamp(19px,2.5vw,24px);font-weight:600;margin-bottom:30px;
+  letter-spacing:-.02em}
+.ager-val{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.ager-num{font-family:var(--lat);font-size:clamp(52px,10vw,86px);font-weight:800;
+  line-height:.9;letter-spacing:-.05em;color:var(--violet);
+  font-variant-numeric:tabular-nums}
+.ager-unit{font-size:18px;color:var(--ink3);font-weight:400}
+.slider{width:100%;margin:26px 0 8px;-webkit-appearance:none;appearance:none;
+  background:transparent;cursor:grab}
+.slider:active{cursor:grabbing}
+.slider::-webkit-slider-runnable-track{height:6px;border-radius:3px;
+  background:linear-gradient(90deg,var(--violet) var(--p,0%),var(--line) var(--p,0%))}
+.slider::-moz-range-track{height:6px;border-radius:3px;background:var(--line)}
+.slider::-moz-range-progress{height:6px;border-radius:3px;background:var(--violet)}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;
+  border-radius:50%;background:var(--violet);margin-top:-12px;border:4px solid var(--paper);
+  box-shadow:0 2px 10px rgba(107,78,158,.35)}
+.slider::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--violet);
+  border:4px solid var(--paper);box-shadow:0 2px 10px rgba(107,78,158,.35)}
+.ager-scale{display:flex;justify-content:space-between;font-family:var(--lat);
+  font-size:12px;color:var(--ink3);font-weight:500;margin-bottom:26px}
+/* Панель, перестраивающаяся под возраст */
+.stagebox{border-top:1px solid var(--line);padding-top:26px}
+.stagebox-nm{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.stagebox-nm h4{font-size:22px;letter-spacing:-.022em}
+.stagebox-tag{font-family:var(--lat);font-size:11.5px;font-weight:700;padding:4px 11px;
+  border-radius:100px;background:var(--vsoft);color:var(--violet);letter-spacing:.04em}
+.sb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:24px}
+.sb-k{font-family:var(--lat);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink3);font-weight:700;margin-bottom:9px}
+.sb ul{list-style:none;margin:0;padding:0}
+.sb li{font-size:15.5px;line-height:1.55;padding-left:17px;position:relative;
+  color:var(--ink2);margin-bottom:5px}
+.sb li::before{content:'';position:absolute;left:0;top:10px;width:6px;height:6px;
+  border-radius:50%;background:var(--clay)}
+.sb-v{font-size:15.5px;line-height:1.6;color:var(--ink2)}
+.ager-confirm{margin-top:28px;padding-top:22px;border-top:1px solid var(--line);
+  display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.btn-confirm{background:var(--violet);color:#fff;border:0;padding:13px 26px;
+  border-radius:100px;font-weight:600;font-size:15.5px;cursor:pointer;
+  transition:background .2s}
+.btn-confirm:hover{background:#5A3F88}
+.btn-confirm.done{background:var(--teal)}
+.confirm-hint{font-size:14px;color:var(--ink3);flex:1;min-width:200px}
+
+/* ── Колода карточек-гайдов ──────────────────────────────────────── */
+.deck{display:grid;gap:12px;margin-top:30px}
+.gcard{background:var(--card);border:1px solid var(--line);border-radius:18px;
+  overflow:hidden;transition:border-color .22s,box-shadow .22s}
+.gcard.opened{border-color:var(--vline);box-shadow:0 3px 16px rgba(36,28,46,.05)}
+.gcard.marked{border-color:var(--teal);background:var(--tsoft)}
+.gc-head{width:100%;background:none;border:0;padding:20px 24px;display:flex;gap:16px;
+  align-items:center;cursor:pointer;text-align:left;color:inherit}
+.gc-head:hover{background:var(--line2)}
+.gcard.marked .gc-head:hover{background:transparent}
+.gc-ab{display:block;font-family:var(--lat);font-weight:700;font-size:12.5px;color:var(--violet);
+  background:var(--vsoft);padding:7px 11px;border-radius:9px;flex:none;min-width:48px;
+  text-align:center}
+.gcard.marked .gc-ab{background:var(--teal);color:#fff}
+.gc-tx{display:block;flex:1;min-width:0}
+.gc-nm{display:block;font-size:19px;font-weight:600;letter-spacing:-.022em;line-height:1.25}
+.gc-ft{display:block;font-family:var(--lat);font-size:12.5px;color:var(--ink3);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.gc-rel{font-family:var(--lat);font-size:11px;font-weight:700;color:var(--clay);
+  background:var(--csoft);padding:4px 10px;border-radius:100px;flex:none;white-space:nowrap}
+.gc-ch{width:11px;height:11px;flex:none;border-right:2px solid var(--ink3);
+  border-bottom:2px solid var(--ink3);transform:rotate(45deg);margin-top:-5px;
+  transition:transform .22s}
+.gcard.opened .gc-ch{transform:rotate(-135deg);margin-top:3px}
+.gcard.marked .gc-ch{display:none}
+.gc-tick{width:24px;height:24px;flex:none;border-radius:50%;background:var(--teal);
+  display:none;place-items:center}
+.gcard.marked .gc-tick{display:grid}
+.gc-body{display:none;padding:0 24px 24px}
+.gcard.opened .gc-body{display:block}
+ol.steps{list-style:none;counter-reset:st;margin:0;padding:0}
+ol.steps li{counter-increment:st;position:relative;padding:0 0 17px 40px;font-size:16.5px;
+  line-height:1.7;color:var(--ink2)}
+ol.steps li::before{content:counter(st);position:absolute;left:0;top:4px;
+  font-family:var(--lat);font-weight:700;font-size:13px;color:var(--violet);
+  background:var(--vsoft);width:26px;height:26px;border-radius:50%;
+  display:grid;place-items:center}
+.gc-note{margin-top:14px;padding:16px 18px;background:var(--vsoft);border-radius:12px;
+  font-size:15.5px;line-height:1.65;color:var(--ink2)}
+.gc-marks{display:flex;gap:10px;margin-top:20px;padding-top:18px;
+  border-top:1px solid var(--line)}
+.gm{flex:1;padding:12px;border:1.5px solid var(--line);border-radius:100px;
+  background:var(--card);font-size:14.5px;font-weight:600;cursor:pointer;color:var(--ink2);
+  transition:all .18s}
+.gm:hover{border-color:var(--violet);color:var(--violet)}
+.gm.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.gm.na.on{background:var(--ink3);border-color:var(--ink3)}
+@media(max-width:520px){.gc-marks{flex-direction:column}}
+
+/* Настройки: оригинал в тексте, русский — мелким под абзацем */
+.setting{font-family:var(--lat);font-weight:600;color:var(--ink);
+  border-bottom:1.5px solid var(--vline);white-space:nowrap}
+.ru-line{font-family:var(--lat);font-size:12.5px;color:var(--ink3);line-height:1.55;
+  margin-top:6px;font-weight:500}
+.fn{font-family:var(--lat);font-size:.68em;vertical-align:super;color:var(--clay);
+  font-weight:700}
+
+/* Скрипты как реплики диалога */
+.talk{margin-top:26px}
+.bubble{max-width:74%;padding:18px 22px;border-radius:22px;margin-bottom:12px;
+  font-size:17px;line-height:1.6;position:relative;cursor:pointer;transition:all .2s;
+  border:1.5px solid transparent}
+@media(max-width:640px){.bubble{max-width:92%}}
+.bubble.good{background:var(--tsoft);border-bottom-left-radius:6px}
+.bubble.bad{background:var(--csoft);margin-left:auto;border-bottom-right-radius:6px}
+.bubble:hover{border-color:var(--vline)}
+.bubble-why{display:none;margin-top:13px;padding-top:13px;border-top:1px solid rgba(0,0,0,.09);
+  font-size:14.5px;color:var(--ink2);line-height:1.6}
+.bubble.opened .bubble-why{display:block}
+.bubble-tap{font-family:var(--lat);font-size:11.5px;font-weight:700;color:var(--ink3);
+  letter-spacing:.05em;margin-top:9px}
+.bubble.opened .bubble-tap{display:none}
+.talk-lb{font-family:var(--lat);font-size:11.5px;font-weight:700;letter-spacing:.13em;
+  text-transform:uppercase;margin:28px 0 12px}
+.talk-lb.g{color:var(--teal)} .talk-lb.b{color:var(--clay);text-align:right}
+
+/* Принципы */
+.pr{display:flex;gap:20px;padding:22px 0;border-bottom:1px solid var(--line2);
+  max-width:62ch}
+.pr:last-child{border-bottom:0}
+.pr-n{font-family:var(--lat);font-weight:700;font-size:14px;color:var(--violet);flex:none;
+  padding-top:4px}
+.pr h4{font-size:19px;margin-bottom:5px;letter-spacing:-.02em}
+.pr p{margin:0;font-size:16px;color:var(--ink2);line-height:1.65}
+
+/* ── РЕФЛЕКСИЯ «Ի՞նչ կասեիք» ─────────────────────────────────────── */
+.refl{background:var(--card);border:1px solid var(--line);border-radius:22px;
+  padding:32px 34px;margin-bottom:16px}
+@media(max-width:640px){.refl{padding:24px 20px;border-radius:16px}}
+.refl-n{font-family:var(--lat);font-size:11.5px;font-weight:700;letter-spacing:.14em;
+  color:var(--violet);margin-bottom:13px}
+.refl-sit{font-size:19px;font-weight:500;line-height:1.55;margin-bottom:22px;
+  max-width:44ch;letter-spacing:-.015em}
+.refl-opts{display:grid;gap:11px}
+.ro{padding:18px 22px;border-radius:18px;border:1.5px solid var(--line);
+  background:var(--paper);cursor:pointer;text-align:left;font-size:17px;line-height:1.55;
+  color:var(--ink);width:100%;transition:all .18s;font-weight:500}
+.ro:hover:not(:disabled){border-color:var(--violet);background:var(--vsoft)}
+.ro:disabled{cursor:default}
+.ro.good{border-color:var(--teal);background:var(--tsoft)}
+.ro.bad{border-color:var(--clay);background:var(--csoft)}
+.ro.dim{opacity:.5}
+.refl-fb{margin-top:16px;padding:18px 20px;border-radius:14px;background:var(--vsoft);
+  font-size:15.5px;line-height:1.65;color:var(--ink2);display:none}
+.refl-fb.show{display:block}
+.refl-vd{display:block;font-weight:700;margin-bottom:5px;font-family:var(--lat);
+  letter-spacing:-.01em}
+.refl-fb.ok .refl-vd{color:var(--teal)} .refl-fb.no .refl-vd{color:var(--clay)}
+
+/* Чеклист */
+.cl{background:var(--card);border:1px solid var(--line);border-radius:18px;
+  margin-bottom:11px;overflow:hidden}
+.cl.opened{border-color:var(--vline)}
+.cl.marked{border-color:var(--teal);background:var(--tsoft)}
+.cl-h{width:100%;background:none;border:0;padding:19px 23px;display:flex;gap:15px;
+  align-items:center;cursor:pointer;text-align:left;color:inherit}
+.cl-h:hover{background:var(--line2)}
+.cl.marked .cl-h:hover{background:transparent}
+.cl-n{display:block;font-family:var(--lat);font-weight:700;font-size:13px;color:var(--violet);flex:none;
+  width:22px}
+.cl-s{display:block;flex:1;font-size:18px;font-weight:600;letter-spacing:-.02em}
+.cl-b{display:none;padding:0 23px 22px 60px}
+.cl.opened .cl-b{display:block}
+.cl-b p{font-size:16px;color:var(--ink2);margin-bottom:16px}
+
+/* Финал */
+.fin{text-align:center;padding:24px 0 12px}
+.fin-m{width:76px;height:76px;margin:0 auto 24px;border-radius:50%;background:var(--teal);
+  display:grid;place-items:center}
+.fin h2{font-size:clamp(30px,5vw,44px);margin-bottom:14px}
+.fin p{color:var(--ink2);max-width:40ch;margin:0 auto;font-size:18px;font-weight:300}
+.sos-card{background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:22px 24px;display:block;text-decoration:none;color:inherit;margin-bottom:11px}
+.sos-card:hover{border-color:var(--violet)}
+.sos-card.urgent{border-color:var(--clay);background:var(--csoft)}
+.sos-nm{font-size:19px;font-weight:600;letter-spacing:-.02em}
+.sos-for{font-size:13px;color:var(--ink3);margin-bottom:10px}
+.sos-ct{font-family:var(--lat);font-size:16px;font-weight:700;color:var(--violet);
+  margin-bottom:9px;word-break:break-word}
+.sos-card.urgent .sos-ct{color:var(--clay)}
+.sos-tx{font-size:15px;color:var(--ink2);margin:0;line-height:1.6}
+.media-card{background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:22px;display:block;text-decoration:none;color:inherit;margin-bottom:11px}
+.media-card:hover{border-color:var(--violet)}
+.media-tp{font-family:var(--lat);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink3);font-weight:700;margin-bottom:9px}
+.media-card h4{font-size:18px;line-height:1.35;margin-bottom:5px;letter-spacing:-.02em}
+.media-au{font-size:14px;color:var(--ink3);margin-bottom:11px}
+.media-cta{font-family:var(--lat);font-size:14px;font-weight:700;color:var(--violet)}
+.rg h4{font-family:var(--lat);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink3);font-weight:700;padding-bottom:10px;border-bottom:1px solid var(--line);
+  margin:28px 0 0}
+.ritem{padding:16px 0;border-bottom:1px solid var(--line2)}
+.ritem a{font-size:17.5px;font-weight:600;text-decoration:none;color:var(--ink);
+  letter-spacing:-.02em}
+.ritem a:hover{color:var(--violet)}
+.ritem p{margin:5px 0 5px;font-size:15px;color:var(--ink2)}
+.rurl{font-family:var(--lat);font-size:13px;color:var(--violet);font-weight:500}
+ol.srcs{list-style:none;counter-reset:s;margin:18px 0 0;padding:0;max-width:70ch}
+ol.srcs li{counter-increment:s;position:relative;padding:0 0 12px 30px;font-size:14.5px;
+  line-height:1.55;color:var(--ink2)}
+ol.srcs li::before{content:counter(s);position:absolute;left:0;top:1px;font-family:var(--lat);
+  font-weight:700;font-size:12px;color:var(--violet)}
+.srcs strong{color:var(--ink);font-weight:600}
+.srcs a{font-family:var(--lat);font-size:13px;word-break:break-word}
+
+/* ── Панель перехода ─────────────────────────────────────────────── */
+.nav{position:sticky;bottom:0;z-index:45;background:rgba(252,252,250,.95);
+  backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.nav-in{max-width:var(--wrap);margin:0 auto;padding:15px 26px;display:flex;
+  align-items:center;gap:16px}
+.b-back{background:none;border:0;color:var(--ink3);padding:11px 4px;font-size:15px;
+  font-weight:500;cursor:pointer}
+.b-back:hover{color:var(--ink)}
+.b-back:disabled{opacity:.3;cursor:default}
+.gmsg{flex:1;font-size:13.5px;color:var(--ink3);text-align:right;line-height:1.45}
+.gmsg.ready{color:var(--teal);font-weight:600}
+.b-next{background:var(--ink);border:0;color:var(--paper);padding:14px 30px;
+  border-radius:100px;font-weight:600;font-size:15.5px;cursor:pointer;display:flex;
+  align-items:center;gap:10px;white-space:nowrap;transition:all .2s}
+.b-next:hover:not(:disabled){background:var(--violet)}
+.b-next:disabled{background:var(--line);color:var(--ink3);cursor:not-allowed}
+.b-next .lk{width:13px;height:13px}
+@media(max-width:600px){
+  .nav-in{flex-wrap:wrap;gap:10px;padding:13px 20px}
+  .gmsg{order:-1;flex:100%;text-align:left;font-size:12.5px}
+  .b-next{flex:1;justify-content:center}
+}
+.end{height:1px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="mark">ԶՐՈՒՅՑ<em>.</em></div>
+    <div class="sub">UNICEF · Մոդուլ 1</div>
+    <div class="sp"></div>
+    <div class="chapt" id="chapt"></div>
+  </div>
+</header>
+<div class="thread"><i id="thread"></i></div>
+
+<main class="spread" id="spread"></main>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="b-back" id="back" type="button">← Նախորդը</button>
+    <div class="gmsg" id="gmsg"></div>
+    <button class="b-next" id="next" type="button">
+      <svg class="lk" viewBox="0 0 16 16" fill="none" id="lk">
+        <rect x="3" y="7" width="10" height="7" rx="1.6" fill="currentColor"/>
+        <path d="M5.5 7V5a2.5 2.5 0 015 0v2" stroke="currentColor" stroke-width="1.7" fill="none"/>
+      </svg>
+      <span id="nextlb">Շարունակել</span>
+    </button>
+  </div>
+</nav>
+
+<script src="../../shared/module-01.js"></script>
+<script>
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+const M=MODULE_01, $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* Концепт D: в тексте — только оригинал; русские эквиваленты собираются
+   в одну мелкую строку под шагом, чтобы не рвать чтение */
+function md(t){
+  const ru=[];
+  let out=esc(t)
+    .replace(/\[\[([^\|\]]+)\|([^\]]+)\]\]/g,(_,en,r)=>{ru.push(`${en} — «${r}»`);
+      return `<span class="setting">${en}</span>`})
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\{\{(\d+)\}\}/g,(_,n)=>`<sup class="fn">${n}</sup>`);
+  if(ru.length) out += `<div class="ru-line">рус.: ${ru.join(' · ')}</div>`;
+  return out;
+}
+const TICK=`<svg viewBox="0 0 16 16" width="12" height="12"><path d="M3 8.5l3.2 3.2L13 4.8" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+const KEY='unicef-m01-d';
+let S=(()=>{ try{ return JSON.parse(localStorage.getItem(KEY))||{} }catch(e){ return {} } })();
+S.marks=S.marks||{}; S.unlocked=S.unlocked||0; S.age=S.age||null;
+const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(S)) }catch(e){} };
+const stageFor=a=>a<8?M.why.stages[0]:a<13?M.why.stages[1]:M.why.stages[2];
+
+/* ── Карточка гайда ─────────────────────────────────────────────── */
+function gcard(g){
+  const rel = S.age && g.ages.includes(stageFor(S.age).id);
+  return `
+  <div class="gcard" data-req="${g.id}" data-mk="1">
+    <button class="gc-head" type="button" data-toggle>
+      <span class="gc-ab">${esc(g.abbr)}</span>
+      <span class="gc-tx"><span class="gc-nm">${esc(g.name)}</span>
+      <span class="gc-ft">${esc(g.feature)}</span></span>
+      ${rel?`<span class="gc-rel">ձեր տարիքի համար</span>`:''}
+      <span class="gc-tick">${TICK}</span>
+      <span class="gc-ch"></span>
+    </button>
+    <div class="gc-body">
+      <ol class="steps">${g.steps.map(s=>`<li>${md(s)}</li>`).join('')}</ol>
+      ${g.note?`<div class="gc-note">${md(g.note)}</div>`:''}
+      <div class="gc-marks">
+        <button class="gm" type="button" data-mark="done">Կարգավորել եմ</button>
+        <button class="gm na" type="button" data-mark="na">Մեզ չի վերաբերում</button>
+      </div>
+    </div>
+  </div>`;
+}
+function deckSpread(gid){
+  const gr=M.guideGroups.find(x=>x.id===gid);
+  const list=M.guides.filter(x=>x.group===gid).sort((a,b)=>{
+    if(!S.age) return a.order-b.order;
+    const st=stageFor(S.age).id;
+    const ra=a.ages.includes(st)?0:1, rb=b.ages.includes(st)?0:1;
+    return ra-rb || a.order-b.order;
+  });
+  return {
+    id:'d-'+gid, nav:gr.short,
+    build:()=>({
+      kicker:'Գործիքներ · '+gr.letter, head:gr.title,
+      stand:`${list.length} ուղեցույց։ Ձեր երեխայի տարիքին առավել վերաբերողները՝ վերևում։`,
+      html:(gid==='social'?`<div class="prose"><p>${md(M.tools.socialNote)}</p></div>`:'')
+        + `<div class="deck">${list.map(gcard).join('')}</div>`
+    }),
+    gate:{marks:list.map(x=>x.id)}
+  };
+}
+
+/* ── Развороты ──────────────────────────────────────────────────── */
+const SP=[
+{
+  id:'open', nav:'Սկիզբ',
+  build:()=>({html:`
+    <div class="cover">
+      <div class="cover-n">${esc(M.meta.numberLabel)}</div>
+      <h1>${esc(M.meta.title)}</h1>
+      <p class="cover-lead">${esc(M.meta.tagline)}</p>
+      <dl class="cover-facts">
+        <div class="fact"><dt>Ում համար</dt><dd>${esc(M.meta.audience)}</dd></div>
+        <div class="fact"><dt>Տևողությունը</dt><dd>~${M.meta.readingMinutes} րոպե</dd></div>
+        <div class="fact"><dt>Ուղեցույցներ</dt><dd>${M.guides.length}</dd></div>
+      </dl>
+    </div>
+    <div class="prose"><p>${esc(M.intro.lead)}</p></div>
+    <div class="pull">
+      <div class="pull-k">${esc(M.intro.keyQuestion.label)}</div>
+      <div class="pull-q">${esc(M.intro.keyQuestion.text)}</div>
+      <p class="pull-a">${md(M.intro.keyQuestion.answer)}</p>
+    </div>
+    <div class="prose"><h3 class="sub2">Նպատակ</h3><p>${md(M.intro.goal)}</p></div>
+    <div class="note warm"><div class="note-k">${esc(M.intro.howToUse.label)}</div>
+      <p>${md(M.intro.howToUse.text)}</p></div>`}),
+  gate:{read:true}
+},
+{
+  id:'age', nav:'Ձեր երեխան',
+  build:()=>({
+    kicker:'Մաս 1', head:'Քանի՞ տարեկան է ձեր երեխան',
+    stand:'Ռիսկերը, ֆոկուսը և գործիքները տարբեր են ամեն տարիքի համար։ Տեղափոխեք սահիչը՝ տեսնելու ձեր դեպքը։',
+    html:`
+    <div class="ager">
+      <div class="ager-val">
+        <span class="ager-num" id="agenum">${S.age||10}</span>
+        <span class="ager-unit">տարեկան</span>
+      </div>
+      <input class="slider" type="range" min="5" max="17" step="1" value="${S.age||10}"
+        id="ageslider" aria-label="Երեխայի տարիքը">
+      <div class="ager-scale"><span>5</span><span>8</span><span>11</span><span>14</span><span>17</span></div>
+      <div class="stagebox" id="stagebox"></div>
+      <div class="ager-confirm">
+        <button class="btn-confirm ${S.age?'done':''}" id="confirmage" type="button">
+          ${S.age?'✓ Ընտրված է':'Այո, սա իմ երեխայի տարիքն է'}</button>
+        <span class="confirm-hint" id="confhint"></span>
+      </div>
+    </div>
+    <div class="prose"><p>${md(M.why.stagesLead)}</p></div>`
+  }),
+  gate:{age:true}
+},
+{
+  id:'challenge', nav:'Մարտահրավերները',
+  build:()=>({
+    kicker:'Մաս 1', head:M.why.challengesTitle,
+    html:`<div class="prose">${M.why.challenges.map(c=>`<p>${md(c)}</p>`).join('')}</div>
+    <div class="note warm"><div class="note-k">${esc(M.why.callout.label)}</div>
+      <p>${md(M.why.callout.text)}</p></div>
+    <div class="prose"><p>${md(M.tools.lead)}</p></div>`}),
+  gate:{read:true}
+},
+deckSpread('os'), deckSpread('social'), deckSpread('games'), deckSpread('messenger'),
+{
+  id:'base', nav:'Քայլաշար',
+  build:()=>({
+    kicker:'Գործիքներ · '+M.checklist.letter, head:M.checklist.title,
+    stand:'Բացեք ամեն կետ և նշեք։ Չբացվածը նշել հնարավոր չէ։',
+    html:M.checklist.items.map((it,i)=>`
+      <div class="cl" data-req="cl-${i}" data-mk="1">
+        <button class="cl-h" type="button" data-toggle>
+          <span class="cl-n">${i+1}</span><span class="cl-s">${esc(it.short)}</span>
+          <span class="gc-tick">${TICK}</span><span class="gc-ch"></span>
+        </button>
+        <div class="cl-b"><p>${md(it.text)}</p>
+          <div class="gc-marks" style="border:0;padding-top:0;margin-top:0">
+            <button class="gm" type="button" data-mark="done">Կարգավորել եմ</button>
+            <button class="gm na" type="button" data-mark="na">Մեզ չի վերաբերում</button>
+          </div></div>
+      </div>`).join('')}),
+  gate:{marks:M.checklist.items.map((_,i)=>'cl-'+i)}
+},
+{
+  id:'trust', nav:'Վստահություն',
+  build:()=>({
+    kicker:'Մաս 3', head:M.balance.researchTitle,
+    stand:'Սեղմեք ցանկացած արտահայտության վրա՝ տեսնելու, թե ինչու է այն աշխատում կամ չի աշխատում։',
+    html:`<div class="prose">${M.balance.research.map(p=>`<p>${md(p)}</p>`).join('')}</div>
+    <div class="talk">
+      <div class="talk-lb g">Ինչ ասել</div>
+      ${M.balance.scriptsDo.map((s,i)=>`
+        <div class="bubble good" data-req="sd-${i}" data-toggle>
+          ${esc(s.text)}
+          <div class="bubble-tap">ինչու՞ →</div>
+          <div class="bubble-why">${esc(s.why)}</div>
+        </div>`).join('')}
+      <div class="talk-lb b">Ինչ չասել</div>
+      ${M.balance.scriptsDont.map((s,i)=>`
+        <div class="bubble bad" data-req="sn-${i}" data-toggle>
+          ${esc(s.text)}
+          <div class="bubble-tap">ինչու՞ →</div>
+          <div class="bubble-why">${esc(s.why)}</div>
+        </div>`).join('')}
+    </div>
+    <div class="prose"><p style="margin-top:26px">${md(M.balance.scriptsNote)}</p></div>`}),
+  gate:{expand:[...M.balance.scriptsDo.map((_,i)=>'sd-'+i),
+                ...M.balance.scriptsDont.map((_,i)=>'sn-'+i)]}
+},
+{
+  id:'reflect', nav:'Ի՞նչ կասեիք',
+  build:()=>({
+    kicker:'Վարժանք', head:'Ի՞նչ կասեիք',
+    stand:'Ոչ թե թեստ հիշողության, այլ վարժանք։ Ընտրեք այն, ինչ իսկապես կասեիք։ Ամեն պատասխանից հետո՝ բացատրություն։',
+    html:M.quiz.reflections.map((r,i)=>`
+      <div class="refl" data-refl="${i}">
+        <div class="refl-n">ԻՐԱՎԻՃԱԿ ${i+1} / ${M.quiz.reflections.length}</div>
+        <div class="refl-sit">${esc(r.situation)}</div>
+        <div class="refl-opts">${r.options.map((o,j)=>`
+          <button class="ro" type="button" data-o="${j}">${esc(o.text)}</button>`).join('')}</div>
+        <div class="refl-fb"><span class="refl-vd"></span><span class="refl-bd"></span></div>
+      </div>`).join('')}),
+  gate:{reflect:true}
+},
+{
+  id:'freedom', nav:'Ազատություն',
+  build:()=>({
+    kicker:'Մաս 3', head:M.balance.boundariesTitle,
+    html:`<div class="prose"><p>${md(M.balance.boundariesLead)}</p></div>
+    ${M.balance.principles.map((p,i)=>`<div class="pr"><div class="pr-n">0${i+1}</div>
+      <div><h4>${esc(p.title)}</h4><p>${md(p.text)}</p></div></div>`).join('')}
+    <div class="prose"><h3 class="sub2">${esc(M.balance.freedomTitle)}</h3>
+      <p>${md(M.balance.freedom)}</p></div>
+    <div class="note"><div class="note-k">${M.balance.goldenRule.icon} ${esc(M.balance.goldenRule.label)}</div>
+      <p>${md(M.balance.goldenRule.text)}</p>
+      <p style="margin-top:11px">${md(M.balance.goldenRule.extra)}</p></div>`}),
+  gate:{read:true}
+},
+{
+  id:'close', nav:'Ավարտ',
+  build:()=>{
+    const done=Object.values(S.marks).filter(v=>v==='done').length;
+    const tot=M.guides.length+M.checklist.items.length;
+    return {html:`
+    <div class="fin">
+      <div class="fin-m"><svg viewBox="0 0 24 24" width="36" height="36"><path d="M5 12.5l4.6 4.6L19 7.5" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h2>Զրույցն ավարտված է</h2>
+      <p>Դուք կարգավորել եք ${done} կետ ${tot}-ից և վարժվել ամենադժվար խոսակցություններին։</p>
+    </div>
+    <div class="prose" style="margin:44px auto 0"><h3 class="sub2">${esc(M.emergency.title)}</h3>
+      <p>${esc(M.emergency.lead)}</p></div>
+    ${M.emergency.contacts.map(c=>`
+      <a class="sos-card${c.urgent?' urgent':''}" href="${esc(c.url)}" target="_blank" rel="noopener">
+        <div class="sos-nm">${esc(c.name)}</div><div class="sos-for">${esc(c.forWhom)}</div>
+        <div class="sos-ct">${esc(c.contact)}${c.phone&&c.phone!==c.contact?` · ${esc(c.phone)}`:''}</div>
+        <p class="sos-tx">${esc(c.text)}</p></a>`).join('')}
+    <div class="prose"><h3 class="sub2">${esc(M.reading.title)}</h3></div>
+    ${M.reading.media.map(m=>`
+      <a class="media-card" href="${esc(m.url)}" target="_blank" rel="noopener">
+        <div class="media-tp">${m.icon} ${esc(m.type)}</div><h4>${esc(m.title)}</h4>
+        <div class="media-au">${esc(m.author)}</div>
+        <div class="media-cta">${esc(m.cta)} →</div></a>`).join('')}
+    ${M.reading.groups.map(g=>`<div class="rg"><h4>${esc(g.lang)}</h4>
+      ${g.items.map(it=>`<div class="ritem">
+        <a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a>
+        <p>${esc(it.text)}</p><div class="rurl">${esc(it.label)}</div></div>`).join('')}</div>`).join('')}
+    <div class="note warm"><div class="note-k">${esc(M.reading.note.label)}</div>
+      <p>${esc(M.reading.note.text)}</p></div>
+    <div class="prose"><h3 class="sub2">${esc(M.sourcesTitle)}</h3></div>
+    <ol class="srcs">${M.sources.map(s=>`<li><strong>${esc(s.org)}</strong> — ${esc(s.title)}
+      <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`).join('')}</ol>
+    <div class="prose" style="margin-top:30px;padding-top:20px;border-top:1px solid var(--line)">
+      <p style="font-size:14px;color:var(--ink3)">${esc(M.meta.disclaimer)}</p></div>`};
+  },
+  gate:{}
+}
+];
+
+let cur=0, PS={};
+
+function render(i){
+  cur=Math.max(0,Math.min(i,SP.length-1));
+  const s=SP[cur];
+  PS={opened:new Set(), marked:new Set(), read:false, moved:false,
+      ageOk:!!S.age, refl:new Set()};
+  const b=s.build();
+  $('#spread').innerHTML =
+    (b.kicker?`<div class="kicker">${esc(b.kicker)}</div>`:'') +
+    (b.head?`<h2 class="head">${esc(b.head)}</h2>`:'') +
+    (b.stand?`<p class="stand">${esc(b.stand)}</p>`:'') +
+    b.html + `<div class="end"></div>`;
+  scrollTo({top:0,behavior:'instant'});
+  wire(s); paintTop(); updateGate();
+}
+
+function wire(s){
+  const sc=$('#spread');
+  sc.querySelectorAll('[data-toggle]').forEach(el=>{
+    const box = el.hasAttribute('data-req') ? el : el.closest('[data-req]');
+    el.addEventListener('click',ev=>{
+      if(ev.target.closest('[data-mark]')) return;
+      box.classList.toggle('opened');
+      if(box.classList.contains('opened')) PS.opened.add(box.dataset.req);
+      updateGate();
+    });
+  });
+  sc.querySelectorAll('[data-mark]').forEach(b=>b.addEventListener('click',ev=>{
+    ev.stopPropagation();
+    const box=b.closest('[data-req]');
+    if(!box.classList.contains('opened')) return;
+    const val=b.dataset.mark, key=box.dataset.req;
+    const same=S.marks[key]===val;
+    box.querySelectorAll('[data-mark]').forEach(x=>x.classList.remove('on'));
+    if(same){ delete S.marks[key]; box.classList.remove('marked'); PS.marked.delete(key); }
+    else { S.marks[key]=val; b.classList.add('on'); box.classList.add('marked'); PS.marked.add(key); }
+    save(); updateGate();
+  }));
+  sc.querySelectorAll('[data-mk="1"]').forEach(box=>{
+    const v=S.marks[box.dataset.req];
+    if(v){ box.classList.add('marked'); const b=box.querySelector(`[data-mark="${v}"]`);
+      if(b) b.classList.add('on'); PS.marked.add(box.dataset.req); PS.opened.add(box.dataset.req); }
+  });
+
+  /* Возрастной слайдер */
+  const sl=document.getElementById('ageslider');
+  if(sl){
+    const paintStage=()=>{
+      const a=+sl.value, st=stageFor(a);
+      document.getElementById('agenum').textContent=a;
+      sl.style.setProperty('--p', ((a-5)/12*100)+'%');
+      document.getElementById('stagebox').innerHTML=`
+        <div class="stagebox-nm"><h4>${esc(st.stage)}</h4>
+          <span class="stagebox-tag">${esc(st.ageLabel)}</span></div>
+        <div class="sb-grid">
+          <div class="sb"><div class="sb-k">Հիմնական ռիսկեր</div>
+            <ul>${st.risks.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>
+          <div class="sb"><div class="sb-k">Ուշադրության կենտրոնը</div>
+            <div class="sb-v">${esc(st.focus)}</div></div>
+          <div class="sb"><div class="sb-k">Գործիքի շեշտը</div>
+            <div class="sb-v">${esc(st.tool)}</div></div>
+        </div>`;
+    };
+    paintStage();
+    sl.addEventListener('input',()=>{ PS.moved=true; paintStage();
+      const c=document.getElementById('confirmage');
+      c.classList.remove('done'); c.textContent='Այո, սա իմ երեխայի տարիքն է';
+      PS.ageOk=false; updateGate(); });
+    document.getElementById('confirmage').addEventListener('click',e=>{
+      S.age=+sl.value; save(); PS.ageOk=true;
+      e.currentTarget.classList.add('done');
+      e.currentTarget.textContent='✓ Ընտրված է '+S.age;
+      updateGate();
+    });
+    const hint=document.getElementById('confhint');
+    if(hint) hint.textContent='Այս ընտրությունը կդասավորի ուղեցույցները ձեր երեխայի տարիքին համապատասխան։';
+  }
+
+  /* Рефлексия */
+  sc.querySelectorAll('[data-refl]').forEach(box=>{
+    const idx=+box.dataset.refl, r=M.quiz.reflections[idx];
+    const opts=[...box.querySelectorAll('.ro')], fb=box.querySelector('.refl-fb');
+    opts.forEach((b,j)=>b.addEventListener('click',()=>{
+      if(box.dataset.done) return;
+      box.dataset.done='1';
+      const o=r.options[j];
+      opts.forEach((x,k)=>{ x.disabled=true;
+        x.classList.add(r.options[k].good?'good':'bad');
+        if(k!==j) x.classList.add('dim'); });
+      fb.classList.add('show', o.good?'ok':'no');
+      fb.querySelector('.refl-vd').textContent = o.good?'Սա աշխատում է':'Սա հակառակ արդյունք է տալիս';
+      fb.querySelector('.refl-bd').textContent=' '+o.why;
+      PS.refl.add(idx); updateGate();
+    }));
+  });
+
+  if(s.gate.read){
+    const end=sc.querySelector('.end');
+    if(document.body.scrollHeight<=innerHeight+40) PS.read=true;
+    const ob=new IntersectionObserver(es=>{es.forEach(e=>{
+      if(e.isIntersecting){PS.read=true;updateGate();ob.disconnect();}})},{threshold:1});
+    ob.observe(end);
+  }
+}
+
+/* ── Гейт ───────────────────────────────────────────────────────── */
+function gate(){
+  if(cur<S.unlocked) return {ok:true,msg:'Այս մասն արդեն անցել եք'};
+  const g=SP[cur].gate||{};
+  if(g.read && !PS.read) return {ok:false,msg:'Ոլորեք մինչև վերջ՝ շարունակելու համար'};
+  if(g.age && !PS.ageOk) return {ok:false,msg:'Ընտրեք ձեր երեխայի տարիքը և հաստատեք'};
+  if(g.expand){
+    const n=g.expand.filter(k=>!PS.opened.has(k)).length;
+    if(n) return {ok:false,msg:`Բացեք ևս ${n} արտահայտություն`};
+  }
+  if(g.marks){
+    const no=g.marks.filter(k=>!PS.opened.has(k)).length;
+    if(no) return {ok:false,msg:`Բացեք ևս ${no} ուղեցույց`};
+    const nm=g.marks.filter(k=>!PS.marked.has(k)).length;
+    if(nm) return {ok:false,msg:`Նշեք ևս ${nm} կետ`};
+  }
+  if(g.reflect && PS.refl.size<M.quiz.reflections.length)
+    return {ok:false,msg:`Մնաց ${M.quiz.reflections.length-PS.refl.size} իրավիճակ`};
+  return {ok:true,msg:'Կարող եք շարունակել'};
+}
+function updateGate(){
+  const st=gate(), last=cur===SP.length-1;
+  $('#next').disabled=!st.ok||last;
+  $('#lk').style.display=(st.ok||last)?'none':'block';
+  $('#nextlb').textContent = last?'Ավարտված է':'Շարունակել';
+  $('#gmsg').textContent = last?'':st.msg;
+  $('#gmsg').classList.toggle('ready',st.ok);
+  $('#back').disabled=cur===0;
+  if(st.ok && cur+1>S.unlocked){ S.unlocked=cur+1; save(); }
+  paintTop();
+}
+function paintTop(){
+  $('#chapt').innerHTML=`<b>${esc(SP[cur].nav)}</b> · ${cur+1}/${SP.length}`;
+  $('#thread').style.width = ((cur+1)/SP.length*100)+'%';
+}
+
+$('#next').addEventListener('click',()=>{ if(cur<SP.length-1) render(cur+1) });
+$('#back').addEventListener('click',()=>{ if(cur>0) render(cur-1) });
+render(Math.min(S.unlocked,SP.length-1));
+</script>
+</body>
+</html>

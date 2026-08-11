@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Մոդուլ 1 · Ծնողական վերահսկողություն — Ուղևորություն</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;600;700&family=Noto+Serif+Armenian:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   КОНЦЕПТ B — «ՈՒՂԵՎՈՐՈՒԹՅՈՒՆ» / Путь
+   UNICEF-основа + тёплая вариация. Сигнатура: маршрутная нить слева —
+   видно пройденное, текущее и закрытое впереди.
+   Гейт: обязательный микро-вопрос на каждой остановке. Ответы
+   собираются в личный семейный план на финише.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --cyan:#1CABE2; --deep:#123A5C; --coral:#FF6B5A; --sand:#FFF3EC;
+  --ink:#10293F; --ink-2:#42607A; --ink-3:#7E97AC;
+  --line:#DEE9F1; --line-2:#EDF4F9; --paper:#FFF; --bg:#F4FAFD;
+  --green:#00A05A; --red:#E2231A;
+  --hy:'Noto Sans Armenian','Mshtakan','Sylfaen',system-ui,sans-serif;
+  --hys:'Noto Serif Armenian','Mshtakan',Georgia,serif;
+  --num:'Space Grotesk',system-ui,sans-serif;
+  --wrap:1060px; --rail:250px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{
+  animation-duration:.01ms!important;transition-duration:.01ms!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--hy);
+  font-size:17px;line-height:1.72;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;line-height:1.2;font-family:var(--hys);font-weight:700;
+  letter-spacing:-.01em}
+p{margin:0 0 1em}
+a{color:var(--deep)}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--coral);outline-offset:3px;border-radius:4px}
+
+/* ── Шапка ───────────────────────────────────────────────────────── */
+.top{position:sticky;top:0;z-index:50;background:var(--deep);color:#fff}
+.top-in{max-width:var(--wrap);margin:0 auto;padding:12px 24px;display:flex;
+  align-items:center;gap:14px}
+.top .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:14px;
+  font-family:var(--hy)}
+.top .brand svg{width:24px;height:24px}
+.top .sub{opacity:.6;font-weight:500;font-size:13px}
+.top .sp{flex:1}
+.top .pct{font-family:var(--num);font-size:13px;font-weight:700;
+  background:rgba(255,255,255,.14);padding:5px 12px;border-radius:100px}
+@media(max-width:600px){.top .sub{display:none}}
+
+/* ── Сетка: маршрутная нить + сцена ──────────────────────────────── */
+.shell{max-width:var(--wrap);margin:0 auto;padding:34px 24px 30px;
+  display:grid;grid-template-columns:var(--rail) 1fr;gap:44px;align-items:start}
+@media(max-width:940px){.shell{grid-template-columns:1fr;gap:0;padding-top:0}}
+
+/* ── СИГНАТУРА: маршрутная нить ──────────────────────────────────── */
+.route{position:sticky;top:96px}
+@media(max-width:940px){.route{display:none}}
+.route-title{font-family:var(--hy);font-size:11px;letter-spacing:.14em;font-weight:700;
+  color:var(--ink-3);text-transform:uppercase;margin-bottom:18px}
+.stop{display:flex;gap:14px;position:relative;padding-bottom:4px;
+  background:none;border:0;text-align:left;width:100%;cursor:not-allowed;font-family:inherit}
+.stop-mark{position:relative;flex:none;width:22px;display:flex;justify-content:center}
+.stop-dot{width:13px;height:13px;border-radius:50%;background:var(--paper);
+  border:2.5px solid var(--line);margin-top:5px;z-index:2;transition:all .25s}
+.stop-line{position:absolute;top:16px;bottom:-6px;left:50%;width:2.5px;
+  transform:translateX(-50%);background:var(--line);z-index:1}
+.stop:last-child .stop-line{display:none}
+.stop-label{font-size:14px;line-height:1.4;color:var(--ink-3);padding-bottom:20px;
+  font-weight:500;transition:color .2s}
+.stop.done{cursor:pointer}
+.stop.done .stop-dot{background:var(--green);border-color:var(--green)}
+.stop.done .stop-line{background:var(--green)}
+.stop.done .stop-label{color:var(--ink-2)}
+.stop.cur{cursor:pointer}
+.stop.cur .stop-dot{background:var(--coral);border-color:var(--coral);
+  box-shadow:0 0 0 5px rgba(255,107,90,.18);width:15px;height:15px;margin-top:4px}
+.stop.cur .stop-label{color:var(--ink);font-weight:700}
+.stop-lock{display:inline-block;width:11px;height:11px;margin-left:6px;opacity:.4;
+  vertical-align:-1px}
+.stop.done .stop-lock,.stop.cur .stop-lock{display:none}
+
+/* Мобильная нить — горизонтальная */
+.mroute{display:none}
+@media(max-width:940px){
+  .mroute{display:block;position:sticky;top:48px;z-index:40;background:var(--bg);
+    padding:12px 0 10px;margin:0 -24px;padding-left:24px;padding-right:24px;
+    border-bottom:1px solid var(--line)}
+  .mroute-track{display:flex;gap:6px;align-items:center}
+  .mdot{flex:1;height:5px;border-radius:3px;background:var(--line);border:0;padding:0;
+    min-width:8px}
+  .mdot.done{background:var(--green)}
+  .mdot.cur{background:var(--coral)}
+  .mroute-now{font-size:13px;font-weight:700;color:var(--ink-2);margin-top:9px;
+    display:flex;justify-content:space-between}
+  .mroute-now span:last-child{font-family:var(--num);color:var(--ink-3);font-weight:600}
+}
+
+/* ── Сцена ───────────────────────────────────────────────────────── */
+.scene{background:var(--paper);border:1px solid var(--line);border-radius:16px;
+  padding:44px 46px 38px;margin-top:0}
+@media(max-width:940px){.scene{margin-top:22px}}
+@media(max-width:640px){.scene{padding:28px 22px 26px;border-radius:12px}}
+.eyebrow{font-family:var(--hy);font-size:11px;letter-spacing:.14em;font-weight:700;
+  text-transform:uppercase;color:var(--coral);margin-bottom:12px}
+.scene h2{font-size:clamp(26px,4vw,38px);letter-spacing:-.022em;max-width:19ch;
+  margin-bottom:14px}
+.scene-sum{color:var(--ink-2);font-size:17px;max-width:54ch;margin-bottom:0}
+.body{margin-top:22px;max-width:66ch}
+.body p{color:var(--ink-2);font-size:16.5px}
+.body p strong{color:var(--ink);font-weight:700}
+h3.sub{font-size:22px;margin:32px 0 12px;max-width:26ch}
+
+/* Обложка */
+.cover-num{display:inline-block;font-family:var(--num);font-size:12px;font-weight:700;
+  letter-spacing:.14em;color:var(--coral);border:1.5px solid var(--coral);
+  padding:6px 14px;border-radius:100px;margin-bottom:24px}
+.cover h1{font-size:clamp(34px,6vw,58px);letter-spacing:-.03em;max-width:14ch;
+  margin-bottom:20px;line-height:1.1}
+.cover-tag{font-size:clamp(16px,2vw,19px);color:var(--ink-2);max-width:50ch;line-height:1.6}
+.cover-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
+@media(max-width:640px){.cover-meta{grid-template-columns:1fr}}
+.cmeta{background:var(--bg);border-radius:11px;padding:16px 18px}
+.cmeta dt{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);
+  font-weight:700;margin-bottom:3px}
+.cmeta dd{margin:0;font-size:16px;font-weight:700;font-family:var(--hys)}
+
+/* Ключевой вопрос */
+.keyq{background:var(--sand);border-radius:14px;padding:28px 30px;margin-top:28px}
+.keyq-label{font-family:var(--hy);font-size:11px;font-weight:700;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--coral);margin-bottom:10px}
+.keyq-q{font-family:var(--hys);font-size:clamp(19px,2.5vw,24px);font-weight:700;
+  line-height:1.42;margin-bottom:13px;max-width:40ch}
+.keyq-a{font-size:16px;color:var(--ink-2);margin:0}
+
+/* Врезки */
+.callout{padding:22px 24px;border-radius:12px;margin:24px 0;background:var(--sand);
+  display:flex;gap:14px}
+.callout .ic{font-size:18px;flex:none;line-height:1.5}
+.callout .lb{font-family:var(--hys);font-weight:700;font-size:16px;margin-bottom:4px}
+.callout p{margin:0;font-size:15.5px;line-height:1.62;color:var(--ink-2)}
+.callout.gold{background:#E8F6FC}
+
+/* ── Гайды ───────────────────────────────────────────────────────── */
+.guide{border:1px solid var(--line);border-radius:13px;margin-bottom:11px;overflow:hidden;
+  background:var(--paper);transition:border-color .2s}
+.guide.opened{border-color:#A8DCF1}
+.guide.marked{border-color:var(--green);background:#F6FCF9}
+.g-head{width:100%;background:none;border:0;padding:17px 19px;display:flex;gap:13px;
+  align-items:center;cursor:pointer;text-align:left}
+.g-head:hover{background:var(--bg)}
+.g-abbr{width:38px;height:38px;flex:none;border-radius:11px;display:grid;place-items:center;
+  background:var(--bg);font-family:var(--num);font-weight:700;font-size:12.5px;
+  color:var(--deep);border:1px solid var(--line)}
+.g-tx{display:block;flex:1;min-width:0}
+.g-nm{display:block;font-family:var(--hys);font-weight:700;font-size:17px;line-height:1.3}
+.g-ft{display:block;font-family:var(--num);font-size:12.5px;color:var(--ink-3);margin-top:1px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g-mn{font-family:var(--num);font-size:12px;color:var(--ink-3);font-weight:600;flex:none}
+.g-ch{width:10px;height:10px;flex:none;border-right:2px solid var(--ink-3);
+  border-bottom:2px solid var(--ink-3);transform:rotate(45deg);margin-top:-4px;
+  transition:transform .2s}
+.guide.opened .g-ch{transform:rotate(-135deg);margin-top:2px}
+.g-tick{width:22px;height:22px;flex:none;border-radius:50%;background:var(--green);
+  display:none;place-items:center}
+.g-abbr,.g-mn,.g-ch{display:block}
+.guide.marked .g-tick{display:grid}
+.guide.marked .g-ch{display:none}
+.g-body{display:none;padding:2px 19px 19px}
+.guide.opened .g-body{display:block}
+ol.steps{list-style:none;counter-reset:s;margin:0;padding:0}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 15px 40px;font-size:16px;
+  line-height:1.62;color:var(--ink-2)}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:2px;width:25px;height:25px;
+  border-radius:8px;background:var(--deep);color:#fff;display:grid;place-items:center;
+  font-family:var(--num);font-weight:700;font-size:12px}
+.g-note{margin-top:12px;padding:13px 15px;background:var(--bg);border-radius:9px;
+  font-size:15px;line-height:1.6;color:var(--ink-2)}
+.marks{display:flex;gap:9px;margin-top:17px;padding-top:15px;border-top:1px dashed var(--line)}
+.mark{flex:1;padding:11px 13px;border:1.5px solid var(--line);border-radius:9px;
+  background:var(--paper);font-size:14.5px;font-weight:600;cursor:pointer;color:var(--ink-2);
+  transition:all .16s}
+.mark:hover{border-color:var(--coral)}
+.mark.on{background:var(--green);border-color:var(--green);color:#fff}
+.mark.na.on{background:var(--ink-3);border-color:var(--ink-3)}
+@media(max-width:520px){.marks{flex-direction:column}}
+
+/* Названия настроек — русский раскрывается по нажатию */
+.setting{font-family:var(--num);font-weight:600;color:var(--deep);background:#E8F6FC;
+  padding:1px 6px;border-radius:5px;font-size:.92em;white-space:nowrap;cursor:help;
+  border-bottom:1.5px dotted var(--cyan)}
+.setting[data-open="1"]::after{content:' · «' attr(data-ru) '»';font-weight:500;
+  color:var(--ink-3);font-size:.94em}
+.fn{font-family:var(--num);font-size:.7em;vertical-align:super;color:var(--coral);
+  font-weight:700}
+
+/* ── Стадии возраста ─────────────────────────────────────────────── */
+.stage{border:1px solid var(--line);border-radius:13px;margin-bottom:11px;overflow:hidden}
+.stage.opened{border-color:#A8DCF1}
+.stage-head{width:100%;background:none;border:0;padding:16px 19px;display:flex;gap:13px;
+  align-items:center;cursor:pointer;text-align:left}
+.stage-head:hover{background:var(--bg)}
+.stage-age{font-family:var(--num);font-size:12px;font-weight:700;color:#fff;
+  background:var(--deep);padding:4px 10px;border-radius:100px;flex:none}
+.stage:nth-of-type(2) .stage-age{background:var(--cyan)}
+.stage:nth-of-type(3) .stage-age{background:var(--coral)}
+.stage-nm{flex:1;font-family:var(--hys);font-weight:700;font-size:17px}
+.stage-body{display:none;padding:0 19px 19px}
+.stage.opened .stage-body{display:block}
+.stage-k{font-family:var(--hy);font-size:11px;letter-spacing:.1em;font-weight:700;
+  text-transform:uppercase;color:var(--ink-3);margin:14px 0 6px}
+.stage-risks{list-style:none;margin:0;padding:0}
+.stage-risks li{font-size:15px;line-height:1.5;padding-left:17px;position:relative;
+  margin-bottom:4px;color:var(--ink-2)}
+.stage-risks li::before{content:'';position:absolute;left:0;top:9px;width:6px;height:6px;
+  border-radius:50%;background:var(--coral)}
+.stage-v{font-size:15px;line-height:1.55;color:var(--ink-2)}
+
+/* ── Скрипты ─────────────────────────────────────────────────────── */
+.shead{padding:13px 19px;font-family:var(--hys);font-weight:700;font-size:16px;color:#fff;
+  border-radius:11px 11px 0 0;margin-top:22px;display:flex;gap:9px;align-items:center}
+.shead.do{background:var(--green)} .shead.dont{background:var(--red)}
+.shead .mk{width:21px;height:21px;border-radius:50%;background:rgba(255,255,255,.24);
+  display:grid;place-items:center;font-size:12px;font-family:var(--hy)}
+.sitem{border:1px solid var(--line);border-top:0;background:var(--paper)}
+.sitem:last-of-type{border-radius:0 0 11px 11px}
+.s-head{width:100%;background:none;border:0;padding:15px 19px;display:flex;gap:12px;
+  align-items:flex-start;cursor:pointer;text-align:left}
+.s-head:hover{background:var(--bg)}
+.s-q{flex:1;font-size:16px;line-height:1.55;font-weight:600}
+.s-plus{flex:none;width:23px;height:23px;border-radius:50%;border:1.5px solid var(--line);
+  display:grid;place-items:center;font-size:14px;color:var(--ink-3);font-weight:700;
+  transition:all .18s;font-family:var(--num)}
+.sitem.opened .s-plus{background:var(--coral);border-color:var(--coral);color:#fff}
+.s-why{display:none;padding:0 19px 15px;font-size:15px;color:var(--ink-2);line-height:1.6}
+.sitem.opened .s-why{display:block}
+
+/* Принципы */
+.pr{display:flex;gap:15px;padding:17px 0;border-bottom:1px solid var(--line-2)}
+.pr:last-child{border-bottom:0}
+.pr-n{font-family:var(--num);font-weight:700;font-size:13px;color:var(--coral);flex:none;
+  padding-top:3px}
+.pr h4{font-size:17px;margin-bottom:4px}
+.pr p{margin:0;font-size:15.5px;color:var(--ink-2);line-height:1.6}
+
+/* ── Микро-вопрос остановки ──────────────────────────────────────── */
+.micro{margin-top:32px;background:var(--deep);border-radius:14px;padding:30px 32px;color:#fff}
+@media(max-width:640px){.micro{padding:24px 20px}}
+.micro-lb{font-family:var(--hy);font-size:11px;letter-spacing:.14em;font-weight:700;
+  text-transform:uppercase;color:#7FD3F0;margin-bottom:11px}
+.micro-q{font-family:var(--hys);font-size:19px;font-weight:700;line-height:1.45;
+  margin-bottom:17px;color:#fff}
+.micro-hint{font-size:13px;color:#93B2C8;margin:-11px 0 15px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:13px 16px;border-radius:10px;
+  cursor:pointer;font-size:15.5px;line-height:1.5;text-align:left;width:100%;
+  background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.16);color:#fff;
+  transition:all .16s;font-family:inherit}
+.opt:hover:not(:disabled){background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.4)}
+.opt:disabled{cursor:default}
+.opt-mk{width:20px;height:20px;flex:none;border:2px solid rgba(255,255,255,.45);
+  border-radius:50%;margin-top:1px;display:grid;place-items:center;font-size:11px;
+  font-weight:700;font-family:var(--num)}
+.micro.multi .opt-mk{border-radius:6px}
+.opt.sel{background:rgba(255,255,255,.18);border-color:#fff}
+.opt.sel .opt-mk{background:#fff;color:var(--deep);border-color:#fff}
+.opt.right{background:rgba(0,160,90,.28);border-color:var(--green)}
+.opt.right .opt-mk{background:var(--green);border-color:var(--green)}
+.opt.wrong{background:rgba(226,35,26,.24);border-color:var(--red)}
+.opt.wrong .opt-mk{background:var(--red);border-color:var(--red)}
+.m-check{margin-top:13px;background:var(--coral);color:#fff;border:0;padding:10px 22px;
+  border-radius:9px;font-size:15px;font-weight:700;cursor:pointer}
+.m-check:disabled{background:rgba(255,255,255,.18);color:#93B2C8;cursor:default}
+.m-ex{margin-top:14px;padding:15px 17px;border-radius:10px;background:rgba(255,255,255,.1);
+  font-size:15px;line-height:1.6;color:#DCE9F2;display:none}
+.m-ex.show{display:block}
+.m-verdict{font-weight:700;display:block;margin-bottom:4px;font-family:var(--hys)}
+.m-ex.ok .m-verdict{color:#5BE3A5} .m-ex.no .m-verdict{color:#FF9B8E}
+.m-retry{margin-top:11px;background:transparent;border:1.5px solid rgba(255,255,255,.5);
+  color:#fff;padding:8px 17px;border-radius:9px;font-weight:700;font-size:14px;cursor:pointer}
+
+/* ── Личный план (финал) ─────────────────────────────────────────── */
+.plan{border:2px solid var(--deep);border-radius:16px;overflow:hidden;margin-top:26px}
+.plan-head{background:var(--deep);color:#fff;padding:24px 28px}
+.plan-head h3{color:#fff;font-size:22px;margin-bottom:5px}
+.plan-head p{margin:0;font-size:14.5px;color:#A8C2D6}
+.plan-sec{padding:20px 28px;border-bottom:1px solid var(--line)}
+.plan-sec:last-child{border-bottom:0}
+.plan-k{font-family:var(--hy);font-size:11px;letter-spacing:.12em;font-weight:700;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:11px}
+.plan-row{display:flex;gap:11px;align-items:flex-start;padding:7px 0;font-size:15.5px;
+  line-height:1.55}
+.plan-row .pm{flex:none;width:19px;height:19px;border-radius:50%;display:grid;
+  place-items:center;margin-top:2px;font-size:11px;font-weight:700;color:#fff;
+  font-family:var(--num)}
+.plan-row.yes .pm{background:var(--green)} .plan-row.no .pm{background:var(--ink-3)}
+.plan-row.no{color:var(--ink-3)}
+.plan-empty{font-size:15px;color:var(--ink-3);font-style:italic}
+.btn-print{margin-top:18px;background:var(--coral);color:#fff;border:0;padding:12px 24px;
+  border-radius:10px;font-weight:700;font-size:15px;cursor:pointer}
+
+/* Экстренная помощь / материалы */
+.sos{background:var(--deep);color:#fff;border-radius:14px;padding:32px 30px;margin-top:26px}
+@media(max-width:640px){.sos{padding:24px 20px}}
+.sos-eb{font-family:var(--hy);font-size:11px;letter-spacing:.15em;font-weight:700;
+  color:var(--coral);text-transform:uppercase;margin-bottom:8px}
+.sos h3{color:#fff;font-size:25px;margin-bottom:8px}
+.sos-lead{color:#A8C2D6;font-size:16px;max-width:46ch;margin-bottom:20px}
+.sos-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  border-radius:11px;padding:18px 20px;display:block;text-decoration:none;color:#fff;
+  margin-bottom:10px}
+.sos-card:hover{background:rgba(255,255,255,.15)}
+.sos-card.urgent{border-color:var(--coral)}
+.sos-nm{font-family:var(--hys);font-size:17px;font-weight:700}
+.sos-for{font-size:12.5px;color:#8AA7BD;margin-bottom:8px}
+.sos-ct{font-family:var(--num);font-size:15px;font-weight:700;color:#7FD3F0;
+  margin-bottom:7px;word-break:break-word}
+.sos-card.urgent .sos-ct{color:var(--coral)}
+.sos-tx{font-size:14px;color:#BDD2E1;margin:0;line-height:1.55}
+.media-card{border:1px solid var(--line);border-radius:12px;padding:19px;display:block;
+  text-decoration:none;color:inherit;margin-bottom:10px;background:var(--paper)}
+.media-card:hover{border-color:var(--coral)}
+.media-tp{font-size:11px;letter-spacing:.1em;font-weight:700;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:7px}
+.media-card h4{font-size:16.5px;line-height:1.4;margin-bottom:4px}
+.media-au{font-size:13.5px;color:var(--ink-3);margin-bottom:9px}
+.media-cta{font-size:14px;font-weight:700;color:var(--coral);font-family:var(--hy)}
+.rg h4{font-family:var(--hy);font-size:11.5px;letter-spacing:.13em;font-weight:700;
+  text-transform:uppercase;color:var(--ink-3);padding-bottom:9px;
+  border-bottom:1px solid var(--line);margin:24px 0 0}
+.ritem{padding:14px 0;border-bottom:1px solid var(--line-2)}
+.ritem a{font-family:var(--hys);font-weight:700;font-size:16px;text-decoration:none;color:var(--ink)}
+.ritem a:hover{color:var(--coral)}
+.ritem p{margin:4px 0 5px;font-size:14.5px;color:var(--ink-2)}
+.rurl{font-family:var(--num);font-size:12.5px;color:var(--cyan)}
+ol.srcs{list-style:none;counter-reset:s2;margin:16px 0 0;padding:0}
+ol.srcs li{counter-increment:s2;position:relative;padding:0 0 11px 28px;font-size:14px;
+  line-height:1.5}
+ol.srcs li::before{content:counter(s2);position:absolute;left:0;top:1px;font-family:var(--num);
+  font-weight:700;font-size:11.5px;color:var(--coral)}
+.srcs a{color:var(--cyan);font-family:var(--num);font-size:12.5px;word-break:break-word}
+
+/* Финиш */
+.finish{text-align:center;padding:10px 0 6px}
+.finish-mark{width:74px;height:74px;margin:0 auto 20px;border-radius:50%;
+  background:var(--green);display:grid;place-items:center}
+.finish h2{font-size:32px;margin-bottom:10px}
+.finish p{color:var(--ink-2);max-width:42ch;margin:0 auto;font-size:16.5px}
+
+/* ── Панель перехода ─────────────────────────────────────────────── */
+.nav{position:sticky;bottom:0;z-index:45;background:var(--paper);
+  border-top:1px solid var(--line)}
+.nav-in{max-width:var(--wrap);margin:0 auto;padding:14px 24px;display:flex;
+  align-items:center;gap:14px}
+.b-back{background:none;border:1.5px solid var(--line);color:var(--ink-2);padding:11px 18px;
+  border-radius:10px;font-weight:700;font-size:15px;cursor:pointer}
+.b-back:hover{border-color:var(--ink-3)}
+.b-back:disabled{opacity:.4;cursor:default}
+.gmsg{flex:1;font-size:13.5px;color:var(--ink-3);text-align:right;line-height:1.4}
+.gmsg.ready{color:var(--green);font-weight:700}
+.b-next{background:var(--coral);border:0;color:#fff;padding:13px 26px;border-radius:10px;
+  font-weight:700;font-size:15.5px;cursor:pointer;display:flex;align-items:center;gap:9px;
+  white-space:nowrap;transition:background .18s}
+.b-next:hover:not(:disabled){background:#EE5645}
+.b-next:disabled{background:var(--line);color:var(--ink-3);cursor:not-allowed}
+.b-next .lk{width:13px;height:13px}
+@media(max-width:600px){
+  .nav-in{flex-wrap:wrap;gap:10px;padding:12px 18px}
+  .gmsg{order:-1;flex:100%;text-align:left;font-size:12.5px}
+  .b-next{flex:1;justify-content:center}
+}
+.end{height:1px}
+@media print{
+  .top,.route,.mroute,.nav,.b-print,.btn-print{display:none!important}
+  .shell{grid-template-columns:1fr;padding:0}
+  .scene{border:0;padding:0}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="11" fill="#fff"/>
+        <path d="M12 5.5c-2.4 0-4 1.6-4 3.9v3.4c0 2.6 1.7 4.4 4 4.4s4-1.8 4-4.4V9.4c0-2.3-1.6-3.9-4-3.9Z" fill="#123A5C"/>
+      </svg>
+      <span>UNICEF</span><span class="sub">· Մոդուլ 1</span>
+    </div>
+    <div class="sp"></div>
+    <div class="pct" id="pct">0%</div>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="route" aria-label="Ուղևորության կանգառները">
+    <div class="route-title">Ուղևորությունը</div>
+    <div id="stops"></div>
+  </nav>
+
+  <main>
+    <nav class="mroute" aria-label="Առաջընթաց">
+      <div class="mroute-track" id="mtrack"></div>
+      <div class="mroute-now"><span id="mnow"></span><span id="mcount"></span></div>
+    </nav>
+    <div class="scene" id="scene"></div>
+  </main>
+</div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="b-back" id="back" type="button">← Հետ</button>
+    <div class="gmsg" id="gmsg"></div>
+    <button class="b-next" id="next" type="button">
+      <svg class="lk" viewBox="0 0 16 16" fill="none" id="lk">
+        <rect x="3" y="7" width="10" height="7" rx="1.6" fill="currentColor"/>
+        <path d="M5.5 7V5a2.5 2.5 0 015 0v2" stroke="currentColor" stroke-width="1.7" fill="none"/>
+      </svg>
+      <span id="nextlb">Առաջ</span>
+    </button>
+  </div>
+</nav>
+
+<script src="../../shared/module-01.js"></script>
+<script>
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+const M = MODULE_01, $ = s=>document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* Концепт B: русский эквивалент скрыт, раскрывается по нажатию на чип */
+function md(t){
+  return esc(t)
+    .replace(/\[\[([^\|\]]+)\|([^\]]+)\]\]/g,
+      (_,en,ru)=>`<span class="setting" data-ru="${ru}" tabindex="0" role="button">${en}</span>`)
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\{\{(\d+)\}\}/g,(_,n)=>`<sup class="fn">${n}</sup>`);
+}
+const Q = Object.fromEntries(M.quiz.questions.map(q=>[q.id,q]));
+
+const KEY='unicef-m01-b';
+let S=(()=>{ try{ return JSON.parse(localStorage.getItem(KEY))||{} }catch(e){ return {} } })();
+S.marks=S.marks||{}; S.unlocked=S.unlocked||0;
+const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(S)) }catch(e){} };
+
+/* ── Блоки ──────────────────────────────────────────────────────── */
+function guideBlock(g){ return `
+  <div class="guide" data-req="${g.id}" data-mk="1">
+    <button class="g-head" type="button" data-toggle>
+      <span class="g-abbr">${esc(g.abbr)}</span>
+      <span class="g-tx">
+        <span class="g-nm">${esc(g.name)}</span>
+        <span class="g-ft">${esc(g.feature)}</span>
+      </span>
+      <span class="g-mn">${g.minutes} ր</span>
+      <span class="g-tick"><svg viewBox="0 0 16 16" width="11" height="11"><path d="M3 8.5l3.2 3.2L13 4.8" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="g-ch"></span>
+    </button>
+    <div class="g-body">
+      <ol class="steps">${g.steps.map(s=>`<li>${md(s)}</li>`).join('')}</ol>
+      ${g.note?`<div class="g-note">${md(g.note)}</div>`:''}
+      <div class="marks">
+        <button class="mark" type="button" data-mark="done">✓ Կատարված է</button>
+        <button class="mark na" type="button" data-mark="na">Չի վերաբերում</button>
+      </div>
+    </div>
+  </div>`;
+}
+function guideStop(gid,micro){
+  const gr=M.guideGroups.find(x=>x.id===gid);
+  const list=M.guides.filter(x=>x.group===gid).sort((a,b)=>a.order-b.order);
+  return {
+    id:'g-'+gid, nav:gr.short, eyebrow:'Կանգառ · '+gr.letter, title:gr.title,
+    sum:`${list.length} ուղեցույց։ Բացեք յուրաքանչյուրը և նշեք ձեր ընտանիքի համար։`,
+    html:(gid==='social'?`<div class="body"><p>${md(M.tools.socialNote)}</p></div>`:'')
+         + list.map(guideBlock).join(''),
+    gate:{marks:list.map(x=>x.id), micro:micro}, planGroup:gr.title
+  };
+}
+
+/* ── Остановки маршрута ─────────────────────────────────────────── */
+const STOPS = [
+{
+  id:'start', nav:'Մեկնարկ', bare:true,
+  html:`<div class="cover">
+    <div class="cover-num">${esc(M.meta.numberLabel)}</div>
+    <h1>${esc(M.meta.title)}</h1>
+    <p class="cover-tag">${esc(M.meta.tagline)}</p>
+    <dl class="cover-meta">
+      <div class="cmeta"><dt>Ում համար</dt><dd>${esc(M.meta.audience)}</dd></div>
+      <div class="cmeta"><dt>Տևողությունը</dt><dd>~${M.meta.readingMinutes} րոպե</dd></div>
+      <div class="cmeta"><dt>Կանգառներ</dt><dd id="stopnum">—</dd></div>
+    </dl>
+  </div>
+  <div class="body"><p>${esc(M.intro.lead)}</p></div>
+  <div class="keyq">
+    <div class="keyq-label">${esc(M.intro.keyQuestion.label)}</div>
+    <div class="keyq-q">${esc(M.intro.keyQuestion.text)}</div>
+    <p class="keyq-a">${md(M.intro.keyQuestion.answer)}</p>
+  </div>
+  <div class="body"><h3 class="sub">Նպատակ</h3><p>${md(M.intro.goal)}</p></div>
+  <div class="callout"><div class="ic">${M.intro.howToUse.icon}</div>
+    <div><div class="lb">${esc(M.intro.howToUse.label)}</div>
+    <p>${md(M.intro.howToUse.text)}</p></div></div>`,
+  gate:{read:true}
+},
+{
+  id:'ages', nav:'Տարիքային ռիսկեր', eyebrow:'Կանգառ · Մաս 1', title:M.why.stagesTitle,
+  sum:'Բացեք երեք փուլերն էլ։',
+  html:`<div class="body"><p>${md(M.why.stagesLead)}</p></div>
+  ${M.why.stages.map(s=>`
+    <div class="stage" data-req="st-${s.id}">
+      <button class="stage-head" type="button" data-toggle>
+        <span class="stage-age">${esc(s.ageLabel)}</span>
+        <span class="stage-nm">${esc(s.stage)}</span>
+        <span class="g-ch"></span>
+      </button>
+      <div class="stage-body">
+        <div class="stage-k">Հիմնական ռիսկեր</div>
+        <ul class="stage-risks">${s.risks.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>
+        <div class="stage-k">Ուշադրության կենտրոնը</div>
+        <div class="stage-v">${esc(s.focus)}</div>
+        <div class="stage-k">Գործիքի շեշտը</div>
+        <div class="stage-v">${esc(s.tool)}</div>
+      </div>
+    </div>`).join('')}`,
+  gate:{expand:M.why.stages.map(s=>'st-'+s.id), micro:'q3'}
+},
+{
+  id:'challenges', nav:'Մարտահրավերները', eyebrow:'Կանգառ · Մաս 1',
+  title:M.why.challengesTitle,
+  html:`<div class="body">${M.why.challenges.map(c=>`<p>${md(c)}</p>`).join('')}</div>
+  <div class="callout"><div class="ic">${M.why.callout.icon}</div>
+    <div><div class="lb">${esc(M.why.callout.label)}</div>
+    <p>${md(M.why.callout.text)}</p></div></div>`,
+  gate:{read:true, micro:'q2'}
+},
+guideStop('os','q5'),
+guideStop('social','q7'),
+guideStop('games','q6'),
+guideStop('messenger','q12'),
+{
+  id:'checklist', nav:'Քայլաշար', eyebrow:'Կանգառ · '+M.checklist.letter,
+  title:M.checklist.title, sum:'Բացեք ամեն կետ և նշեք։ Այս պատասխանները կմտնեն ձեր պլանի մեջ։',
+  html:M.checklist.items.map((it,i)=>`
+    <div class="guide" data-req="cl-${i}" data-mk="1">
+      <button class="g-head" type="button" data-toggle>
+        <span class="g-abbr">${i+1}</span>
+        <span class="g-tx"><span class="g-nm">${esc(it.short)}</span></span>
+        <span class="g-tick"><svg viewBox="0 0 16 16" width="11" height="11"><path d="M3 8.5l3.2 3.2L13 4.8" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="g-ch"></span>
+      </button>
+      <div class="g-body">
+        <div class="body" style="margin-top:4px"><p>${md(it.text)}</p></div>
+        <div class="marks">
+          <button class="mark" type="button" data-mark="done">✓ Կատարված է</button>
+          <button class="mark na" type="button" data-mark="na">Չի վերաբերում</button>
+        </div>
+      </div>
+    </div>`).join(''),
+  gate:{marks:M.checklist.items.map((_,i)=>'cl-'+i)}, planGroup:M.checklist.title
+},
+{
+  id:'trust', nav:'Վստահություն', eyebrow:'Կանգառ · Մաս 3', title:M.balance.researchTitle,
+  sum:'Բացեք բոլոր արտահայտությունները՝ տեսնելու, թե ինչու են դրանք աշխատում։',
+  html:`<div class="body">${M.balance.research.map(p=>`<p>${md(p)}</p>`).join('')}</div>
+  <div class="body"><h3 class="sub">${esc(M.balance.scriptsTitle)}</h3></div>
+  <div class="shead do"><span class="mk">✓</span> Ինչ ասել</div>
+  ${M.balance.scriptsDo.map((s,i)=>`
+    <div class="sitem" data-req="sd-${i}">
+      <button class="s-head" type="button" data-toggle><span class="s-q">${esc(s.text)}</span>
+      <span class="s-plus">+</span></button>
+      <div class="s-why">${esc(s.why)}</div>
+    </div>`).join('')}
+  <div class="shead dont"><span class="mk">✕</span> Ինչ չասել</div>
+  ${M.balance.scriptsDont.map((s,i)=>`
+    <div class="sitem" data-req="sn-${i}">
+      <button class="s-head" type="button" data-toggle><span class="s-q">${esc(s.text)}</span>
+      <span class="s-plus">+</span></button>
+      <div class="s-why">${esc(s.why)}</div>
+    </div>`).join('')}
+  <div class="body"><p style="margin-top:20px">${md(M.balance.scriptsNote)}</p></div>`,
+  gate:{expand:[...M.balance.scriptsDo.map((_,i)=>'sd-'+i),
+                ...M.balance.scriptsDont.map((_,i)=>'sn-'+i)], micro:'q8'}
+},
+{
+  id:'freedom', nav:'Սահմաններ և ազատություն', eyebrow:'Կանգառ · Մաս 3',
+  title:M.balance.boundariesTitle,
+  html:`<div class="body"><p>${md(M.balance.boundariesLead)}</p></div>
+  ${M.balance.principles.map((p,i)=>`<div class="pr"><div class="pr-n">0${i+1}</div>
+    <div><h4>${esc(p.title)}</h4><p>${md(p.text)}</p></div></div>`).join('')}
+  <div class="body"><h3 class="sub">${esc(M.balance.freedomTitle)}</h3>
+    <p>${md(M.balance.freedom)}</p></div>
+  <div class="callout gold"><div class="ic">${M.balance.goldenRule.icon}</div>
+    <div><div class="lb">${esc(M.balance.goldenRule.label)}</div>
+    <p>${md(M.balance.goldenRule.text)}</p>
+    <p style="margin-top:9px">${md(M.balance.goldenRule.extra)}</p></div></div>`,
+  gate:{read:true, micro:'q9'}
+},
+{
+  id:'plan', nav:'Ձեր պլանը', bare:true, html:'', plan:true, gate:{read:true}
+}
+];
+
+/* ── Отрисовка ──────────────────────────────────────────────────── */
+let cur=0, PS={};
+
+function planHtml(){
+  const groups=[];
+  STOPS.forEach(s=>{
+    if(!s.planGroup || !s.gate.marks) return;
+    const rows=s.gate.marks.map(key=>{
+      const v=S.marks[key];
+      let label;
+      if(key.startsWith('cl-')) label=M.checklist.items[+key.slice(3)].short;
+      else { const g=M.guides.find(x=>x.id===key); label=g?`${g.name} — ${g.feature}`:key; }
+      return {label, v};
+    });
+    groups.push({title:s.planGroup, rows});
+  });
+  const total=groups.reduce((n,g)=>n+g.rows.length,0);
+  const done=groups.reduce((n,g)=>n+g.rows.filter(r=>r.v==='done').length,0);
+  return `
+  <div class="finish">
+    <div class="finish-mark"><svg viewBox="0 0 24 24" width="34" height="34"><path d="M5 12.5l4.6 4.6L19 7.5" stroke="#fff" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h2>Ուղևորությունն ավարտված է</h2>
+    <p>Դուք անցել եք բոլոր կանգառները։ Ստորև՝ ձեր ընտանեկան պլանը՝ կազմված ձեր իսկ պատասխաններից։</p>
+  </div>
+  <div class="plan">
+    <div class="plan-head">
+      <h3>Ձեր ընտանեկան պլանը</h3>
+      <p>Կատարված է ${done} կետ ${total}-ից։ Մնացածը՝ անելիքների ցանկ։</p>
+    </div>
+    ${groups.map(g=>`
+      <div class="plan-sec">
+        <div class="plan-k">${esc(g.title)}</div>
+        ${g.rows.map(r=>`
+          <div class="plan-row ${r.v==='done'?'yes':'no'}">
+            <span class="pm">${r.v==='done'?'✓':'–'}</span>
+            <span>${esc(r.label)}${r.v==='na'?' · չի վերաբերում':r.v==='done'?'':' · դեռ չի արվել'}</span>
+          </div>`).join('')||'<div class="plan-empty">Դատարկ է</div>'}
+      </div>`).join('')}
+  </div>
+  <button class="btn-print" type="button" id="printbtn">Տպել պլանը</button>
+
+  <div class="sos">
+    <div class="sos-eb">${esc(M.emergency.eyebrow)}</div>
+    <h3>${esc(M.emergency.title)}</h3>
+    <p class="sos-lead">${esc(M.emergency.lead)}</p>
+    ${M.emergency.contacts.map(c=>`
+      <a class="sos-card${c.urgent?' urgent':''}" href="${esc(c.url)}" target="_blank" rel="noopener">
+        <div class="sos-nm">${esc(c.name)}</div>
+        <div class="sos-for">${esc(c.forWhom)}</div>
+        <div class="sos-ct">${esc(c.contact)}${c.phone&&c.phone!==c.contact?` · ${esc(c.phone)}`:''}</div>
+        <p class="sos-tx">${esc(c.text)}</p>
+      </a>`).join('')}
+  </div>
+  <div class="body"><h3 class="sub">${esc(M.reading.title)}</h3></div>
+  ${M.reading.media.map(m=>`
+    <a class="media-card" href="${esc(m.url)}" target="_blank" rel="noopener">
+      <div class="media-tp">${m.icon} ${esc(m.type)}</div>
+      <h4>${esc(m.title)}</h4><div class="media-au">${esc(m.author)}</div>
+      <div class="media-cta">${esc(m.cta)} →</div></a>`).join('')}
+  ${M.reading.groups.map(g=>`<div class="rg"><h4>${esc(g.lang)}</h4>
+    ${g.items.map(it=>`<div class="ritem">
+      <a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a>
+      <p>${esc(it.text)}</p><div class="rurl">${esc(it.label)}</div></div>`).join('')}</div>`).join('')}
+  <div class="callout" style="margin-top:22px"><div class="ic">${M.reading.note.icon}</div>
+    <div><div class="lb">${esc(M.reading.note.label)}</div>
+    <p>${esc(M.reading.note.text)}</p></div></div>
+  <div class="body"><h3 class="sub">${esc(M.sourcesTitle)}</h3></div>
+  <ol class="srcs">${M.sources.map(s=>`<li><strong>${esc(s.org)}</strong> — ${esc(s.title)}
+    <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`).join('')}</ol>
+  <div class="body" style="margin-top:22px;padding-top:16px;border-top:1px solid var(--line)">
+    <p style="font-size:13.5px;color:var(--ink-3)">${esc(M.meta.disclaimer)}</p></div>`;
+}
+
+function microHtml(qid){
+  const q=Q[qid];
+  return `<div class="micro ${q.type==='multi'?'multi':''}" data-q="${qid}">
+    <div class="micro-lb">Կանգառի հարցը</div>
+    <div class="micro-q">${esc(q.q)}</div>
+    ${q.type==='multi'?`<div class="micro-hint">Հնարավոր է մեկից ավելի ճիշտ պատասխան</div>`:''}
+    <div class="opts">${q.options.map((o,j)=>`
+      <button class="opt" type="button" data-o="${j}">
+        <span class="opt-mk">${q.type==='multi'?'✓':''}</span><span>${esc(o)}</span>
+      </button>`).join('')}</div>
+    ${q.type==='multi'?`<button class="m-check" type="button" data-check>Ստուգել</button>`:''}
+    <div class="m-ex"><span class="m-verdict"></span><span class="m-body"></span>
+      <div><button class="m-retry" type="button" data-retry style="display:none">Փորձել կրկին</button></div>
+    </div>
+  </div>`;
+}
+
+function render(i){
+  cur=i;
+  const s=STOPS[i];
+  PS={opened:new Set(), marked:new Set(), read:false, microOk:false};
+  let h='';
+  if(!s.bare) h+=`<div class="eyebrow">${esc(s.eyebrow)}</div>
+    <h2>${esc(s.title)}</h2>${s.sum?`<p class="scene-sum">${esc(s.sum)}</p>`:''}`;
+  h += s.plan ? planHtml() : s.html;
+  if(s.gate.micro) h += microHtml(s.gate.micro);
+  h += `<div class="end"></div>`;
+  $('#scene').innerHTML=h;
+  const sn=document.getElementById('stopnum'); if(sn) sn.textContent=STOPS.length;
+  scrollTo({top:0,behavior:'instant'});
+  wire(s); paintRoute(); updateGate();
+}
+
+function wire(s){
+  $('#scene').querySelectorAll('[data-toggle]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const box=b.closest('[data-req]');
+      box.classList.toggle('opened');
+      if(box.classList.contains('opened')) PS.opened.add(box.dataset.req);
+      updateGate();
+    });
+  });
+  $('#scene').querySelectorAll('[data-mark]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const box=b.closest('[data-req]');
+      if(!box.classList.contains('opened')) return;   /* отметить можно только раскрытое */
+      const val=b.dataset.mark, key=box.dataset.req;
+      const same=S.marks[key]===val;
+      box.querySelectorAll('[data-mark]').forEach(x=>x.classList.remove('on'));
+      if(same){ delete S.marks[key]; box.classList.remove('marked'); PS.marked.delete(key); }
+      else { S.marks[key]=val; b.classList.add('on'); box.classList.add('marked'); PS.marked.add(key); }
+      save(); updateGate();
+    });
+  });
+  $('#scene').querySelectorAll('[data-mk="1"]').forEach(box=>{
+    const v=S.marks[box.dataset.req];
+    if(v){ box.classList.add('marked'); const b=box.querySelector(`[data-mark="${v}"]`);
+      if(b) b.classList.add('on'); PS.marked.add(box.dataset.req); PS.opened.add(box.dataset.req); }
+  });
+  /* Русский эквивалент — по нажатию на чип */
+  $('#scene').querySelectorAll('.setting').forEach(el=>{
+    const t=()=>el.dataset.open = el.dataset.open==='1' ? '0' : '1';
+    el.addEventListener('click',t);
+    el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();t();} });
+  });
+  const m=$('#scene').querySelector('.micro'); if(m) wireMicro(m);
+  if(s.gate.read){
+    const end=$('#scene').querySelector('.end');
+    if(document.body.scrollHeight <= innerHeight + 40){ PS.read = true; }
+    const ob=new IntersectionObserver(es=>{es.forEach(e=>{
+      if(e.isIntersecting){PS.read=true;updateGate();ob.disconnect();}})},{threshold:1});
+    ob.observe(end);
+  }
+  const pb=document.getElementById('printbtn'); if(pb) pb.addEventListener('click',()=>print());
+}
+
+function wireMicro(el){
+  const q=Q[el.dataset.q]; let picks=[],done=false;
+  const opts=[...el.querySelectorAll('.opt')], ex=el.querySelector('.m-ex');
+  const chk=el.querySelector('[data-check]'), rt=el.querySelector('[data-retry]');
+  const same=(a,b)=>a.length===b.length&&a.every(v=>b.includes(v));
+  function reveal(){
+    const ok=same(picks,q.correct); done=true;
+    opts.forEach((b,j)=>{ b.disabled=true; b.classList.remove('sel');
+      if(q.correct.includes(j)) b.classList.add('right');
+      else if(picks.includes(j)) b.classList.add('wrong'); });
+    ex.classList.add('show', ok?'ok':'no');
+    ex.querySelector('.m-verdict').textContent = ok?'Ճիշտ է':'Ոչ ճիշտ';
+    ex.querySelector('.m-body').innerHTML=' '+md(q.explain);
+    if(chk) chk.disabled=true;
+    PS.microOk=ok; if(rt) rt.style.display = ok?'none':'inline-block';
+    updateGate();
+  }
+  opts.forEach((b,j)=>b.addEventListener('click',()=>{
+    if(done) return;
+    if(q.type==='multi'){ const k=picks.indexOf(j); if(k>-1)picks.splice(k,1); else picks.push(j);
+      b.classList.toggle('sel',picks.includes(j)); }
+    else { picks=[j]; reveal(); }
+  }));
+  if(chk) chk.addEventListener('click',()=>{ if(picks.length) reveal(); });
+  if(rt) rt.addEventListener('click',()=>{
+    picks=[];done=false; opts.forEach(b=>{b.disabled=false;b.className='opt'});
+    ex.className='m-ex'; if(chk)chk.disabled=false; rt.style.display='none';
+    PS.microOk=false; updateGate();
+  });
+}
+
+/* ── Гейт ───────────────────────────────────────────────────────── */
+function gate(){
+  if(cur<S.unlocked) return {ok:true,msg:'Կանգառն արդեն անցված է'};
+  const g=STOPS[cur].gate||{};
+  if(g.read && !PS.read) return {ok:false,msg:'Ոլորեք մինչև վերջ՝ շարունակելու համար'};
+  if(g.expand){
+    const n=g.expand.filter(k=>!PS.opened.has(k)).length;
+    if(n) return {ok:false,msg:`Բացեք ևս ${n} բաժին`};
+  }
+  if(g.marks){
+    const no=g.marks.filter(k=>!PS.opened.has(k)).length;
+    if(no) return {ok:false,msg:`Բացեք ևս ${no} ուղեցույց`};
+    const nm=g.marks.filter(k=>!PS.marked.has(k)).length;
+    if(nm) return {ok:false,msg:`Նշեք ևս ${nm} կետ`};
+  }
+  if(g.micro && !PS.microOk) return {ok:false,msg:'Պատասխանեք կանգառի հարցին ճիշտ'};
+  return {ok:true,msg:'Կանգառն ավարտված է'};
+}
+function updateGate(){
+  const st=gate(), last=cur===STOPS.length-1;
+  $('#next').disabled = !st.ok||last;
+  $('#lk').style.display = (st.ok||last)?'none':'block';
+  $('#nextlb').textContent = last?'Ավարտված է':'Հաջորդ կանգառ';
+  $('#gmsg').textContent = last?'':st.msg;
+  $('#gmsg').classList.toggle('ready',st.ok);
+  $('#back').disabled = cur===0;
+  if(st.ok && cur+1>S.unlocked){ S.unlocked=cur+1; save(); paintRoute(); }
+  $('#pct').textContent = Math.round(Math.min(S.unlocked,STOPS.length)/STOPS.length*100)+'%';
+}
+
+/* ── Маршрутная нить ────────────────────────────────────────────── */
+const LOCK=`<svg class="stop-lock" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="7" rx="1.6" fill="currentColor"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2" stroke="currentColor" stroke-width="1.7" fill="none"/></svg>`;
+function paintRoute(){
+  $('#stops').innerHTML = STOPS.map((s,i)=>{
+    const cls = i===cur?'cur' : i<S.unlocked?'done':'';
+    return `<button class="stop ${cls}" data-go="${i}" ${i>S.unlocked?'disabled':''} type="button">
+      <span class="stop-mark"><span class="stop-line"></span><span class="stop-dot"></span></span>
+      <span class="stop-label">${esc(s.nav)}${i>S.unlocked?LOCK:''}</span>
+    </button>`;
+  }).join('');
+  $('#stops').querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.dataset.go; if(i<=S.unlocked) render(i);
+  }));
+  $('#mtrack').innerHTML = STOPS.map((s,i)=>
+    `<button class="mdot ${i===cur?'cur':i<S.unlocked?'done':''}" data-go="${i}"
+      ${i>S.unlocked?'disabled':''} type="button" aria-label="${esc(s.nav)}"></button>`).join('');
+  $('#mtrack').querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.dataset.go; if(i<=S.unlocked) render(i);
+  }));
+  $('#mnow').textContent = STOPS[cur].nav;
+  $('#mcount').textContent = `${cur+1} / ${STOPS.length}`;
+}
+
+$('#next').addEventListener('click',()=>{ if(cur<STOPS.length-1) render(cur+1) });
+$('#back').addEventListener('click',()=>{ if(cur>0) render(cur-1) });
+render(Math.min(S.unlocked,STOPS.length-1));
+</script>
+</body>
+</html>
