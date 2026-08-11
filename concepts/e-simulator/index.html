@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Մոդուլ 1 · Ծնողական վերահսկողություն — Փորձարան</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   КОНЦЕПТ E — «ՓՈՐՁԱՐԱՆ» / Практикум · интерактивный симулятор
+   Анимация здесь не украшение, а механика обучения: вместо чтения
+   инструкции родитель проходит её на модели экрана устройства —
+   тапает по нужному пункту меню, двигает переключатели.
+   Гейт: шаг засчитан только после действия в симуляторе.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --bg:#F3F6FD; --card:#FFF; --sunk:#EDF1FB;
+  --ink:#111834; --ink2:#4B5675; --ink3:#8B96B4;
+  --line:#E2E8F5; --line2:#EFF3FB;
+  --blue:#3D5AFE; --teal:#00C9A7; --amber:#FFB020; --rose:#FF5C7A;
+  --hy:'Noto Sans Armenian','Mshtakan','Sylfaen',system-ui,sans-serif;
+  --lat:'Manrope',system-ui,sans-serif;
+  --wrap:1080px;
+  --ease:cubic-bezier(.34,1.3,.5,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--hy);
+  font-size:16.5px;line-height:1.7;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;line-height:1.2;font-weight:700;letter-spacing:-.024em}
+p{margin:0 0 1em}
+a{color:var(--blue)}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:6px}
+
+/* ── Все анимации отключаются одним правилом ─────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .rise{opacity:1!important;transform:none!important}
+}
+
+/* Появление блоков при входе во вьюпорт */
+.rise{opacity:0;transform:translateY(18px);
+  transition:opacity .55s ease,transform .55s var(--ease)}
+.rise.in{opacity:1;transform:none}
+
+/* ── Шапка с кольцевым прогрессом ────────────────────────────────── */
+.top{position:sticky;top:0;z-index:60;background:rgba(243,246,253,.9);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top-in{max-width:var(--wrap);margin:0 auto;padding:10px 24px;display:flex;
+  align-items:center;gap:14px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14.5px;
+  white-space:nowrap}
+.logo-badge{width:26px;height:26px;border-radius:9px;flex:none;
+  background:linear-gradient(135deg,var(--blue),var(--teal));display:grid;place-items:center}
+.logo .m{font-family:var(--lat);font-size:11px;color:var(--ink3);font-weight:600}
+.sp{flex:1}
+.reset-btn{background:none;border:0;font-family:inherit;font-size:12px;color:var(--ink3);
+  cursor:pointer;padding:5px 9px;border-radius:7px;white-space:nowrap;transition:color .18s}
+.reset-btn:hover{color:var(--ink)}
+/* Кольцо прогресса */
+.ring{width:40px;height:40px;flex:none;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:4;stroke-linecap:round}
+.ring .bg{stroke:var(--line)}
+.ring .fg{stroke:url(#grad);stroke-dasharray:100.5;stroke-dashoffset:100.5;
+  transition:stroke-dashoffset .8s var(--ease)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--lat);
+  font-size:11px;font-weight:800;color:var(--ink)}
+@media(max-width:620px){.logo .m,.reset-btn{display:none}}
+
+/* Лента шагов */
+.rail{background:var(--card);border-bottom:1px solid var(--line)}
+.rail-in{max-width:var(--wrap);margin:0 auto;padding:9px 24px;display:flex;gap:6px;
+  overflow-x:auto;scrollbar-width:none}
+.rail-in::-webkit-scrollbar{display:none}
+.rs{flex:none;font-size:12.5px;font-weight:600;padding:6px 13px;border-radius:100px;
+  background:var(--sunk);color:var(--ink3);border:0;cursor:not-allowed;white-space:nowrap;
+  transition:all .25s var(--ease)}
+.rs.done{background:rgba(0,201,167,.14);color:#00806B;cursor:pointer}
+.rs.cur{background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;
+  cursor:pointer;transform:scale(1.04)}
+
+/* ── Экран ───────────────────────────────────────────────────────── */
+.stage{max-width:var(--wrap);margin:0 auto;padding:36px 24px 30px;
+  animation:pagein .45s var(--ease)}
+@keyframes pagein{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.kick{font-family:var(--lat);font-size:11.5px;font-weight:800;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:12px}
+h2.head{font-size:clamp(27px,4.2vw,40px);max-width:19ch;margin-bottom:12px}
+.stand{color:var(--ink2);font-size:17px;max-width:56ch;margin-bottom:0}
+.prose{max-width:64ch;margin-top:26px}
+.prose p{color:var(--ink2)}
+.prose p strong{color:var(--ink);font-weight:700}
+h3.sub{font-size:21px;margin:32px 0 12px;max-width:28ch}
+
+/* Обложка */
+.cover-badge{display:inline-flex;align-items:center;gap:9px;font-family:var(--lat);
+  font-size:11.5px;font-weight:800;letter-spacing:.13em;color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--teal));padding:8px 16px;
+  border-radius:100px;margin-bottom:24px}
+.cover h1{font-size:clamp(34px,6.2vw,60px);max-width:14ch;margin-bottom:20px;
+  line-height:1.05;letter-spacing:-.035em}
+.cover-lead{font-size:clamp(17px,2.1vw,20px);color:var(--ink2);max-width:50ch;line-height:1.6}
+.cover-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px}
+@media(max-width:640px){.cover-grid{grid-template-columns:1fr}}
+.cg{background:var(--card);border-radius:16px;padding:18px 20px;border:1px solid var(--line)}
+.cg dt{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);
+  font-weight:700;margin-bottom:3px}
+.cg dd{margin:0;font-size:17px;font-weight:700}
+
+/* Врезки */
+.note{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--amber);
+  border-radius:14px;padding:22px 24px;margin:26px 0;max-width:66ch}
+.note-k{font-weight:800;font-size:15.5px;margin-bottom:5px;color:#A66A00}
+.note p{margin:0;font-size:15.5px;line-height:1.65;color:var(--ink2)}
+.note.key{border-left-color:var(--blue)} .note.key .note-k{color:var(--blue)}
+
+/* Настройки в тексте */
+.setting{font-family:var(--lat);font-weight:700;font-size:.93em;color:var(--blue);
+  background:rgba(61,90,254,.09);padding:1.5px 7px;border-radius:6px;white-space:nowrap}
+.ru{font-family:var(--lat);font-size:12.5px;color:var(--ink3);margin-top:5px;font-weight:600}
+.fn{font-family:var(--lat);font-size:.68em;vertical-align:super;color:var(--teal);font-weight:800}
+
+/* ── Возрастной таймлайн с анимацией ─────────────────────────────── */
+.tl{position:relative;margin-top:30px;padding-left:30px}
+.tl::before{content:'';position:absolute;left:9px;top:8px;bottom:8px;width:3px;
+  border-radius:2px;background:linear-gradient(180deg,var(--blue),var(--teal),var(--rose))}
+.tlc{position:relative;background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:22px 24px;margin-bottom:14px;cursor:pointer;transition:all .3s var(--ease)}
+.tlc:hover{border-color:#C4D0EE}
+.tlc.open{box-shadow:0 10px 34px rgba(17,24,52,.09);border-color:transparent}
+.tlc::before{content:'';position:absolute;left:-27px;top:26px;width:15px;height:15px;
+  border-radius:50%;background:var(--card);border:3px solid var(--blue);
+  transition:all .3s var(--ease)}
+.tlc:nth-child(2)::before{border-color:var(--teal)}
+.tlc:nth-child(3)::before{border-color:var(--rose)}
+.tlc.open::before{transform:scale(1.35)}
+.tlh{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tlage{font-family:var(--lat);font-size:12px;font-weight:800;color:#fff;background:var(--blue);
+  padding:4px 11px;border-radius:100px}
+.tlc:nth-child(2) .tlage{background:var(--teal)}
+.tlc:nth-child(3) .tlage{background:var(--rose)}
+.tlh h4{font-size:19px;flex:1}
+.tlplus{width:26px;height:26px;border-radius:50%;background:var(--sunk);display:grid;
+  place-items:center;font-family:var(--lat);font-weight:800;color:var(--ink3);
+  transition:all .3s var(--ease);flex:none}
+.tlc.open .tlplus{background:var(--blue);color:#fff;transform:rotate(135deg)}
+.tlbody{max-height:0;overflow:hidden;transition:max-height .45s var(--ease)}
+.tlc.open .tlbody{max-height:620px}
+.tlin{padding-top:18px}
+.tlk{font-family:var(--lat);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink3);font-weight:800;margin:14px 0 6px}
+.tlin ul{list-style:none;margin:0;padding:0}
+.tlin li{font-size:15px;line-height:1.55;padding-left:17px;position:relative;color:var(--ink2)}
+.tlin li::before{content:'';position:absolute;left:0;top:9px;width:6px;height:6px;
+  border-radius:50%;background:var(--rose)}
+.tlv{font-size:15px;color:var(--ink2);line-height:1.6}
+
+/* ══ СИМУЛЯТОР ═══════════════════════════════════════════════════ */
+.sims{display:grid;gap:14px;margin-top:28px}
+.sim{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;
+  transition:border-color .3s,box-shadow .3s}
+.sim.done{border-color:rgba(0,201,167,.5)}
+.simh{width:100%;background:none;border:0;padding:18px 22px;display:flex;gap:14px;
+  align-items:center;cursor:pointer;text-align:left;color:inherit}
+.simh:hover{background:var(--line2)}
+.simab{width:42px;height:42px;flex:none;border-radius:13px;background:var(--sunk);
+  display:grid;place-items:center;font-family:var(--lat);font-weight:800;font-size:12.5px;
+  color:var(--ink2);transition:all .35s var(--ease)}
+.sim.done .simab{background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;
+  transform:rotate(-6deg) scale(1.06)}
+.simtx{display:block;flex:1;min-width:0}
+.simnm{display:block;font-size:17.5px;font-weight:700;line-height:1.25}
+.simft{display:block;font-family:var(--lat);font-size:12.5px;color:var(--ink3);
+  font-weight:600;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.simcnt{font-family:var(--lat);font-size:12.5px;font-weight:700;color:var(--ink3);flex:none}
+.sim.done .simcnt{color:#00806B}
+.simch{width:10px;height:10px;flex:none;border-right:2.5px solid var(--ink3);
+  border-bottom:2.5px solid var(--ink3);transform:rotate(45deg);margin-top:-4px;
+  transition:transform .3s var(--ease)}
+.sim.open .simch{transform:rotate(-135deg);margin-top:3px}
+.simbody{display:none;padding:0 22px 24px}
+.sim.open .simbody{display:block}
+
+/* Задание над устройством */
+.task{background:var(--sunk);border-radius:16px;padding:18px 20px;margin-bottom:18px}
+.taskn{font-family:var(--lat);font-size:11px;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:7px}
+.tasktx{font-size:16px;line-height:1.6;color:var(--ink)}
+
+/* Корпус устройства */
+.devwrap{display:flex;justify-content:center;margin-bottom:18px}
+.dev{width:100%;max-width:340px;background:#0E1526;border-radius:34px;padding:11px;
+  box-shadow:0 20px 50px rgba(17,24,52,.22)}
+.devscreen{background:#F2F4F9;border-radius:25px;overflow:hidden;position:relative;
+  min-height:330px;display:flex;flex-direction:column}
+.devnotch{height:22px;display:flex;align-items:center;justify-content:center}
+.devnotch i{width:70px;height:5px;border-radius:3px;background:rgba(255,255,255,.35)}
+.devbar{background:#fff;padding:11px 16px;display:flex;align-items:center;gap:9px;
+  border-bottom:1px solid #E4E8F2}
+.devback{font-family:var(--lat);font-size:13px;color:var(--blue);font-weight:700}
+.devtitle{font-family:var(--lat);font-size:14px;font-weight:800;flex:1;text-align:center;
+  color:#111834;margin-right:26px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.devlist{flex:1;background:#fff;overflow:hidden;position:relative}
+/* Слайд-переход между экранами */
+.devlist.slide{animation:slidein .38s var(--ease)}
+@keyframes slidein{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+.mi{display:flex;align-items:center;gap:11px;padding:13px 16px;border-bottom:1px solid #F0F2F8;
+  font-family:var(--lat);font-size:14px;font-weight:600;color:#3A4considerable}
+.mi{color:#39415C}
+.mi-ic{width:26px;height:26px;border-radius:8px;flex:none;background:#E8ECF7}
+.mi-tx{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mi-ar{color:#B8C0D6;font-size:15px}
+/* Целевой пункт — пульсирует, пока не нажали */
+.mi.target{cursor:pointer;position:relative;background:rgba(61,90,254,.06)}
+.mi.target .mi-ic{background:linear-gradient(135deg,var(--blue),var(--teal))}
+.mi.target .mi-tx{color:var(--blue);font-weight:800}
+.mi.target::after{content:'';position:absolute;inset:3px 8px;border-radius:11px;
+  border:2px solid var(--blue);animation:pulse 1.7s infinite;pointer-events:none}
+@keyframes pulse{0%{opacity:.85;transform:scale(1)}70%{opacity:0;transform:scale(1.045)}
+  100%{opacity:0;transform:scale(1.045)}}
+.mi.target:hover{background:rgba(61,90,254,.11)}
+/* Переключатель */
+.mi.tog{justify-content:space-between}
+.sw{width:46px;height:27px;border-radius:100px;background:#D3D9E8;flex:none;position:relative;
+  cursor:pointer;transition:background .3s var(--ease)}
+.sw i{position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.22);transition:transform .3s var(--ease)}
+.sw.on{background:var(--teal)}
+.sw.on i{transform:translateX(19px)}
+.sw.want{box-shadow:0 0 0 0 rgba(61,90,254,.5);animation:swpulse 1.7s infinite}
+@keyframes swpulse{0%{box-shadow:0 0 0 0 rgba(61,90,254,.45)}
+  70%{box-shadow:0 0 0 9px rgba(61,90,254,0)}100%{box-shadow:0 0 0 0 rgba(61,90,254,0)}}
+/* Экран подтверждения действия */
+.doact{padding:26px 20px;text-align:center;background:#fff;flex:1;display:flex;
+  flex-direction:column;justify-content:center;align-items:center;gap:16px}
+.doact-ic{width:56px;height:56px;border-radius:18px;
+  background:linear-gradient(135deg,var(--blue),var(--teal));display:grid;place-items:center}
+.doact p{font-family:var(--lat);font-size:13.5px;color:#39415C;margin:0;line-height:1.5;
+  font-weight:600}
+.doact-btn{background:var(--blue);color:#fff;border:0;padding:11px 22px;border-radius:100px;
+  font-size:14px;font-weight:700;cursor:pointer;font-family:var(--hy)}
+.doact-btn:hover{background:#2E48E0}
+/* Экран «готово» */
+.devdone{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  gap:14px;background:#fff;padding:26px}
+.devdone-ic{width:66px;height:66px;border-radius:50%;background:var(--teal);display:grid;
+  place-items:center;animation:pop .5s var(--ease)}
+@keyframes pop{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
+.devdone b{font-size:17px}
+.devdone span{font-family:var(--lat);font-size:13px;color:var(--ink3);font-weight:600}
+
+/* Точки шагов симулятора */
+.simdots{display:flex;gap:5px;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+.sd{width:22px;height:5px;border-radius:3px;background:var(--line);transition:all .3s var(--ease)}
+.sd.done{background:var(--teal)}
+.sd.cur{background:var(--blue);width:32px}
+.simfoot{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.simskip{background:none;border:1.5px solid var(--line);color:var(--ink3);padding:9px 18px;
+  border-radius:100px;font-size:14px;font-weight:600;cursor:pointer}
+.simskip:hover{border-color:var(--ink3);color:var(--ink2)}
+.simskip.on{background:var(--sunk);border-color:var(--ink3);color:var(--ink)}
+.simnote{margin-top:14px;padding:14px 16px;background:var(--sunk);border-radius:13px;
+  font-size:14.5px;line-height:1.6;color:var(--ink2)}
+
+/* ── Чеклист-тумблеры ────────────────────────────────────────────── */
+.cls{display:grid;gap:11px;margin-top:26px}
+.cl{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 22px;
+  display:flex;gap:16px;align-items:center;cursor:pointer;transition:all .3s var(--ease)}
+.cl.on{border-color:rgba(0,201,167,.5);background:linear-gradient(90deg,rgba(0,201,167,.05),transparent)}
+.cl-n{font-family:var(--lat);font-weight:800;font-size:13px;color:var(--ink3);flex:none;width:20px}
+.cl.on .cl-n{color:var(--teal)}
+.cl-tx{flex:1}
+.cl-s{font-size:17px;font-weight:700;display:block;margin-bottom:3px}
+.cl-d{font-size:14.5px;color:var(--ink2);line-height:1.55}
+
+/* ── Диалог-скрипты ──────────────────────────────────────────────── */
+.talk{margin-top:26px}
+.bub{max-width:76%;padding:17px 21px;border-radius:20px;margin-bottom:11px;font-size:16px;
+  line-height:1.6;cursor:pointer;border:1.5px solid transparent;transition:all .3s var(--ease);
+  animation:bubin .5s var(--ease) backwards}
+@keyframes bubin{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+@media(max-width:640px){.bub{max-width:93%}}
+.bub.g{background:rgba(0,201,167,.11);border-bottom-left-radius:6px}
+.bub.b{background:rgba(255,92,122,.1);margin-left:auto;border-bottom-right-radius:6px}
+.bub:hover{border-color:rgba(61,90,254,.3)}
+.bub-why{max-height:0;overflow:hidden;transition:max-height .4s var(--ease);
+  font-size:14.5px;color:var(--ink2);line-height:1.6}
+.bub.open .bub-why{max-height:220px;margin-top:12px;padding-top:12px;
+  border-top:1px solid rgba(0,0,0,.08)}
+.bub-tap{font-family:var(--lat);font-size:11.5px;font-weight:800;color:var(--ink3);
+  margin-top:9px;letter-spacing:.05em}
+.bub.open .bub-tap{display:none}
+.talkl{font-family:var(--lat);font-size:11.5px;font-weight:800;letter-spacing:.12em;
+  text-transform:uppercase;margin:26px 0 12px}
+.talkl.g{color:#00806B} .talkl.b{color:#D93A5A;text-align:right}
+
+.pr{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line2);max-width:64ch}
+.pr:last-child{border-bottom:0}
+.pr-n{font-family:var(--lat);font-weight:800;font-size:13px;color:var(--blue);flex:none;padding-top:3px}
+.pr h4{font-size:17px;margin-bottom:4px}
+.pr p{margin:0;font-size:15.5px;color:var(--ink2);line-height:1.6}
+
+/* ── Квиз ────────────────────────────────────────────────────────── */
+.q{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px 28px;
+  margin-bottom:14px}
+@media(max-width:640px){.q{padding:20px 18px}}
+.q.shake{animation:shake .42s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}
+  45%{transform:translateX(7px)}70%{transform:translateX(-4px)}}
+.qn{font-family:var(--lat);font-size:11.5px;font-weight:800;letter-spacing:.1em;
+  color:var(--blue);margin-bottom:10px}
+.qt{font-size:18px;font-weight:700;line-height:1.5;margin-bottom:16px}
+.qh{font-size:13px;color:var(--ink3);margin:-10px 0 14px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:14px 17px;border-radius:14px;
+  border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-size:15.5px;
+  line-height:1.5;text-align:left;color:inherit;width:100%;transition:all .22s var(--ease)}
+.opt:hover:not(:disabled){border-color:var(--blue);transform:translateX(3px)}
+.opt:disabled{cursor:default}
+.optm{width:21px;height:21px;flex:none;border:2px solid var(--ink3);border-radius:50%;
+  margin-top:1px;display:grid;place-items:center;font-family:var(--lat);font-size:11px;
+  font-weight:800;color:#fff}
+.q.multi .optm{border-radius:6px}
+.opt.sel{border-color:var(--blue);background:rgba(61,90,254,.06)}
+.opt.sel .optm{background:var(--blue);border-color:var(--blue)}
+.opt.right{border-color:var(--teal);background:rgba(0,201,167,.09)}
+.opt.right .optm{background:var(--teal);border-color:var(--teal)}
+.opt.wrong{border-color:var(--rose);background:rgba(255,92,122,.08)}
+.opt.wrong .optm{background:var(--rose);border-color:var(--rose)}
+.qbtn{margin-top:13px;background:var(--ink);color:#fff;border:0;padding:11px 22px;
+  border-radius:100px;font-size:14.5px;font-weight:700;cursor:pointer}
+.qbtn:disabled{background:var(--line);color:var(--ink3);cursor:default}
+.qex{max-height:0;overflow:hidden;transition:max-height .45s var(--ease);
+  font-size:15px;line-height:1.6;color:var(--ink2)}
+.qex.show{max-height:340px;margin-top:14px}
+.qvd{font-weight:800;display:block;margin-bottom:4px}
+.qex.ok .qvd{color:#00806B} .qex.no .qvd{color:#D93A5A}
+.qretry{margin-top:11px;background:none;border:1.5px solid var(--ink);color:var(--ink);
+  padding:8px 18px;border-radius:100px;font-weight:700;font-size:14px;cursor:pointer}
+
+/* ── Финал ───────────────────────────────────────────────────────── */
+.fin{text-align:center;padding:20px 0 8px}
+.finring{width:150px;height:150px;margin:0 auto 24px;position:relative}
+.finring svg{transform:rotate(-90deg)}
+.finring circle{fill:none;stroke-width:11;stroke-linecap:round}
+.finring .bg{stroke:var(--line)}
+.finring .fg{stroke:url(#grad2);stroke-dasharray:408;stroke-dashoffset:408;
+  transition:stroke-dashoffset 1.5s var(--ease)}
+.finring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--lat);
+  font-size:36px;font-weight:800}
+.fin h2{font-size:clamp(27px,4.4vw,38px);margin-bottom:12px}
+.fin p{color:var(--ink2);max-width:44ch;margin:0 auto;font-size:17px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:30px 0 0}
+@media(max-width:640px){.stats{grid-template-columns:1fr}}
+.st{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.st b{display:block;font-family:var(--lat);font-size:29px;font-weight:800;color:var(--blue);
+  line-height:1}
+.st span{font-size:13.5px;color:var(--ink3);font-weight:600}
+
+.sos{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 22px;
+  display:block;text-decoration:none;color:inherit;margin-bottom:11px;transition:all .25s var(--ease)}
+.sos:hover{border-color:var(--blue);transform:translateY(-2px)}
+.sos.urgent{border-left:4px solid var(--rose)}
+.sosn{font-size:17.5px;font-weight:700}
+.sosf{font-size:12.5px;color:var(--ink3);margin-bottom:9px}
+.sosc{font-family:var(--lat);font-size:15px;font-weight:800;color:var(--blue);margin-bottom:8px;
+  word-break:break-word}
+.sos.urgent .sosc{color:#D93A5A}
+.sost{font-size:14.5px;color:var(--ink2);margin:0;line-height:1.55}
+.mc{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;
+  display:block;text-decoration:none;color:inherit;margin-bottom:11px;transition:all .25s var(--ease)}
+.mc:hover{border-color:var(--blue);transform:translateY(-2px)}
+.mct{font-family:var(--lat);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink3);font-weight:800;margin-bottom:8px}
+.mc h4{font-size:17px;line-height:1.4;margin-bottom:5px}
+.mca{font-size:13.5px;color:var(--ink3);margin-bottom:10px}
+.mcc{font-family:var(--lat);font-size:14px;font-weight:800;color:var(--blue)}
+.rg h4{font-family:var(--lat);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink3);font-weight:800;padding-bottom:10px;border-bottom:1px solid var(--line);
+  margin:26px 0 0}
+.ri{padding:15px 0;border-bottom:1px solid var(--line2)}
+.ri a{font-size:16.5px;font-weight:700;text-decoration:none;color:var(--ink)}
+.ri a:hover{color:var(--blue)}
+.ri p{margin:4px 0 5px;font-size:14.5px;color:var(--ink2)}
+.riu{font-family:var(--lat);font-size:12.5px;color:var(--blue);font-weight:700}
+ol.srcs{list-style:none;counter-reset:s;margin:16px 0 0;padding:0;max-width:72ch}
+ol.srcs li{counter-increment:s;position:relative;padding:0 0 11px 30px;font-size:14px;
+  line-height:1.55;color:var(--ink2)}
+ol.srcs li::before{content:counter(s);position:absolute;left:0;top:1px;font-family:var(--lat);
+  font-weight:800;font-size:11.5px;color:var(--teal)}
+.srcs strong{color:var(--ink)}
+.srcs a{font-family:var(--lat);font-size:12.5px;word-break:break-word;font-weight:600}
+
+/* ── Панель перехода ─────────────────────────────────────────────── */
+.nav{position:sticky;bottom:0;z-index:55;background:rgba(255,255,255,.92);
+  backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.nav-in{max-width:var(--wrap);margin:0 auto;padding:13px 24px;display:flex;
+  align-items:center;gap:14px}
+.bb{background:none;border:1.5px solid var(--line);color:var(--ink2);padding:11px 18px;
+  border-radius:100px;font-weight:700;font-size:14.5px;cursor:pointer}
+.bb:hover{border-color:var(--ink3)}
+.bb:disabled{opacity:.35;cursor:default}
+.gm{flex:1;font-size:13.5px;color:var(--ink3);text-align:right;line-height:1.4}
+.gm.ready{color:#00806B;font-weight:700}
+.bn{background:linear-gradient(135deg,var(--blue),var(--teal));border:0;color:#fff;
+  padding:14px 28px;border-radius:100px;font-weight:700;font-size:15.5px;cursor:pointer;
+  display:flex;align-items:center;gap:9px;white-space:nowrap;transition:all .25s var(--ease);
+  box-shadow:0 5px 18px rgba(61,90,254,.3)}
+.bn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 9px 24px rgba(61,90,254,.38)}
+.bn:disabled{background:var(--line);color:var(--ink3);cursor:not-allowed;box-shadow:none}
+.bn .lk{width:13px;height:13px}
+@media(max-width:600px){
+  .nav-in{flex-wrap:wrap;gap:10px;padding:12px 18px}
+  .gm{order:-1;flex:100%;text-align:left;font-size:12.5px}
+  .bn{flex:1;justify-content:center}
+}
+.end{height:1px}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#3D5AFE"/><stop offset="1" stop-color="#00C9A7"/></linearGradient>
+  <linearGradient id="grad2" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#3D5AFE"/><stop offset="1" stop-color="#00C9A7"/></linearGradient>
+</defs></svg>
+
+<header class="top">
+  <div class="top-in">
+    <div class="logo">
+      <span class="logo-badge">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none">
+          <path d="M12 3 5 6.2v5.5c0 4.1 2.9 7.2 7 8.3 4.1-1.1 7-4.2 7-8.3V6.2L12 3Z"
+            stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+      </span>
+      <span>ՓՈՐՁԱՐԱՆ</span><span class="m">UNICEF · M01</span>
+    </div>
+    <div class="sp"></div>
+    <button class="reset-btn" id="resetbtn" type="button">↺ Սկսել նորից</button>
+    <div class="ring">
+      <svg width="40" height="40" viewBox="0 0 40 40">
+        <circle class="bg" cx="20" cy="20" r="16"/>
+        <circle class="fg" id="ringfg" cx="20" cy="20" r="16"/>
+      </svg>
+      <b id="ringtx">0%</b>
+    </div>
+  </div>
+</header>
+<div class="rail"><div class="rail-in" id="rail"></div></div>
+
+<main class="stage" id="stage"></main>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="bb" id="back" type="button">← Հետ</button>
+    <div class="gm" id="gmsg"></div>
+    <button class="bn" id="next" type="button">
+      <svg class="lk" viewBox="0 0 16 16" fill="none" id="lk">
+        <rect x="3" y="7" width="10" height="7" rx="1.6" fill="currentColor"/>
+        <path d="M5.5 7V5a2.5 2.5 0 015 0v2" stroke="currentColor" stroke-width="1.7" fill="none"/>
+      </svg>
+      <span id="nextlb">Առաջ</span>
+    </button>
+  </div>
+</nav>
+
+<script src="../../shared/module-01.js"></script>
+<script>
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+const M=MODULE_01, $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* Концепт E: в тексте — оригинал, русский собирается строкой под абзацем */
+function md(t){
+  const ru=[];
+  let out=esc(t)
+    .replace(/\[\[([^\|\]]+)\|([^\]]+)\]\]/g,(_,en,r)=>{ru.push(en+' — «'+r+'»');
+      return '<span class="setting">'+en+'</span>'})
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\{\{(\d+)\}\}/g,(_,n)=>'<sup class="fn">'+n+'</sup>');
+  if(ru.length) out+='<div class="ru">рус.: '+ru.join(' · ')+'</div>';
+  return out;
+}
+/* Текст без русской строки — для заданий в симуляторе */
+function plain(t){
+  return esc(t).replace(/\[\[([^\|\]]+)\|[^\]]+\]\]/g,'<span class="setting">$1</span>')
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\{\{\d+\}\}/g,'');
+}
+const Q=Object.fromEntries(M.quiz.questions.map(q=>[q.id,q]));
+const CHECK='<svg viewBox="0 0 16 16" width="11" height="11"><path d="M3 8.5l3.2 3.2L13 4.8" stroke="#fff" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+const KEY='unicef-m01-e';
+let S=(()=>{ try{ return JSON.parse(localStorage.getItem(KEY))||{} }catch(e){ return {} } })();
+S.steps=S.steps||{}; S.skip=S.skip||{}; S.cl=S.cl||{}; S.unlocked=S.unlocked||0;
+const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(S)) }catch(e){} };
+
+/* ══ Разбор шага в сценарий симулятора ═══════════════════════════ */
+/* Правдоподобное окружение меню — чтобы экран выглядел как настоящий */
+const DECOY={
+  ios:['General','Face ID & Passcode','Privacy & Security','Notifications','Sounds & Haptics','Battery','Wallpaper','Focus'],
+  macos:['General','Appearance','Desktop & Dock','Displays','Network','Users & Groups','Sound'],
+  android:['Network & internet','Connected devices','Apps','Notifications','Battery','Storage','Security','System'],
+  windows:['System','Bluetooth & devices','Network & internet','Personalization','Apps','Time & language','Gaming'],
+  youtube:['Account','Notifications','Playback','Privacy','Data saving','History & privacy'],
+  instagram:['Account Centre','Notifications','Privacy','Saved','Close Friends','Archive'],
+  tiktok:['Manage account','Privacy','Security','Balance','Share profile','Display'],
+  snapchat:['My Account','Notifications','Privacy Controls','Additional Services','Support'],
+  roblox:['Account Info','Security','Privacy','Billing','Notifications'],
+  ps5:['Users and Accounts','Network','Sound','Screen and Video','Storage','System'],
+  xbox:['General','Account','Preferences','Devices & connections','Ease of Access'],
+  switch:['Data Management','Screen Brightness','Themes','System','Internet','Users'],
+  discord:['My Account','Profiles','Privacy & Safety','Voice & Video','Appearance','Notifications']
+};
+/* Детерминированная позиция цели в списке — чтобы не прыгала при перерисовке */
+const hash=s=>{let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h)};
+
+/* Один шаг гайда → экраны симулятора.
+   Не больше трёх на шаг: иначе на плотных шагах iOS человек тапает
+   по десятку экранов подряд и устаёт. Полный текст шага виден всегда. */
+const MAX_PER_STEP = 3;
+function screensFor(step, guide, si){
+  const settings=[...step.matchAll(/\[\[([^\|\]]+)\|([^\]]+)\]\]/g)].map(m=>({en:m[1],ru:m[2]}));
+  const out=[];
+  if(!settings.length){
+    out.push({kind:'act', label:'Կատարեցի'});
+    return out;
+  }
+  const path=settings[0].en;
+  if(path.includes('›')){
+    const seg=path.split('›').map(s=>s.trim()).filter(Boolean);
+    for(let i=0;i<seg.length-1;i++)
+      out.push({kind:'nav', title:seg[i], target:seg[i+1], key:guide.id+':'+si+':'+i});
+    /* Дальше внутри найденного экрана — переключатели остальных настроек */
+    settings.slice(1).forEach((s,j)=>out.push({kind:'tog', title:seg[seg.length-1],
+      target:s.en, key:guide.id+':'+si+':t'+j}));
+  } else {
+    settings.forEach((s,j)=>out.push({kind:'tog', title:guide.feature,
+      target:s.en, key:guide.id+':'+si+':t'+j}));
+  }
+  return out.slice(0, MAX_PER_STEP);
+}
+/* Все экраны гайда, плоским списком */
+function simOf(g){
+  const arr=[];
+  g.steps.forEach((st,i)=>screensFor(st,g,i).forEach(sc=>arr.push({...sc, step:i, text:st})));
+  return arr;
+}
+const SIM={}; M.guides.forEach(g=>SIM[g.id]=simOf(g));
+const simDone=id=>!!S.skip[id] || (S.steps[id]|0)>=SIM[id].length;
+const totalScreens=M.guides.reduce((n,g)=>n+SIM[g.id].length,0);
+
+function progressPct(){
+  let done=0;
+  M.guides.forEach(g=>{ done += S.skip[g.id] ? SIM[g.id].length : Math.min(S.steps[g.id]|0, SIM[g.id].length) });
+  const cl=M.checklist.items.filter((_,i)=>S.cl[i]).length;
+  return Math.round((done+cl)/(totalScreens+M.checklist.items.length)*100);
+}
+function paintRing(){
+  const p=progressPct();
+  $('#ringfg').style.strokeDashoffset = 100.5 - 100.5*p/100;
+  $('#ringtx').textContent = p+'%';
+}
+
+/* ══ Отрисовка симулятора ═══════════════════════════════════════ */
+function menuRows(sc, isTarget){
+  const gid=sc.key.split(':')[0];
+  const pool=DECOY[gid]||DECOY.ios;
+  const n=4;
+  const pos=hash(sc.target)%(n+1);
+  const rows=[];
+  const picks=[];
+  for(let i=0;i<n;i++) picks.push(pool[(hash(sc.target)+i*3)%pool.length]);
+  for(let i=0;i<=n;i++){
+    if(i===pos) rows.push({t:sc.target, target:true});
+    else rows.push({t:picks[i>pos?i-1:i], target:false});
+  }
+  return rows;
+}
+function deviceHtml(g, idx){
+  const arr=SIM[g.id];
+  const done=S.steps[g.id]|0;
+  if(S.skip[g.id]||done>=arr.length){
+    return '<div class="devdone"><div class="devdone-ic">'+
+      '<svg viewBox="0 0 24 24" width="30" height="30"><path d="M5 12.5l4.6 4.6L19 7.5" stroke="#fff" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
+      '</div><b>'+(S.skip[g.id]?'Բաց թողնված':'Ավարտված')+'</b>'+
+      '<span>'+esc(g.name)+' · '+arr.length+' քայլ</span></div>';
+  }
+  const sc=arr[done];
+  if(sc.kind==='act'){
+    return '<div class="devbar"><span class="devtitle">'+esc(g.feature)+'</span></div>'+
+      '<div class="devlist slide"><div class="doact"><div class="doact-ic">'+
+      '<svg viewBox="0 0 24 24" width="26" height="26" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>'+
+      '</div><p>'+esc(g.name)+'</p>'+
+      '<button class="doact-btn" type="button" data-adv>'+esc(sc.label)+'</button></div></div>';
+  }
+  if(sc.kind==='tog'){
+    return '<div class="devbar"><span class="devback">‹</span>'+
+      '<span class="devtitle">'+esc(sc.title)+'</span></div>'+
+      '<div class="devlist slide">'+
+      '<div class="mi tog"><span class="mi-tx">'+esc(sc.target)+'</span>'+
+      '<span class="sw want" data-adv role="switch" aria-checked="false" tabindex="0"><i></i></span></div>'+
+      menuRows(sc).filter(r=>!r.target).slice(0,3).map(r=>
+        '<div class="mi tog"><span class="mi-tx" style="color:#9AA3BC">'+esc(r.t)+'</span>'+
+        '<span class="sw"><i></i></span></div>').join('')+
+      '</div>';
+  }
+  return '<div class="devbar">'+(idx>0?'<span class="devback">‹</span>':'')+
+    '<span class="devtitle">'+esc(sc.title)+'</span></div>'+
+    '<div class="devlist slide">'+menuRows(sc).map(r=>
+      '<div class="mi'+(r.target?' target':'')+'"'+(r.target?' data-adv role="button" tabindex="0"':'')+'>'+
+      '<span class="mi-ic"></span><span class="mi-tx">'+esc(r.t)+'</span>'+
+      '<span class="mi-ar">›</span></div>').join('')+'</div>';
+}
+function simCard(g){
+  const arr=SIM[g.id], done=Math.min(S.steps[g.id]|0, arr.length);
+  const fin=simDone(g.id);
+  const cur=arr[Math.min(done,arr.length-1)];
+  return '<div class="sim'+(fin?' done':'')+'" data-g="'+g.id+'">'+
+    '<button class="simh" type="button" data-toggle>'+
+      '<span class="simab">'+esc(g.abbr)+'</span>'+
+      '<span class="simtx"><span class="simnm">'+esc(g.name)+'</span>'+
+      '<span class="simft">'+esc(g.feature)+'</span></span>'+
+      '<span class="simcnt" data-cnt>'+(S.skip[g.id]?'բաց թողնված':done+'/'+arr.length)+'</span>'+
+      '<span class="simch"></span>'+
+    '</button>'+
+    '<div class="simbody">'+
+      '<div class="simdots" data-dots>'+arr.map((_,i)=>
+        '<span class="sd'+(i<done?' done':i===done?' cur':'')+'"></span>').join('')+'</div>'+
+      '<div class="task" data-task><div class="taskn">Քայլ '+
+        Math.min(done+1,arr.length)+' / '+arr.length+'</div>'+
+        '<div class="tasktx">'+(fin?'Այս ուղեցույցն ավարտված է։':plain(cur.text))+'</div></div>'+
+      '<div class="devwrap"><div class="dev"><div class="devscreen" data-screen>'+
+        '<div class="devnotch"><i></i></div>'+deviceHtml(g,done)+
+      '</div></div></div>'+
+      (g.note?'<div class="simnote">'+md(g.note)+'</div>':'')+
+      '<div class="simfoot"><button class="simskip'+(S.skip[g.id]?' on':'')+'" type="button" data-skip>'+
+        'Այս սարքը մեզ մոտ չկա</button></div>'+
+    '</div>'+
+  '</div>';
+}
+
+/* ══ Экраны модуля ══════════════════════════════════════════════ */
+function groupStage(gid){
+  const gr=M.guideGroups.find(x=>x.id===gid);
+  const list=M.guides.filter(x=>x.group===gid).sort((a,b)=>a.order-b.order);
+  return {
+    id:'sim-'+gid, nav:gr.short,
+    build:()=>({
+      kick:'Փորձարան · '+gr.letter, head:gr.title,
+      stand:'Անցեք կարգավորումները սիմուլյատորի վրա։ Սեղմեք ընդգծված կետին կամ շարժեք անջատիչը — ինչպես իրական սարքում։',
+      html:(gid==='social'?'<div class="prose"><p>'+md(M.tools.socialNote)+'</p></div>':'')+
+           '<div class="sims">'+list.map(simCard).join('')+'</div>'
+    }),
+    gate:{sims:list.map(x=>x.id)}
+  };
+}
+
+const ST=[
+{
+  id:'start', nav:'Մեկնարկ',
+  build:()=>({html:
+    '<div class="cover">'+
+      '<span class="cover-badge">'+esc(M.meta.numberLabel)+' · ԻՆՏԵՐԱԿՏԻՎ</span>'+
+      '<h1>'+esc(M.meta.title)+'</h1>'+
+      '<p class="cover-lead">'+esc(M.meta.tagline)+'</p>'+
+      '<dl class="cover-grid">'+
+        '<div class="cg"><dt>Ձևաչափ</dt><dd>Սիմուլյատոր</dd></div>'+
+        '<div class="cg"><dt>Գործնական քայլեր</dt><dd>'+totalScreens+'</dd></div>'+
+        '<div class="cg"><dt>Տևողությունը</dt><dd>~'+M.meta.readingMinutes+' րոպե</dd></div>'+
+      '</dl>'+
+    '</div>'+
+    '<div class="prose rise"><p>'+esc(M.intro.lead)+'</p></div>'+
+    '<div class="note key rise"><div class="note-k">'+esc(M.intro.keyQuestion.label)+'</div>'+
+      '<p style="color:var(--ink);font-weight:700;margin-bottom:8px">'+esc(M.intro.keyQuestion.text)+'</p>'+
+      '<p>'+md(M.intro.keyQuestion.answer)+'</p></div>'+
+    '<div class="prose rise"><h3 class="sub">Ինչպես է աշխատում այս մոդուլը</h3>'+
+      '<p>'+md(M.intro.goal)+'</p>'+
+      '<p>Կարգավորումները չեք կարդա — <strong>կանցնեք դրանք սարքի մոդելի վրա</strong>։ '+
+      'Ամեն քայլ պահանջում է իրական գործողություն. սեղմել ճիշտ կետին կամ միացնել անջատիչը։ '+
+      'Այդպես, երբ բացեք ձեր հեռախոսը, արդեն կիմանաք՝ ուր նայել։</p></div>'+
+    '<div class="note rise"><div class="note-k">'+M.intro.howToUse.icon+' '+esc(M.intro.howToUse.label)+'</div>'+
+      '<p>'+md(M.intro.howToUse.text)+'</p></div>'}),
+  gate:{read:true}
+},
+{
+  id:'ages', nav:'Տարիքային ռիսկեր',
+  build:()=>({
+    kick:'Մաս 1', head:M.why.stagesTitle,
+    stand:'Բացեք երեք փուլերն էլ՝ շարունակելու համար։',
+    html:'<div class="prose"><p>'+md(M.why.stagesLead)+'</p></div>'+
+      '<div class="tl">'+M.why.stages.map(s=>
+        '<div class="tlc" data-req="st-'+s.id+'" data-toggle>'+
+          '<div class="tlh"><span class="tlage">'+esc(s.ageLabel)+'</span>'+
+            '<h4>'+esc(s.stage)+'</h4><span class="tlplus">+</span></div>'+
+          '<div class="tlbody"><div class="tlin">'+
+            '<div class="tlk">Հիմնական ռիսկեր</div><ul>'+
+              s.risks.map(r=>'<li>'+esc(r)+'</li>').join('')+'</ul>'+
+            '<div class="tlk">Ուշադրության կենտրոնը</div><div class="tlv">'+esc(s.focus)+'</div>'+
+            '<div class="tlk">Գործիքի շեշտը</div><div class="tlv">'+esc(s.tool)+'</div>'+
+          '</div></div></div>').join('')+'</div>'}),
+  gate:{expand:M.why.stages.map(s=>'st-'+s.id)}
+},
+{
+  id:'why', nav:'Մարտահրավերները',
+  build:()=>({
+    kick:'Մաս 1', head:M.why.challengesTitle,
+    html:'<div class="prose">'+M.why.challenges.map(c=>'<p>'+md(c)+'</p>').join('')+'</div>'+
+      '<div class="note rise"><div class="note-k">'+M.why.callout.icon+' '+esc(M.why.callout.label)+'</div>'+
+      '<p>'+md(M.why.callout.text)+'</p></div>'+
+      '<div class="prose rise"><p>'+md(M.tools.lead)+'</p></div>'}),
+  gate:{read:true}
+},
+groupStage('os'), groupStage('social'), groupStage('games'), groupStage('messenger'),
+{
+  id:'base', nav:'Բազային քայլեր',
+  build:()=>({
+    kick:'Փորձարան · '+M.checklist.letter, head:M.checklist.title,
+    stand:'Այս յոթ քայլը վերաբերում է բոլորին՝ անկախ սարքից։ Միացրեք կատարվածները։',
+    html:'<div class="cls">'+M.checklist.items.map((it,i)=>
+      '<div class="cl'+(S.cl[i]?' on':'')+'" data-cl="'+i+'" role="checkbox" '+
+        'aria-checked="'+(!!S.cl[i])+'" tabindex="0">'+
+        '<span class="cl-n">'+String(i+1).padStart(2,'0')+'</span>'+
+        '<span class="cl-tx"><span class="cl-s">'+esc(it.short)+'</span>'+
+        '<span class="cl-d">'+md(it.text)+'</span></span>'+
+        '<span class="sw'+(S.cl[i]?' on':'')+'"><i></i></span>'+
+      '</div>').join('')+'</div>'}),
+  gate:{checklist:true}
+},
+{
+  id:'trust', nav:'Վստահություն',
+  build:()=>({
+    kick:'Մաս 3', head:M.balance.researchTitle,
+    stand:'Սեղմեք ցանկացած արտահայտության վրա՝ տեսնելու, թե ինչու է այն աշխատում կամ չի աշխատում։',
+    html:'<div class="prose">'+M.balance.research.map(p=>'<p>'+md(p)+'</p>').join('')+'</div>'+
+      '<div class="talk"><div class="talkl g">Ինչ ասել</div>'+
+      M.balance.scriptsDo.map((s,i)=>
+        '<div class="bub g" data-req="sd-'+i+'" data-toggle style="animation-delay:'+(i*70)+'ms">'+
+        esc(s.text)+'<div class="bub-tap">ինչու՞ →</div>'+
+        '<div class="bub-why">'+esc(s.why)+'</div></div>').join('')+
+      '<div class="talkl b">Ինչ չասել</div>'+
+      M.balance.scriptsDont.map((s,i)=>
+        '<div class="bub b" data-req="sn-'+i+'" data-toggle style="animation-delay:'+(i*70)+'ms">'+
+        esc(s.text)+'<div class="bub-tap">ինչու՞ →</div>'+
+        '<div class="bub-why">'+esc(s.why)+'</div></div>').join('')+'</div>'+
+      '<div class="prose"><p style="margin-top:22px">'+md(M.balance.scriptsNote)+'</p>'+
+        '<h3 class="sub">'+esc(M.balance.boundariesTitle)+'</h3>'+
+        '<p>'+md(M.balance.boundariesLead)+'</p></div>'+
+      M.balance.principles.map((p,i)=>'<div class="pr rise"><div class="pr-n">0'+(i+1)+'</div>'+
+        '<div><h4>'+esc(p.title)+'</h4><p>'+md(p.text)+'</p></div></div>').join('')+
+      '<div class="prose rise"><h3 class="sub">'+esc(M.balance.freedomTitle)+'</h3>'+
+        '<p>'+md(M.balance.freedom)+'</p></div>'+
+      '<div class="note key rise"><div class="note-k">'+M.balance.goldenRule.icon+' '+
+        esc(M.balance.goldenRule.label)+'</div><p>'+md(M.balance.goldenRule.text)+'</p>'+
+        '<p style="margin-top:9px">'+md(M.balance.goldenRule.extra)+'</p></div>'}),
+  gate:{expand:[].concat(M.balance.scriptsDo.map((_,i)=>'sd-'+i),
+                         M.balance.scriptsDont.map((_,i)=>'sn-'+i))}
+},
+{
+  id:'quiz', nav:'Ստուգում',
+  quiz:['q1','q2','q4','q6','q9','q10','q11','q12'],
+  build:function(){
+    return {kick:'Եզրափակիչ', head:M.quiz.title, stand:M.quiz.intro,
+      html:this.quiz.map((qid,n)=>{
+        const q=Q[qid];
+        return '<div class="q'+(q.type==='multi'?' multi':'')+'" data-q="'+qid+'">'+
+          '<div class="qn">ՀԱՐՑ '+(n+1)+' / '+this.quiz.length+'</div>'+
+          '<div class="qt">'+esc(q.q)+'</div>'+
+          (q.type==='multi'?'<div class="qh">Հնարավոր է մեկից ավելի ճիշտ պատասխան</div>':'')+
+          '<div class="opts">'+q.options.map((o,j)=>
+            '<button class="opt" type="button" data-o="'+j+'">'+
+            '<span class="optm">'+(q.type==='multi'?'✓':'')+'</span><span>'+esc(o)+'</span></button>').join('')+
+          '</div>'+(q.type==='multi'?'<button class="qbtn" type="button" data-check>Ստուգել</button>':'')+
+          '<div class="qex"><span class="qvd"></span><span class="qbd"></span>'+
+          '<div><button class="qretry" type="button" data-retry style="display:none">Փորձել կրկին</button></div></div>'+
+        '</div>';
+      }).join('')};
+  },
+  gate:{quiz:true}
+},
+{
+  id:'fin', nav:'Ավարտ',
+  build:()=>{
+    let doneScreens=0, doneGuides=0;
+    M.guides.forEach(g=>{ if(S.skip[g.id]) return;
+      doneScreens+=Math.min(S.steps[g.id]|0,SIM[g.id].length);
+      if(simDone(g.id)) doneGuides++; });
+    const cl=M.checklist.items.filter((_,i)=>S.cl[i]).length;
+    return {html:
+      '<div class="fin">'+
+        '<div class="finring"><svg width="150" height="150" viewBox="0 0 150 150">'+
+          '<circle class="bg" cx="75" cy="75" r="65"/>'+
+          '<circle class="fg" id="finfg" cx="75" cy="75" r="65"/></svg>'+
+          '<b id="fintx">0%</b></div>'+
+        '<h2>Փորձարանն ավարտված է</h2>'+
+        '<p>Դուք ոչ թե կարդացել եք կարգավորումների մասին, այլ անցել եք դրանք քայլ առ քայլ։</p>'+
+        '<div class="stats">'+
+          '<div class="st"><b>'+doneScreens+'</b><span>կատարված գործողություն</span></div>'+
+          '<div class="st"><b>'+doneGuides+' / '+M.guides.length+'</b><span>ուղեցույց ավարտված</span></div>'+
+          '<div class="st"><b>'+cl+' / '+M.checklist.items.length+'</b><span>բազային քայլ</span></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="prose rise" style="margin-top:44px"><h3 class="sub">'+esc(M.emergency.title)+'</h3>'+
+        '<p>'+esc(M.emergency.lead)+'</p></div>'+
+      M.emergency.contacts.map(c=>
+        '<a class="sos rise'+(c.urgent?' urgent':'')+'" href="'+esc(c.url)+'" target="_blank" rel="noopener">'+
+        '<div class="sosn">'+esc(c.name)+'</div><div class="sosf">'+esc(c.forWhom)+'</div>'+
+        '<div class="sosc">'+esc(c.contact)+(c.phone&&c.phone!==c.contact?' · '+esc(c.phone):'')+'</div>'+
+        '<p class="sost">'+esc(c.text)+'</p></a>').join('')+
+      '<div class="prose rise"><h3 class="sub">'+esc(M.reading.title)+'</h3></div>'+
+      M.reading.media.map(m=>
+        '<a class="mc rise" href="'+esc(m.url)+'" target="_blank" rel="noopener">'+
+        '<div class="mct">'+m.icon+' '+esc(m.type)+'</div><h4>'+esc(m.title)+'</h4>'+
+        '<div class="mca">'+esc(m.author)+'</div><div class="mcc">'+esc(m.cta)+' →</div></a>').join('')+
+      M.reading.groups.map(g=>'<div class="rg"><h4>'+esc(g.lang)+'</h4>'+
+        g.items.map(it=>'<div class="ri"><a href="'+esc(it.url)+'" target="_blank" rel="noopener">'+
+        esc(it.title)+'</a><p>'+esc(it.text)+'</p><div class="riu">'+esc(it.label)+'</div></div>').join('')+
+        '</div>').join('')+
+      '<div class="note rise" style="margin-top:22px"><div class="note-k">'+M.reading.note.icon+' '+
+        esc(M.reading.note.label)+'</div><p>'+esc(M.reading.note.text)+'</p></div>'+
+      '<div class="prose rise"><h3 class="sub">'+esc(M.sourcesTitle)+'</h3></div>'+
+      '<ol class="srcs">'+M.sources.map(s=>'<li><strong>'+esc(s.org)+'</strong> — '+esc(s.title)+
+        ' <a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.label)+'</a></li>').join('')+'</ol>'+
+      '<div class="prose" style="margin-top:26px;padding-top:18px;border-top:1px solid var(--line)">'+
+        '<p style="font-size:13.5px;color:var(--ink3)">'+esc(M.meta.disclaimer)+'</p></div>'};
+  },
+  gate:{}
+}
+];
+
+/* ══ Движок ═════════════════════════════════════════════════════ */
+let cur=0, PS={};
+
+function render(i){
+  cur=Math.max(0,Math.min(i,ST.length-1));
+  const s=ST[cur];
+  PS={opened:new Set(), read:false, quizOk:0};
+  const b=s.build();
+  $('#stage').innerHTML =
+    (b.kick?'<div class="kick">'+esc(b.kick)+'</div>':'')+
+    (b.head?'<h2 class="head">'+esc(b.head)+'</h2>':'')+
+    (b.stand?'<p class="stand">'+esc(b.stand)+'</p>':'')+
+    b.html+'<div class="end"></div>';
+  scrollTo({top:0,behavior:'instant'});
+  wire(s); paintRail(); paintRing(); observeRise(); updateGate();
+  if(s.id==='fin') setTimeout(animateFinal, 220);
+}
+
+function observeRise(){
+  const els=$('#stage').querySelectorAll('.rise');
+  if(REDUCED){ els.forEach(e=>e.classList.add('in')); return }
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target) }
+  }),{rootMargin:'0px 0px -40px 0px'});
+  els.forEach(e=>io.observe(e));
+}
+function animateFinal(){
+  const p=progressPct();
+  const fg=document.getElementById('finfg'), tx=document.getElementById('fintx');
+  if(!fg) return;
+  fg.style.strokeDashoffset = 408 - 408*p/100;
+  if(REDUCED){ tx.textContent=p+'%'; return }
+  let n=0; const step=Math.max(1,Math.round(p/28));
+  const t=setInterval(()=>{ n=Math.min(p,n+step); tx.textContent=n+'%';
+    if(n>=p) clearInterval(t) }, 42);
+}
+
+/* Продвижение симулятора на один экран */
+function advance(card){
+  const gid=card.dataset.g, g=M.guides.find(x=>x.id===gid), arr=SIM[gid];
+  const done=Math.min(S.steps[gid]|0, arr.length);
+  if(done>=arr.length) return;
+  S.steps[gid]=done+1; save();
+  const nd=S.steps[gid];
+  const scr=card.querySelector('[data-screen]');
+  scr.innerHTML='<div class="devnotch"><i></i></div>'+deviceHtml(g,nd);
+  card.querySelector('[data-cnt]').textContent=nd+'/'+arr.length;
+  card.querySelector('[data-dots]').innerHTML=arr.map((_,i)=>
+    '<span class="sd'+(i<nd?' done':i===nd?' cur':'')+'"></span>').join('');
+  const cu=arr[Math.min(nd,arr.length-1)], fin=nd>=arr.length;
+  card.querySelector('[data-task]').innerHTML='<div class="taskn">Քայլ '+
+    Math.min(nd+1,arr.length)+' / '+arr.length+'</div><div class="tasktx">'+
+    (fin?'Այս ուղեցույցն ավարտված է։':plain(cu.text))+'</div>';
+  if(fin) card.classList.add('done');
+  wireScreen(card);
+  paintRing(); updateGate();
+}
+function wireScreen(card){
+  card.querySelectorAll('[data-adv]').forEach(el=>{
+    const go=ev=>{
+      ev.stopPropagation();
+      if(el.classList.contains('sw')){
+        el.classList.add('on'); el.classList.remove('want');
+        el.setAttribute('aria-checked','true');
+        setTimeout(()=>advance(card), REDUCED?0:330);
+      } else advance(card);
+    };
+    el.addEventListener('click',go);
+    el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();go(e)} });
+  });
+}
+
+function wire(s){
+  const st=$('#stage');
+  st.querySelectorAll('[data-toggle]').forEach(el=>{
+    const box = el.hasAttribute('data-req') ? el : el.closest('.sim,[data-req]');
+    el.addEventListener('click',ev=>{
+      if(ev.target.closest('[data-adv],[data-skip]')) return;
+      box.classList.toggle(box.classList.contains('sim')?'open':'open');
+      if(box.classList.contains('open')&&box.dataset.req) PS.opened.add(box.dataset.req);
+      updateGate();
+    });
+  });
+  st.querySelectorAll('.sim').forEach(card=>{
+    wireScreen(card);
+    const sk=card.querySelector('[data-skip]');
+    if(sk) sk.addEventListener('click',ev=>{
+      ev.stopPropagation();
+      const gid=card.dataset.g;
+      if(S.skip[gid]) delete S.skip[gid]; else S.skip[gid]=1;
+      sk.classList.toggle('on',!!S.skip[gid]);
+      const g=M.guides.find(x=>x.id===gid), arr=SIM[gid];
+      const done=Math.min(S.steps[gid]|0,arr.length);
+      card.querySelector('[data-cnt]').textContent=S.skip[gid]?'բաց թողնված':done+'/'+arr.length;
+      card.classList.toggle('done', simDone(gid));
+      card.querySelector('[data-screen]').innerHTML=
+        '<div class="devnotch"><i></i></div>'+deviceHtml(g,done);
+      wireScreen(card);
+      save(); paintRing(); updateGate();
+    });
+  });
+  /* Чеклист-тумблеры */
+  const togCl=el=>{
+    const i=+el.dataset.cl;
+    if(S.cl[i]) delete S.cl[i]; else S.cl[i]=1;
+    el.classList.toggle('on',!!S.cl[i]);
+    el.querySelector('.sw').classList.toggle('on',!!S.cl[i]);
+    el.setAttribute('aria-checked',!!S.cl[i]);
+    save(); paintRing(); updateGate();
+  };
+  st.querySelectorAll('[data-cl]').forEach(el=>{
+    el.addEventListener('click',()=>togCl(el));
+    el.addEventListener('keydown',e=>{ if(e.key===' '||e.key==='Enter'){e.preventDefault();togCl(el)} });
+  });
+  st.querySelectorAll('.q').forEach(wireQ);
+  if(s.gate.read){
+    const end=st.querySelector('.end');
+    if(document.body.scrollHeight<=innerHeight+40) PS.read=true;
+    const ob=new IntersectionObserver(es=>es.forEach(e=>{
+      if(e.isIntersecting){PS.read=true;updateGate();ob.disconnect()}}),{threshold:1});
+    ob.observe(end);
+  }
+}
+
+function wireQ(el){
+  const q=Q[el.dataset.q]; let picks=[],done=false;
+  const opts=[...el.querySelectorAll('.opt')], ex=el.querySelector('.qex');
+  const chk=el.querySelector('[data-check]'), rt=el.querySelector('[data-retry]');
+  const same=(a,b)=>a.length===b.length&&a.every(v=>b.includes(v));
+  function reveal(){
+    const ok=same(picks,q.correct); done=true;
+    opts.forEach((b,j)=>{ b.disabled=true; b.classList.remove('sel');
+      if(q.correct.includes(j)) b.classList.add('right');
+      else if(picks.includes(j)) b.classList.add('wrong') });
+    ex.classList.add('show', ok?'ok':'no');
+    ex.querySelector('.qvd').textContent = ok?'Ճիշտ է':'Ոչ ճիշտ';
+    ex.querySelector('.qbd').innerHTML=' '+md(q.explain);
+    if(chk) chk.disabled=true;
+    el.dataset.res = ok?'ok':'no';
+    if(rt) rt.style.display = ok?'none':'inline-block';
+    if(!ok && !REDUCED){ el.classList.add('shake'); setTimeout(()=>el.classList.remove('shake'),450) }
+    updateGate();
+  }
+  opts.forEach((b,j)=>b.addEventListener('click',()=>{
+    if(done) return;
+    if(q.type==='multi'){ const k=picks.indexOf(j); if(k>-1)picks.splice(k,1); else picks.push(j);
+      b.classList.toggle('sel',picks.includes(j)) }
+    else { picks=[j]; reveal() }
+  }));
+  if(chk) chk.addEventListener('click',()=>{ if(picks.length) reveal() });
+  if(rt) rt.addEventListener('click',()=>{
+    picks=[];done=false; opts.forEach(b=>{b.disabled=false;b.className='opt'});
+    ex.className='qex'; if(chk)chk.disabled=false; rt.style.display='none';
+    delete el.dataset.res; updateGate();
+  });
+}
+
+/* ══ Гейт ═══════════════════════════════════════════════════════ */
+function gate(){
+  if(cur<S.unlocked) return {ok:true,msg:'Այս մասն արդեն անցել եք'};
+  const g=ST[cur].gate||{};
+  if(g.read && !PS.read) return {ok:false,msg:'Ոլորեք մինչև վերջ՝ շարունակելու համար'};
+  if(g.expand){
+    const n=g.expand.filter(k=>!PS.opened.has(k)).length;
+    if(n) return {ok:false,msg:'Բացեք ևս '+n+' կետ'};
+  }
+  if(g.sims){
+    const left=g.sims.filter(id=>!simDone(id));
+    if(left.length){
+      const steps=left.reduce((n,id)=>n+(SIM[id].length-Math.min(S.steps[id]|0,SIM[id].length)),0);
+      return {ok:false,msg:'Մնաց '+steps+' գործողություն ('+left.length+' ուղեցույց)'};
+    }
+  }
+  if(g.checklist){
+    const n=M.checklist.items.filter((_,i)=>!S.cl[i]).length;
+    if(n) return {ok:false,msg:'Միացրեք ևս '+n+' կետ'};
+  }
+  if(g.quiz){
+    const qs=[...$('#stage').querySelectorAll('.q')];
+    const ans=qs.filter(e=>e.dataset.res).length;
+    if(ans<qs.length) return {ok:false,msg:'Պատասխանեք ևս '+(qs.length-ans)+' հարցի'};
+    const ok=qs.filter(e=>e.dataset.res==='ok').length;
+    const need=Math.ceil(qs.length*0.7);
+    if(ok<need) return {ok:false,msg:'Անհրաժեշտ է '+need+' ճիշտ պատասխան '+qs.length+'-ից. հիմա՝ '+ok};
+  }
+  return {ok:true,msg:'Կարող եք շարունակել'};
+}
+function updateGate(){
+  const st=gate(), last=cur===ST.length-1;
+  $('#next').disabled=!st.ok||last;
+  $('#lk').style.display=(st.ok||last)?'none':'block';
+  $('#nextlb').textContent = last?'Ավարտված է':'Առաջ';
+  $('#gmsg').textContent = last?'':st.msg;
+  $('#gmsg').classList.toggle('ready',st.ok);
+  $('#back').disabled=cur===0;
+  if(st.ok && cur+1>S.unlocked){ S.unlocked=cur+1; save(); paintRail() }
+}
+function paintRail(){
+  $('#rail').innerHTML=ST.map((s,i)=>
+    '<button class="rs '+(i===cur?'cur':i<S.unlocked?'done':'')+'" data-go="'+i+'"'+
+    (i>S.unlocked?' disabled':'')+' type="button">'+esc(s.nav)+'</button>').join('');
+  $('#rail').querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.dataset.go; if(i<=S.unlocked) render(i);
+  }));
+  const c=$('#rail').querySelector('.cur');
+  if(c) c.scrollIntoView({block:'nearest',inline:'center',behavior:REDUCED?'auto':'smooth'});
+}
+
+$('#next').addEventListener('click',()=>{ if(cur<ST.length-1) render(cur+1) });
+$('#back').addEventListener('click',()=>{ if(cur>0) render(cur-1) });
+$('#resetbtn').addEventListener('click',()=>{
+  if(!confirm('Ջնջե՞լ այս տարբերակի առաջընթացը և սկսել սկզբից։')) return;
+  try{ localStorage.removeItem(KEY) }catch(e){}
+  location.href=location.pathname;
+});
+render(Math.min(S.unlocked,ST.length-1));
+</script>
+</body>
+</html>

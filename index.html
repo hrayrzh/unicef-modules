@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>UNICEF · Մոդուլ 1 — չորս տարբերակ</title>
+<title>UNICEF · Մոդուլ 1 — հինգ տարբերակ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;500;600;700;800&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
   --line:#E3E8EF; --line2:#F1F4F8; --bg:#FAFBFD; --card:#FFF;
   --f:'Noto Sans Armenian','Mshtakan','Sylfaen',system-ui,sans-serif;
   --lat:'Inter',system-ui,sans-serif;
-  --a:#1CABE2; --b:#FF6B5A; --c:#F2A93B; --d:#6B4E9E;
+  --a:#1CABE2; --b:#FF6B5A; --c:#F2A93B; --d:#6B4E9E; --e:#3D5AFE;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);
@@ -60,7 +60,7 @@ h1{font-size:clamp(32px,5vw,52px);font-weight:800;max-width:17ch;margin-bottom:2
   text-decoration:none;color:inherit}
 .card:hover{transform:translateY(-3px);box-shadow:0 10px 34px rgba(20,25,34,.08)}
 .card.a:hover{border-color:var(--a)} .card.b:hover{border-color:var(--b)}
-.card.c:hover{border-color:var(--c)} .card.d:hover{border-color:var(--d)}
+.card.c:hover{border-color:var(--c)} .card.d:hover{border-color:var(--d)} .card.e:hover{border-color:var(--e)}
 
 /* Мини-превью — палитра и характер каждого варианта */
 .prev{height:132px;padding:20px 22px;display:flex;flex-direction:column;
@@ -69,6 +69,8 @@ h1{font-size:clamp(32px,5vw,52px);font-weight:800;max-width:17ch;margin-bottom:2
 .prev.b{background:#123A5C}
 .prev.c{background:#0E1420}
 .prev.d{background:#FCFCFA;border-bottom:1px solid var(--line)}
+.prev.e{background:linear-gradient(135deg,#3D5AFE,#00C9A7)}
+.prev.e .pv-type{color:#fff} .prev.e .pv-note{color:rgba(255,255,255,.8)}
 .pv-row{display:flex;gap:6px;align-items:center}
 .sw{width:26px;height:26px;border-radius:7px;flex:none}
 .pv-type{font-size:27px;font-weight:800;letter-spacing:-.03em}
@@ -86,8 +88,10 @@ h1{font-size:clamp(32px,5vw,52px);font-weight:800;max-width:17ch;margin-bottom:2
 .tag i{width:9px;height:9px;border-radius:50%;display:inline-block}
 .card.a .tag{color:var(--a)} .card.b .tag{color:#E05445}
 .card.c .tag{color:#C77E13} .card.d .tag{color:var(--d)}
+.card.e .tag{color:var(--e)}
 .card.a .tag i{background:var(--a)} .card.b .tag i{background:var(--b)}
 .card.c .tag i{background:var(--c)} .card.d .tag i{background:var(--d)}
+.card.e .tag i{background:var(--e)}
 .card h2{font-size:26px;font-weight:800;margin-bottom:4px}
 .card .kind{font-size:14.5px;color:var(--ink3);font-weight:600;margin-bottom:14px}
 .card .desc{font-size:15.5px;color:var(--ink2);margin-bottom:18px;flex:1}
@@ -99,13 +103,20 @@ h1{font-size:clamp(32px,5vw,52px);font-weight:800;max-width:17ch;margin-bottom:2
   padding:12px 22px;border-radius:100px;background:var(--ink);color:#fff;align-self:flex-start}
 .card.a .open{background:var(--a)} .card.b .open{background:var(--b)}
 .card.c .open{background:var(--c);color:#0E1420} .card.d .open{background:var(--d)}
+.card.e .open{background:linear-gradient(135deg,#3D5AFE,#00C9A7)}
+/* Пятый вариант добавлен позже — помечаем как новый */
+.isnew{display:inline-block;font-family:var(--lat);font-size:10.5px;font-weight:800;
+  letter-spacing:.08em;background:var(--e);color:#fff;padding:3px 9px;border-radius:100px;
+  margin-left:9px;vertical-align:3px}
+@media(min-width:881px){.card.e{grid-column:span 2}
+  .card.e .prev{height:110px}}
 
 /* Таблица сравнения */
 .compare{margin:60px 0 0}
 .compare h2{font-size:28px;font-weight:800;margin-bottom:8px}
 .compare>p{color:var(--ink2);max-width:62ch;margin-bottom:24px}
 .tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--card)}
-table{border-collapse:collapse;width:100%;min-width:820px}
+table{border-collapse:collapse;width:100%;min-width:1000px}
 th,td{text-align:left;padding:15px 18px;border-bottom:1px solid var(--line2);
   font-size:14.5px;vertical-align:top;line-height:1.5}
 th{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);
@@ -144,8 +155,8 @@ footer p{max-width:78ch;margin-bottom:6px}
 
 <header>
   <div class="eyebrow">UNICEF Հայաստան · Մոդուլ 1 / 5</div>
-  <h1>Ծնողական վերահսկողություն — չորս տարբերակ</h1>
-  <p class="lead">Նույն մոդուլը՝ կառուցված չորս տարբեր ձևով։ Տարբերվում են ոչ միայն ձևավորմամբ,
+  <h1>Ծնողական վերահսկողություն — հինգ տարբերակ</h1>
+  <p class="lead">Նույն մոդուլը՝ կառուցված հինգ տարբեր ձևով։ Տարբերվում են ոչ միայն ձևավորմամբ,
   այլև ուսուցման տրամաբանությամբ՝ ինչո՞վ է մարդը փաստում, որ իսկապես անցել է բաժինը։
   Ընտրում ենք մեկը — այն կդառնա հիմք բոլոր հինգ մոդուլների համար։</p>
   <dl class="facts">
@@ -158,12 +169,12 @@ footer p{max-width:78ch;margin-bottom:6px}
   <div class="howto">
     <h3>Ինչպես դիտել</h3>
     <p>Բացեք ցանկացած տարբերակ և փորձեք <b>անցնել այն որպես ծնող</b>, ոչ թե թերթել որպես մակետ։
-    Չորսում էլ հնարավոր չէ ցատկել առաջ. հաջորդ էջը բացվում է միայն իրական գործողությունից հետո՝
+    Հինգում էլ հնարավոր չէ ցատկել առաջ. հաջորդ էջը բացվում է միայն իրական գործողությունից հետո՝
     բացել ուղեցույցը, նշել կատարվածը, պատասխանել հարցին։ «Առաջ» կոճակը միշտ բացատրում է,
     թե կոնկրետ ինչ է պակասում։</p>
     <p>Ամեն տարբերակ ունի <b>իր առանձին առաջընթացը</b>. մեկում անցածը մյուսում չի երևում։
     Տարբերակի ներսում կա «↺ Սկսել նորից» կոճակը՝ այն զրոյացնում է միայն տվյալ տարբերակը։
-    Ստորև կոճակը զրոյացնում է բոլոր չորսը միանգամից։</p>
+    Ստորև կոճակը զրոյացնում է բոլորը միանգամից։</p>
     <button class="reset-all" id="resetall" type="button">↺ Զրոյացնել բոլոր տարբերակների առաջընթացը</button>
     <span class="reset-done" id="resetdone" hidden>Զրոյացված է</span>
   </div>
@@ -280,6 +291,35 @@ footer p{max-width:78ch;margin-bottom:6px}
     </div>
   </a>
 
+  <a class="card e" href="concepts/e-simulator/">
+    <div class="prev e">
+      <div class="pv-type">Փորձարան</div>
+      <div class="pv-row">
+        <span class="sw" style="background:rgba(255,255,255,.95)"></span>
+        <span class="sw" style="background:rgba(255,255,255,.55)"></span>
+        <span class="sw" style="background:rgba(255,255,255,.3)"></span>
+        <span class="pv-bar" style="background:rgba(255,255,255,.3)"></span>
+      </div>
+      <div class="pv-note">Սեփական ոճ · ինտերակտիվ սիմուլյատոր</div>
+    </div>
+    <div class="card-in">
+      <div class="tag"><i></i>Տարբերակ E</div>
+      <h2>Փորձարան<span class="isnew">ՆՈՐ</span></h2>
+      <div class="kind">Ինտերակտիվ սիմուլյատոր</div>
+      <p class="desc">Կարգավորումները չեն կարդացվում — դրանք անցնում են սարքի մոդելի վրա։
+      Էկրանին հայտնվում է հեռախոսի պատուհանը՝ իրական մենյուով, որտեղ ընդգծված է հենց այն կետը,
+      որ պետք է սեղմել։ Սեղմում եք — էկրանը փոխվում է հաջորդով, ինչպես իրական սարքում։
+      Անջատիչները շարժվում են, առաջընթացի օղակը լցվում է։ Ծնողները կորչում են հենց նրանից,
+      որ չգիտեն՝ ուր նայել. այստեղ նրանք արդեն մեկ անգամ արել են այդ ճանապարհը։</p>
+      <dl class="rows">
+        <div class="row"><dt>Տրամաբանություն</dt><dd>11 էկրան, ուղեցույցները՝ սիմուլյացիա</dd></div>
+        <div class="row"><dt>Ստուգում</dt><dd>քայլը հաշվվում է միայն սիմուլյատորում գործողությունից հետո + 8 հարցից թեստ</dd></div>
+        <div class="row"><dt>Ում համար</dt><dd>եթե խնդիրը ոչ թե «չգիտեմ ինչու», այլ «չգիտեմ որտեղ»</dd></div>
+      </dl>
+      <span class="open">Բացել E →</span>
+    </div>
+  </a>
+
 </div>
 
 <section class="compare">
@@ -292,47 +332,47 @@ footer p{max-width:78ch;margin-bottom:6px}
           <th><span class="dot" style="background:#1CABE2"></span>A · Ուղեցույց</th>
           <th><span class="dot" style="background:#FF6B5A"></span>B · Ուղևորություն</th>
           <th><span class="dot" style="background:#F2A93B"></span>C · Վահան</th>
-          <th><span class="dot" style="background:#6B4E9E"></span>D · Զրույց</th></tr>
+          <th><span class="dot" style="background:#6B4E9E"></span>D · Զրույց</th><th><span class="dot" style="background:#3D5AFE"></span>E · Փորձարան</th></tr>
       </thead>
       <tbody>
         <tr><td>Մոդել</td>
           <td>Պաշտոնական տեղեկատու</td><td>Կանգառներով դասընթաց</td>
-          <td>Աշխատանքային գործիք</td><td>Ամսագրային զրույց</td></tr>
+          <td>Աշխատանքային գործիք</td><td>Ամսագրային զրույց</td><td>Ինտերակտիվ սիմուլյատոր</td></tr>
         <tr><td>Անհատականացում</td>
           <td>չկա — բոլորը տեսնում են նույնը</td>
           <td>չկա, բայց պատասխանները հավաքվում են պլանում</td>
           <td><b>ըստ սարքերի</b> — ավելորդը թաքցված է</td>
-          <td><b>ըստ տարիքի</b> — հերթականություն և շեշտադրումներ</td></tr>
+          <td><b>ըստ տարիքի</b> — հերթականություն և շեշտադրումներ</td><td>չկա, բայց չվերաբերող սարքերը բաց են թողնվում</td></tr>
         <tr><td>Ինչն է բացում<br>հաջորդ էջը</td>
           <td>բացել բոլոր ուղեցույցները, նշել յուրաքանչյուրը, պատասխանել հարցին</td>
           <td>պարտադիր հարց՝ ամեն կանգառում</td>
           <td>նշել ուղեցույցի ամեն քայլն առանձին</td>
-          <td>կիրառել տարիքային սահիչը, վերլուծել իրավիճակները</td></tr>
+          <td>կիրառել տարիքային սահիչը, վերլուծել իրավիճակները</td><td>կատարել գործողությունը սիմուլյատորում՝ սեղմել ընդգծված կետին</td></tr>
         <tr><td>Եզրափակիչ ստուգում</td>
           <td>8 հարցից թեստ, շեմը՝ 70%</td><td>միկրո-հարցեր + անձնական պլան</td>
-          <td>սթրես-թեստ՝ 5 կենսական սցենար</td><td>ռեֆլեքսիա՝ ծնողի 4 արտահայտություն</td></tr>
+          <td>սթրես-թեստ՝ 5 կենսական սցենար</td><td>ռեֆլեքսիա՝ ծնողի 4 արտահայտություն</td><td>8 հարցից թեստ, շեմը՝ 70%</td></tr>
         <tr><td>Ինչ է ստանում<br>ելքում</td>
           <td>թեստի արդյունքը</td><td><b>տպելու պատրաստ պլան</b></td>
           <td><b>պաշտպանվածության հաշվետվություն + չարվածների ցանկ</b></td>
-          <td>մարզված արտահայտություններ</td></tr>
+          <td>մարզված արտահայտություններ</td><td><b>անցած ուղու հմտություն — գիտի, ուր սեղմել</b></td></tr>
         <tr><td>Կարգավորումների<br>անվանումները</td>
           <td>բնագիրը + ռուսերենը կողքին</td><td>ռուսերենը՝ սեղմումով</td>
-          <td>մոնո-չիպ + հուշում</td><td>մանր տողով՝ քայլի տակ</td></tr>
+          <td>մոնո-չիպ + հուշում</td><td>մանր տողով՝ քայլի տակ</td><td>ցուցադրվում են հենց սիմուլյատորի էկրանին</td></tr>
         <tr><td>Երկարությունը</td>
           <td>13 էջ</td><td>11 կանգառ</td>
-          <td>7–11 էկրան (կախված ընտրությունից)</td><td>12 էջաբաց</td></tr>
+          <td>7–11 էկրան (կախված ընտրությունից)</td><td>12 էջաբաց</td><td>11 էկրան · ~60 գործողություն</td></tr>
         <tr><td>Ռիսկը</td>
           <td>կարդացվում է որպես փաստաթուղթ, ոչ թե դասընթաց</td>
           <td>պարտադիր հարցը կարող է նյարդայնացնել</td>
           <td>մուգ թեման անսովոր է UNICEF-ի համար</td>
-          <td>ավելի քիչ «արա», ավելի շատ «հասկացիր»</td></tr>
+          <td>ավելի քիչ «արա», ավելի շատ «հասկացիր»</td><td>ամենաերկարն է անցնելու առումով. սիմուլյացիան մոտավոր է, ոչ թե ճշգրիտ պատճեն</td></tr>
       </tbody>
     </table>
   </div>
 </section>
 
 <section class="shared">
-  <h2>Նույնն է բոլոր չորսում</h2>
+  <h2>Նույնն է բոլոր հինգում</h2>
   <p>Որպեսզի համեմատությունն ազնիվ լինի, տարբերությունը միայն ձևավորման ու տրամաբանության մեջ է —
   մնացած ամեն ինչ ընդհանուր է։</p>
   <div class="slist">
@@ -378,8 +418,8 @@ footer p{max-width:78ch;margin-bottom:6px}
 <script>
 /* Каждый вариант хранит прогресс под своим ключом — здесь чистим все четыре сразу */
 document.getElementById('resetall').addEventListener('click', function(){
-  if(!confirm('Զրոյացնե՞լ բոլոր չորս տարբերակների առաջընթացը։')) return;
-  ['a','b','c','d'].forEach(function(k){
+  if(!confirm('Զրոյացնե՞լ բոլոր տարբերակների առաջընթացը։')) return;
+  ['a','b','c','d','e'].forEach(function(k){
     try{ localStorage.removeItem('unicef-m01-'+k) }catch(e){}
   });
   var done = document.getElementById('resetdone');
