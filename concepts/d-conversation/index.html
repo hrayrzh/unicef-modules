@@ -57,6 +57,14 @@ button{font-family:inherit}
 .thread i{position:absolute;left:0;top:0;height:100%;background:var(--violet);
   width:0;transition:width .5s cubic-bezier(.4,0,.2,1)}
 
+
+/* Сброс прогресса — только этого варианта */
+.reset-btn{background:none;border:0;font-family:inherit;font-size:12px;cursor:pointer;
+  padding:5px 9px;border-radius:7px;opacity:.65;white-space:nowrap;transition:opacity .18s}
+.reset-btn:hover{opacity:1;text-decoration:underline}
+@media(max-width:520px){.reset-btn{font-size:11px;padding:4px 6px}}
+.reset-btn{color:var(--ink3)}
+
 /* ── Разворот ────────────────────────────────────────────────────── */
 .spread{max-width:var(--wrap);margin:0 auto;padding:52px 26px 40px}
 @media(max-width:640px){.spread{padding:34px 20px 30px}}
@@ -348,6 +356,7 @@ ol.srcs li::before{content:counter(s);position:absolute;left:0;top:1px;font-fami
     <div class="mark">ԶՐՈՒՅՑ<em>.</em></div>
     <div class="sub">UNICEF · Մոդուլ 1</div>
     <div class="sp"></div>
+    <button class="reset-btn" id="resetbtn" type="button" title="Ջնջել առաջընթացը">↺ Սկսել նորից</button>
     <div class="chapt" id="chapt"></div>
   </div>
 </header>
@@ -758,6 +767,16 @@ function paintTop(){
 $('#next').addEventListener('click',()=>{ if(cur<SP.length-1) render(cur+1) });
 $('#back').addEventListener('click',()=>{ if(cur>0) render(cur-1) });
 render(Math.min(S.unlocked,SP.length-1));
+
+/* Сброс: удаляет прогресс ТОЛЬКО этого варианта, соседние не трогает */
+(function(){
+  var b=document.getElementById('resetbtn'); if(!b) return;
+  b.addEventListener('click',function(){
+    if(!confirm('Ջնջե՞լ այս տարբերակի առաջընթացը և սկսել սկզբից։')) return;
+    try{ localStorage.removeItem(KEY) }catch(e){}
+    location.href=location.pathname;
+  });
+})();
 </script>
 </body>
 </html>

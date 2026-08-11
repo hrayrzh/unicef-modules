@@ -58,6 +58,14 @@ button{font-family:inherit}
 .shield-lb{font-size:11px;color:var(--tx3);letter-spacing:.05em}
 @media(max-width:680px){.shield-lb,.logo .m{display:none}.shield-bar{width:58px}}
 
+
+/* Сброс прогресса — только этого варианта */
+.reset-btn{background:none;border:0;font-family:inherit;font-size:12px;cursor:pointer;
+  padding:5px 9px;border-radius:7px;opacity:.65;white-space:nowrap;transition:opacity .18s}
+.reset-btn:hover{opacity:1;text-decoration:underline}
+@media(max-width:520px){.reset-btn{font-size:11px;padding:4px 6px}}
+.reset-btn{color:var(--tx3);font-family:var(--mono)}
+
 /* ── Полоса шагов ────────────────────────────────────────────────── */
 .rail{background:var(--panel);border-bottom:1px solid var(--line)}
 .rail-in{max-width:var(--wrap);margin:0 auto;padding:9px 22px;display:flex;gap:7px;
@@ -348,6 +356,7 @@ ol.srcs li::before{content:counter(s);position:absolute;left:0;top:0;font-family
       <span>ՎԱՀԱՆ</span><span class="m">/ UNICEF · M01</span>
     </div>
     <div class="sp"></div>
+    <button class="reset-btn" id="resetbtn" type="button" title="Ջնջել առաջընթացը">↺ Սկսել նորից</button>
     <div class="shield">
       <span class="shield-lb">Պաշտպանվածություն</span>
       <span class="shield-bar"><span class="shield-fill" id="sfill"></span></span>
@@ -831,6 +840,16 @@ function paintRail(){
 $('#next').addEventListener('click',()=>{ if(cur<active().length-1) render(cur+1) });
 $('#back').addEventListener('click',()=>{ if(cur>0) render(cur-1) });
 render(Math.min(S.unlocked,active().length-1));
+
+/* Сброс: удаляет прогресс ТОЛЬКО этого варианта, соседние не трогает */
+(function(){
+  var b=document.getElementById('resetbtn'); if(!b) return;
+  b.addEventListener('click',function(){
+    if(!confirm('Ջնջե՞լ այս տարբերակի առաջընթացը և սկսել սկզբից։')) return;
+    try{ localStorage.removeItem(KEY) }catch(e){}
+    location.href=location.pathname;
+  });
+})();
 </script>
 </body>
 </html>

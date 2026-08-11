@@ -58,6 +58,14 @@ button{font-family:inherit}
 .dot.open{background:#B6E4F5;cursor:pointer}
 @media(max-width:600px){.dot{width:22px}}
 
+
+/* Сброс прогресса — только этого варианта */
+.reset-btn{background:none;border:0;font-family:inherit;font-size:12px;cursor:pointer;
+  padding:5px 9px;border-radius:7px;opacity:.65;white-space:nowrap;transition:opacity .18s}
+.reset-btn:hover{opacity:1;text-decoration:underline}
+@media(max-width:520px){.reset-btn{font-size:11px;padding:4px 6px}}
+.reset-btn{color:var(--ink-3)}
+
 /* ── Страница ────────────────────────────────────────────────────── */
 .page-wrap{max-width:var(--wrap);margin:0 auto;padding:0 22px 40px}
 .card{background:#fff;border:1px solid var(--line);border-radius:12px;
@@ -356,6 +364,7 @@ ol.srclist li::before{content:counter(src);position:absolute;left:0;top:1px;
       <span>UNICEF</span><span class="brand-sub">· Մոդուլ 1</span>
     </div>
     <div class="topbar-spacer"></div>
+    <button class="reset-btn" id="resetbtn" type="button" title="Ջնջել առաջընթացը">↺ Սկսել նորից</button>
     <div class="step-count" id="stepcount"></div>
   </div>
 </header>
@@ -929,6 +938,16 @@ $('#btn-next').addEventListener('click',()=>{ if(cur<PAGES.length-1) renderPage(
 $('#btn-back').addEventListener('click',()=>{ if(cur>0) renderPage(cur-1) });
 
 renderPage(Math.min(S.unlocked, PAGES.length-1));
+
+/* Сброс: удаляет прогресс ТОЛЬКО этого варианта, соседние не трогает */
+(function(){
+  var b=document.getElementById('resetbtn'); if(!b) return;
+  b.addEventListener('click',function(){
+    if(!confirm('Ջնջե՞լ այս տարբերակի առաջընթացը և սկսել սկզբից։')) return;
+    try{ localStorage.removeItem(KEY) }catch(e){}
+    location.href=location.pathname;
+  });
+})();
 </script>
 </body>
 </html>

@@ -135,6 +135,13 @@ td b{font-weight:700}
 footer{margin-top:56px;padding:28px 0 60px;border-top:1px solid var(--line);
   font-size:13.5px;color:var(--ink3)}
 footer p{max-width:76ch;margin-bottom:6px}
+
+/* Сброс прогресса всех вариантов */
+.reset-all{margin-top:14px;background:none;border:1.5px solid var(--line);color:var(--ink2);
+  font-family:inherit;font-size:14px;font-weight:600;padding:10px 18px;border-radius:100px;
+  cursor:pointer;transition:all .18s}
+.reset-all:hover{border-color:var(--ink);color:var(--ink)}
+.reset-done{margin-left:12px;font-size:14px;font-weight:600;color:#00833D}
 </style>
 </head>
 <body>
@@ -159,7 +166,11 @@ footer p{max-width:76ch;margin-bottom:6px}
     Во всех четырёх нельзя перескочить вперёд: следующая страница открывается только после реального
     действия — раскрыть инструкцию, отметить сделанное, ответить на вопрос. Кнопка «дальше» всегда
     объясняет, чего именно не хватает.</p>
-    <p>Прогресс сохраняется в браузере. Чтобы пройти заново с нуля — откройте вариант в приватном окне.</p>
+    <p>У каждого варианта <b>свой независимый прогресс</b>: пройденное в одном не видно в другом.
+    Внутри варианта есть кнопка «↺ Սկսել նորից» — она сбрасывает только его.
+    Кнопка ниже обнуляет сразу все четыре.</p>
+    <button class="reset-all" id="resetall" type="button">↺ Сбросить прогресс всех вариантов</button>
+    <span class="reset-done" id="resetdone" hidden>Сброшено</span>
   </div>
 </header>
 
@@ -362,5 +373,18 @@ footer p{max-width:76ch;margin-bottom:6px}
 </footer>
 
 </div>
+
+<script>
+/* Каждый вариант хранит прогресс под своим ключом — здесь чистим все четыре сразу */
+document.getElementById('resetall').addEventListener('click', function(){
+  if(!confirm('Сбросить прогресс всех четырёх вариантов?')) return;
+  ['a','b','c','d'].forEach(function(k){
+    try{ localStorage.removeItem('unicef-m01-'+k) }catch(e){}
+  });
+  var done = document.getElementById('resetdone');
+  done.hidden = false;
+  setTimeout(function(){ done.hidden = true }, 2600);
+});
+</script>
 </body>
 </html>
