@@ -12,6 +12,8 @@ const EMPTY = {
   opened: {},    // "step:block" -> guide/table panel expanded
   marks: {},     // "step:block" -> 'done' | 'na'
   checks: {},    // "step:block:i" -> checklist ticked
+  cardTab: {},   // "step:block" -> selected flashcard index
+  cardFlip: {},  // "step:block:i" -> that card has been flipped
   qSel: {},
   qStatus: {},
   qOrder: {},
@@ -65,7 +67,10 @@ export const useProgressStore = create(
     }),
     {
       name: KEY,
-      version: 1,
+      version: 2,
+      // v1 saves predate the flashcard keys; merging over EMPTY keeps the
+      // reader from reading `undefined` maps.
+      migrate: (s) => ({ ...EMPTY, ...(s || {}) }),
       storage: createJSONStorage(() => safeStorage),
       // Actions stay out of storage.
       partialize: (s) => {

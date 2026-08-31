@@ -16,7 +16,7 @@ export function panelKeys(step) {
 export function openKeys(step) {
   if (isFinalStep(step)) return [];
   return M1.steps[step].blocks
-    .map((b, i) => (b.k === 'table' || b.k === 'pair' ? `${step}:${i}` : null))
+    .map((b, i) => (b.k === 'table' || b.k === 'pair' || b.k === 'cards' ? `${step}:${i}` : null))
     .filter(Boolean);
 }
 
@@ -27,8 +27,15 @@ export function canFinishReading(s, step) {
   );
 }
 
+// The intro is a framing page, not taught material — there is nothing to test
+// yet, so it goes straight to the first section.
+export function hasQuiz(step) {
+  return !isFinalStep(step) && step !== INTRO_STEP;
+}
+
 export function quizPassed(s, step) {
   if (isFinalStep(step)) return s.fDone === true;
+  if (!hasQuiz(step)) return true;
   return s.qStatus[step] === 'ok';
 }
 
@@ -60,12 +67,14 @@ export function nextHint(s, step) {
   const unmarked = keys.filter((k) => !s.marks[k]).length;
   if (unopened > 0) return `Բացեք ևս ${unopened} ուղեցույց`;
   if (unmarked > 0) return `Նշեք ևս ${unmarked} կետ՝ «Կատարված է»`;
+  if (!hasQuiz(step)) return M1.steps[step + 1]?.label ?? '';
   if (s.phase !== 'quiz') return '1 հարց այս բաժնից';
   if (!quizPassed(s, step)) return 'Պատասխանեք վիկտորինայի հարցին';
   return step + 1 < M1.steps.length ? M1.steps[step + 1].label : '5 հարց ամբողջ մոդուլից';
 }
 
 export function nextLabel(s, step) {
+  if (!hasQuiz(step) && !isFinalStep(step)) return 'Հաջորդ բաժին →';
   if (s.phase !== 'quiz' && !isFinalStep(step)) return 'Անցնել վիկտորինային →';
   return step + 1 < M1.steps.length ? 'Հաջորդ բաժին →' : 'Ամփոփիչ վիկտորինա →';
 }

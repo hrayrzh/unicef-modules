@@ -35,6 +35,43 @@ button { font-family: inherit; }
 .ms-card-btn:hover { background: rgba(246,244,239,.26); border-color: #1CABE2; }
 .ms-close:hover { background: rgba(21,26,33,.13); transform: scale(1.06); }
 
+/* Flashcard flip. Both faces are stacked in the same grid cell so the card is
+   sized by its tallest face and never jumps height mid-flip. */
+.ms-card-inner { display: grid; transform-style: preserve-3d; transition: transform .5s cubic-bezier(.2,.85,.2,1); }
+.ms-card-inner.is-flipped { transform: rotateY(180deg); }
+.ms-card-face { grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.ms-card-back { transform: rotateY(180deg); }
+.ms-card:hover .ms-card-inner:not(.is-flipped) { transform: translateY(-2px); }
+.ms-card:focus-visible { outline: 2px solid #1CABE2; outline-offset: 3px; }
+
+/* An explained term: emphasised, with a tooltip on hover or keyboard focus.
+   Focus makes it reachable without a pointer — on touch, a tap focuses it. */
+.ms-term { position: relative; cursor: help; border-bottom: 1px dashed rgba(15,127,168,.5); }
+.ms-term:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; border-radius: 3px; }
+.ms-tip {
+  position: absolute; bottom: calc(100% + 9px); left: 50%; transform: translateX(-50%);
+  z-index: 20; width: max-content; max-width: min(300px, 78vw);
+  padding: 11px 14px; border-radius: 11px;
+  background: #151A21; color: #F2F5F8;
+  font-size: 13px; line-height: 1.6; font-weight: 400; text-align: start;
+  box-shadow: 0 10px 28px rgba(21,26,33,.28);
+  opacity: 0; visibility: hidden; transition: opacity .18s ease, visibility .18s;
+}
+.ms-tip::after {
+  content: ''; position: absolute; top: 100%; left: 50%; margin-left: -6px;
+  border: 6px solid transparent; border-top-color: #151A21;
+}
+.ms-term:hover .ms-tip, .ms-term:focus .ms-tip, .ms-term:focus-within .ms-tip { opacity: 1; visibility: visible; }
+
+/* §5 — with motion reduced the flip is a swap, not a rotation. */
+@media (prefers-reduced-motion: reduce) {
+  .ms-card-inner, .ms-card-inner.is-flipped, .ms-card:hover .ms-card-inner:not(.is-flipped) { transform: none; }
+  .ms-card-face { backface-visibility: visible; -webkit-backface-visibility: visible; }
+  .ms-card-back { transform: none; }
+  .ms-card-inner:not(.is-flipped) .ms-card-back { display: none; }
+  .ms-card-inner.is-flipped .ms-card-face:not(.ms-card-back) { display: none; }
+}
+
 :focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
 
 /* D4 — mobile. The reader collapses to a single column and the sidebar

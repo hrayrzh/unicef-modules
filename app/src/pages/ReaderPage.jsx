@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { MODULES } from '../data/module01';
 import {
   M1, NAV_GROUPS, FINAL_STEP, isFinalStep,
-  canAdvance, canFinishReading, quizPassed, nextHint, nextLabel, stepLabel,
+  canAdvance, canFinishReading, quizPassed, nextHint, nextLabel, stepLabel, hasQuiz,
 } from '../moduleLogic';
 import { useProgressStore } from '../store/progress';
 import Block from '../components/Block';
@@ -77,12 +77,14 @@ export default function ReaderPage() {
 
   const onNext = useCallback(() => {
     // Reading a section only unlocks its quiz; the quiz unlocks the next section.
-    if (!isFinalStep(step) && phase !== 'quiz') {
+    if (!isFinalStep(step) && hasQuiz(step) && phase !== 'quiz') {
       if (!canFinishReading(state, step)) return;
       update((prev) => ({ phase: 'quiz', dir: 1, tick: (prev.tick || 0) + 1 }));
       scrollTop();
       return;
     }
+    // Quiz-less sections (the intro) advance straight on, once read.
+    if (!isFinalStep(step) && !hasQuiz(step) && !canFinishReading(state, step)) return;
     if (step + 1 <= M1.steps.length) { gotoStep(step + 1); return; }
     if (!canAdvance(state, step)) return;
     update((prev) => ({ done: { ...prev.done, [moduleIndex]: true } }));
@@ -199,7 +201,7 @@ export default function ReaderPage() {
             </div>
           )}
 
-          {hasContent && !isFinalStep(step) && phase !== 'quiz' && (
+          {hasContent && !isFinalStep(step) && (phase !== 'quiz' || !hasQuiz(step)) && (
             <div key={`${state.tick || 0}:${step}:read`} style={{ maxWidth: 780, margin: '0 auto', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: '#1CABE2', animation: 'msKickerIn .45s cubic-bezier(.2,.85,.2,1) both' }}>
                 {stepLabel(step)}
@@ -236,7 +238,7 @@ export default function ReaderPage() {
             </div>
           )}
 
-          {hasContent && !isFinalStep(step) && phase === 'quiz' && (
+          {hasContent && !isFinalStep(step) && phase === 'quiz' && hasQuiz(step) && (
             <div key={`${state.tick || 0}:${step}:quiz`} style={{ maxWidth: 780, margin: '0 auto', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: '#1CABE2', animation: 'msKickerIn .45s cubic-bezier(.2,.85,.2,1) both' }}>
                 {stepLabel(step)} · Վիկտորինա
@@ -298,7 +300,7 @@ function NavRow({ item, onPick, phase, size }) {
       <span style={{ fontSize: size, lineHeight: 1.4, color: cur ? '#0F7FA8' : locked ? '#B7BDC6' : seen ? '#2B313A' : '#8A919D', fontWeight: cur ? 600 : 400, transition: 'color .35s ease, transform .35s cubic-bezier(.2,.85,.2,1)', transform: `translateX(${cur ? 4 : 0}px)` }}>
         {locked ? '🔒 ' : ''}{title}
       </span>
-      {cur && (
+      {cur && hasQuiz(i) && (
         <span style={{ alignSelf: 'flex-end', fontSize: 8.5, letterSpacing: '.1em', textTransform: 'uppercase', fontWeight: 600, color: phase === 'quiz' ? '#0F7FA8' : '#C3C9D2', transition: 'color .3s ease' }}>
           Վիկտորինա
         </span>

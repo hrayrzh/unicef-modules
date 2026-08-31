@@ -1,5 +1,37 @@
 import FigureWithBubble from './FigureWithBubble';
 
+// ((term||explanation)) marks a term that is emphasised and explained on
+// hover/focus. §5 — the tooltip is CSS-only and inline, so it survives an
+// iframe with a strict CSP and needs no positioning library.
+const TERM = /\(\((.+?)\|\|(.+?)\)\)/g;
+
+function renderInline(text) {
+  if (typeof text !== 'string' || !text.includes('((')) return text;
+  const out = [];
+  let last = 0;
+  for (const m of text.matchAll(TERM)) {
+    if (m.index > last) out.push(text.slice(last, m.index));
+    out.push(
+      // The term lives inside the card, whose click flips it. Swallow the
+      // event so opening the tooltip — the only way to read it on touch —
+      // does not flip the card away from the text being explained.
+      <span
+        key={m.index}
+        className="ms-term"
+        tabIndex={0}
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') e.stopPropagation(); }}
+      >
+        <strong style={{ fontWeight: 600, color: '#0F7FA8' }}>{m[1]}</strong>
+        <span className="ms-tip" role="tooltip">{m[2]}</span>
+      </span>,
+    );
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) out.push(text.slice(last));
+  return out;
+}
+
 /**
  * Renders one content block. The gating rules (D9) live in the parent —
  * this component only reports opens/marks upward.
@@ -178,29 +210,102 @@ export default function Block({ block: b, step, index, state, update, anim, dela
     );
   }
 
-  if (b.k === 'table') {
-    const cols = `minmax(0,.9fr) repeat(${Math.max(1, (b.head || []).length - 1)}, minmax(0,1.1fr))`;
+  if (b.k === 'cards') {
+    const cards = b.cards || [];
+    const active = Math.min(state.cardTab?.[key] ?? 0, Math.max(0, cards.length - 1));
+    const card = cards[active];
+    const flipped = !!state.cardFlip?.[`${key}:${active}`];
+    const seen = cards.filter((_, i) => state.cardFlip?.[`${key}:${i}`]).length;
+
+    // Picking a stage never counts as progress — only a flip does, so the
+    // panel cannot be satisfied by tabbing across the three ages. (D9)
+    const pick = (i) =>
+      update((prev) => ({ cardTab: { ...prev.cardTab, [key]: i } }));
+
+    const flip = () =>
+      update((prev) => {
+        const fk = `${key}:${active}`;
+        const next = { ...prev.cardFlip, [fk]: !prev.cardFlip?.[fk] };
+        // One flip opens the panel; un-flipping never takes the credit back.
+        const opened = next[fk] ? { ...prev.opened, [key]: true } : prev.opened;
+        return { cardFlip: next, opened };
+      });
+
     return wrap(
       <div style={{ border: `1px solid ${panelBorder}`, borderRadius: 16, overflow: 'hidden', background: '#FFFFFF', transition: 'border-color .25s ease' }}>
-        {head(b.title, null, isOpen ? '✓ Կարդացված' : 'Բացել', isOpen ? '#0F7FA8' : '#8A919D')}
-        {isOpen && (
-          <div style={{ padding: '0 14px 16px', animation: 'msFadeUp .32s cubic-bezier(.2,.85,.2,1) both' }}>
-            <div className="ms-table">
-              <div style={{ display: 'grid', gridTemplateColumns: cols, background: 'rgba(21,26,33,.04)', minWidth: 640 }}>
-                {(b.head || []).map((h, i) => (
-                  <div key={i} style={{ padding: '13px 16px', fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', color: '#5A6270', fontWeight: 600 }}>{h}</div>
-                ))}
-              </div>
-              {(b.rows || []).map((row, ri) => (
-                <div key={ri} style={{ display: 'grid', gridTemplateColumns: cols, borderTop: '1px solid rgba(21,26,33,.09)', minWidth: 640 }}>
-                  {row.map((cell, ci) => (
-                    <div key={ci} style={{ padding: 16, fontSize: 13.5, lineHeight: 1.6, color: '#2B313A' }}>{cell}</div>
-                  ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '18px 22px' }}>
+          <span style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'baseline', gap: 11, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 16.5, fontWeight: 600, letterSpacing: '-.3px' }}>{b.title}</span>
+            <span style={{ fontSize: 12, color: '#6E7787' }}>{b.hint}</span>
+          </span>
+          <span style={{ flexShrink: 0, fontSize: 10.5, letterSpacing: '.12em', textTransform: 'uppercase', color: seen ? '#0F7FA8' : '#8A919D' }}>
+            {seen ? `✓ ${seen} / ${cards.length}` : 'Շրջեք քարտը'}
+          </span>
+        </div>
+
+        <div role="tablist" aria-label={b.title} style={{ display: 'flex', gap: 8, padding: '0 22px', flexWrap: 'wrap' }}>
+          {cards.map((c, i) => {
+            const on = i === active;
+            return (
+              <button
+                key={i}
+                role="tab"
+                aria-selected={on}
+                className="ms-lift"
+                onClick={() => pick(i)}
+                style={{ padding: '9px 18px', borderRadius: 999, cursor: 'pointer', fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit', background: on ? '#1CABE2' : 'transparent', border: `1px solid ${on ? '#1CABE2' : 'rgba(21,26,33,.18)'}`, color: on ? '#0E1218' : '#5A6270', transition: 'background .2s, color .2s, border-color .2s' }}
+              >
+                {c.tab}
+                {state.cardFlip?.[`${key}:${i}`] ? <span style={{ marginInlineStart: 7, opacity: .75 }}>✓</span> : null}
+              </button>
+            );
+          })}
+        </div>
+
+        <div style={{ padding: '16px 22px 22px' }}>
+          <div
+            className="ms-card"
+            role="button"
+            tabIndex={0}
+            aria-pressed={flipped}
+            aria-label={flipped ? 'Շրջել դեպի տարիքային փուլը' : `Բացել «${card?.front}» քարտի բովանդակությունը`}
+            onClick={flip}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } }}
+            style={{ position: 'relative', cursor: 'pointer', borderRadius: 16, minHeight: 232, display: 'grid' }}
+          >
+            <div className={`ms-card-inner${flipped ? ' is-flipped' : ''}`}>
+              <div className="ms-card-face" style={{ display: 'grid', placeItems: 'center', textAlign: 'center', gap: 16, padding: 28, borderRadius: 16, background: 'rgba(28,171,226,.07)', border: '1px solid rgba(28,171,226,.3)' }}>
+                <div style={{ fontFamily: "'Noto Serif Armenian', 'Spectral', serif", fontSize: 21, lineHeight: 1.35, fontWeight: 600, color: '#151A21' }}>
+                  {card?.front}
                 </div>
-              ))}
+                <div style={{ fontSize: 12, letterSpacing: '.1em', textTransform: 'uppercase', color: '#0F7FA8', fontWeight: 600 }}>↻ Շրջել քարտը</div>
+              </div>
+
+              <div className="ms-card-face ms-card-back" style={{ padding: 26, borderRadius: 16, background: '#FFFFFF', border: '1px solid rgba(21,26,33,.14)', display: 'flex', flexDirection: 'column', gap: 15 }}>
+                {(b.fields || []).map((f, i) => {
+                  const value = card?.back?.[i];
+                  return (
+                    <div key={i}>
+                      <div style={{ fontSize: 10.5, letterSpacing: '.12em', textTransform: 'uppercase', color: '#5A6270', fontWeight: 600 }}>{f}</div>
+                      {Array.isArray(value) ? (
+                        <div style={{ marginTop: 6, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                          {value.map((t, j) => (
+                            <div key={j} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                              <span style={{ flexShrink: 0, marginTop: 8, width: 5, height: 5, borderRadius: '50%', background: '#1CABE2' }} />
+                              <span style={{ fontSize: 14.5, lineHeight: 1.6, color: '#2B313A' }}>{renderInline(t)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div style={{ marginTop: 5, fontSize: 14.5, lineHeight: 1.65, color: '#2B313A' }}>{renderInline(value)}</div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        )}
+        </div>
       </div>,
     );
   }
