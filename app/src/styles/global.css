@@ -1,0 +1,79 @@
+html { scroll-behavior: smooth; }
+html, body { margin: 0; padding: 0; background: #0E1218; }
+body {
+  font-family: 'Sora', 'Noto Sans Armenian', Mshtakan, Sylfaen, system-ui, sans-serif;
+  color: #F6F4EF;
+  -webkit-font-smoothing: antialiased;
+  text-wrap: pretty;
+}
+* { box-sizing: border-box; }
+a { color: #1CABE2; text-decoration: none; }
+a:hover { color: #F6F4EF; text-decoration: underline; }
+button { font-family: inherit; }
+::selection { background: #1CABE2; color: #14181F; }
+
+@keyframes msGlow { 0%,100% { opacity: .5; transform: scale(1); } 50% { opacity: .85; transform: scale(1.09); } }
+@keyframes msFadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes msFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes msWheelHint { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+@keyframes msRise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes msShake { 10%,90% { transform: translateX(-3px); } 20%,80% { transform: translateX(5px); } 30%,50%,70% { transform: translateX(-8px); } 40%,60% { transform: translateX(8px); } }
+@keyframes msPop { 0% { opacity: 0; transform: scale(.9); } 60% { transform: scale(1.03); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes msInFwd { from { opacity: 0; transform: translate3d(26px, 8px, 0); } to { opacity: 1; transform: none; } }
+@keyframes msInBack { from { opacity: 0; transform: translate3d(-26px, 8px, 0); } to { opacity: 1; transform: none; } }
+@keyframes msTitleIn { from { opacity: 0; transform: translateY(14px); letter-spacing: .04em; } to { opacity: 1; transform: none; } }
+@keyframes msKickerIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+@keyframes msBar { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes msRowIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+
+/* Hover styles that the original expressed as style-hover attributes. */
+.ms-lift { transition: transform .22s cubic-bezier(.2,.85,.2,1), background .22s ease, box-shadow .22s ease, border-color .22s ease; }
+.ms-lift:hover:not(:disabled) { transform: translateY(-2px); }
+.ms-slide:hover { transform: translateX(4px); }
+.ms-row:hover { background: rgba(21,26,33,.05); }
+.ms-panel-head:hover { background: rgba(21,26,33,.03); }
+.ms-card-btn:hover { background: rgba(246,244,239,.26); border-color: #1CABE2; }
+.ms-close:hover { background: rgba(21,26,33,.13); transform: scale(1.06); }
+
+:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
+
+/* D4 — mobile. The reader collapses to a single column and the sidebar
+   becomes a horizontal scroller above the content. */
+@media (max-width: 860px) {
+  .ms-reader-body { flex-direction: column !important; }
+  .ms-reader-nav {
+    flex: 0 0 auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(21,26,33,.1);
+    max-height: 33vh;
+    padding: 14px 18px !important;
+  }
+  .ms-reader-scroll { padding: 24px 18px 18px !important; }
+  /* The whole composition is sized from one width, so a narrow screen only
+     needs to scale that stage down — the bubble and its offsets follow.
+     A transform is used rather than `zoom`: zoom re-lays-out the container,
+     which changes what 1cqw resolves to and so breaks the bubble text's
+     fixed proportion. A transform scales the rendered result uniformly. */
+  /* Too narrow for figure and text side by side — stack them. The stage is
+     resized by its own width variable rather than a transform: a transform
+     leaves the original box reserved in layout, which pushed the text on top
+     of the figure, and it also breaks the bubble text's cqw proportion. */
+  .ms-figure { flex-direction: column; align-items: flex-start !important; gap: 20px !important; }
+  .ms-figure-stage {
+    --ms-w-mobile: 130px;
+    width: var(--ms-w-mobile) !important;
+    margin-top: calc(var(--ms-w-mobile) * var(--ms-headroom-ratio)) !important;
+  }
+  .ms-table { display: block !important; overflow-x: auto; }
+  .ms-pair { grid-template-columns: 1fr !important; }
+  .ms-footer-nav { flex-wrap: wrap; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Ծնողական վերահսկողություն — Մոդուլ 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   Ф — «Ուղեկից» / Спутник.  Финальный сводный вариант.
+   База — концепт A (строгий UNICEF).
+   Взято: B — личный план; C — выбор устройств и % защиты;
+          D — возрастной слайдер; E — симулятор экрана.
+   Плюс из PDF: поиск + фильтры-чипы + аккордеон (режим «Библиотека»).
+   ───────────────────────────────────────────────────────────── */
+:root{
+  --cyan:#1CABE2; --cyan-d:#128FC0; --blue:#374EA2; --navy:#0F2C4C;
+  --ink:#0F2C4C; --ink-2:#3D566E; --ink-3:#6B8299;
+  --line:#DCE6EE; --line-2:#EDF3F7; --bg:#FFF; --bg-2:#F5F9FC;
+  --yellow:#FFC20E; --green:#00833D; --red:#E2231A; --amber:#B26A00;
+  --hy:'Noto Sans Armenian','Mshtakan','Sylfaen',system-ui,sans-serif;
+  --lat:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  --wrap:860px;
+  --sh:0 1px 2px rgba(15,44,76,.06),0 4px 14px rgba(15,44,76,.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--hy);color:var(--ink);background:var(--bg-2);
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:2px;border-radius:4px}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:none}
+a{color:var(--cyan-d)}
+
+/* ── Шапка ───────────────────────────────────────────────── */
+.top{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(1.6) blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:var(--wrap);margin:0 auto;padding:11px 22px;
+  display:flex;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:9px;flex-shrink:0}
+.brand-mark{width:26px;height:26px;flex-shrink:0}
+.brand-txt{font-size:12px;font-weight:700;letter-spacing:.07em;color:var(--ink-3);
+  text-transform:uppercase;font-family:var(--lat)}
+@media(max-width:640px){.brand-txt{display:none}}
+
+/* Переключатель режимов: Курс / Библиотека */
+.modes{display:flex;gap:3px;background:var(--line-2);padding:3px;border-radius:10px;
+  margin-left:auto;flex-shrink:0}
+.mode{padding:6px 14px;border-radius:8px;font-size:13.5px;font-weight:600;
+  color:var(--ink-3);transition:background .16s,color .16s;white-space:nowrap}
+.mode[aria-selected="true"]{background:#FFF;color:var(--ink);box-shadow:var(--sh)}
+@media(max-width:520px){.mode{padding:6px 10px;font-size:12.5px}}
+
+.reset{font-size:12.5px;color:var(--ink-3);padding:6px 10px;border-radius:8px;flex-shrink:0}
+.reset:hover{background:var(--line-2);color:var(--red)}
+@media(max-width:760px){.reset{display:none}}
+
+/* Полоса прогресса курса */
+.pbar{height:3px;background:var(--line-2);position:relative;overflow:hidden}
+.pbar-f{height:100%;background:linear-gradient(90deg,var(--cyan),var(--blue));
+  width:0;transition:width .45s cubic-bezier(.4,0,.2,1)}
+
+/* ── Каркас ──────────────────────────────────────────────── */
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 22px 130px}
+@media(max-width:640px){.wrap{padding:0 16px 120px}}
+.view[hidden]{display:none}
+
+/* ── Степпер курса ───────────────────────────────────────── */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;padding:18px 0 6px;align-items:center}
+.dot{width:26px;height:26px;border-radius:8px;border:1.5px solid var(--line);
+  background:#FFF;font-size:11.5px;font-weight:700;font-family:var(--lat);
+  color:var(--ink-3);display:grid;place-items:center;transition:all .18s;flex-shrink:0}
+.dot.done{background:var(--cyan);border-color:var(--cyan);color:#FFF}
+.dot.cur{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 0 3px rgba(28,171,226,.16)}
+.dot:disabled{opacity:.42;cursor:not-allowed}
+.stepcount{margin-left:auto;font-family:var(--lat);font-size:12.5px;
+  font-weight:600;color:var(--ink-3)}
+
+/* ── Карточка страницы ───────────────────────────────────── */
+.card{background:#FFF;border:1px solid var(--line);border-radius:18px;
+  padding:38px 40px 34px;box-shadow:var(--sh);margin-top:12px}
+@media(max-width:640px){.card{padding:26px 20px 24px;border-radius:14px}}
+.eyebrow{font-family:var(--lat);font-size:11.5px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--cyan-d);margin-bottom:10px}
+h1{font-size:clamp(25px,4.4vw,35px);line-height:1.22;letter-spacing:-.02em;font-weight:700}
+h2{font-size:clamp(21px,3.2vw,27px);line-height:1.28;letter-spacing:-.018em;
+  font-weight:700;margin-bottom:14px}
+h3.sub{font-size:17.5px;font-weight:700;margin:26px 0 9px;color:var(--navy)}
+.body p{margin-bottom:13px;color:var(--ink-2)}
+.body p:last-child{margin-bottom:0}
+.lead{font-size:17.5px;color:var(--ink-2);margin-bottom:20px}
+
+/* Разметка контента */
+.setting{font-family:var(--mono);font-size:.9em;background:var(--line-2);
+  border:1px solid var(--line);border-radius:5px;padding:1px 6px;
+  color:var(--navy);white-space:nowrap;font-weight:500}
+.setting-ru{font-size:.85em;color:var(--ink-3)}
+.fn{font-family:var(--lat);font-size:.68em;color:var(--cyan-d);font-weight:700;
+  vertical-align:super;margin-left:1px}
+strong{font-weight:700;color:var(--ink)}
+
+/* Обложка */
+.hero-num{font-family:var(--lat);font-size:12px;font-weight:700;letter-spacing:.14em;
+  color:var(--cyan-d);margin-bottom:12px}
+.hero h1{margin-bottom:14px}
+.hero-tag{font-size:18px;color:var(--ink-2);line-height:1.55;max-width:60ch}
+.hero-meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:26px;padding-top:22px;
+  border-top:1px solid var(--line)}
+.hero-meta dt{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-family:var(--lat);margin-bottom:3px}
+.hero-meta dd{font-size:15.5px;font-weight:600}
+.disclaim{margin-top:22px;font-size:13.5px;color:var(--ink-3);line-height:1.5;
+  padding-left:13px;border-left:2px solid var(--line)}
+
+/* Врезки */
+.keyq{background:linear-gradient(135deg,#F0F9FD,#F5F9FC);border:1px solid #CDE9F6;
+  border-radius:14px;padding:24px 26px;margin:24px 0}
+.keyq-label{font-family:var(--lat);font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--cyan-d);margin-bottom:8px}
+.keyq-q{font-size:19px;font-weight:600;line-height:1.42;margin-bottom:12px}
+.keyq-a{color:var(--ink-2);font-size:15.5px}
+.callout{display:flex;gap:14px;background:#FFFBF0;border:1px solid #F5E3B8;
+  border-radius:14px;padding:20px 22px;margin:22px 0}
+.callout-icon{font-size:20px;line-height:1.3;flex-shrink:0}
+.callout-label{font-weight:700;margin-bottom:5px;color:var(--amber)}
+.callout p{color:var(--ink-2);font-size:15.5px}
+.golden{background:linear-gradient(135deg,#FFFAEC,#FFF7E0);border:1px solid var(--yellow);
+  border-radius:14px;padding:24px 26px;margin:24px 0}
+.golden-label{font-family:var(--lat);font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+.golden p{font-size:17px;font-weight:600;line-height:1.5}
+
+/* ── Раскрывающийся блок (аккордеон, из PDF) ─────────────── */
+.disc{border:1px solid var(--line);border-radius:13px;margin-bottom:10px;
+  background:#FFF;overflow:hidden;transition:border-color .18s,box-shadow .18s}
+.disc.opened{border-color:#BFDFF0;box-shadow:var(--sh)}
+.disc.marked{border-color:#B8E0C8;background:#FBFEFC}
+.disc-head{width:100%;display:flex;align-items:center;gap:13px;
+  padding:15px 18px;text-align:left}
+.disc-head:hover{background:var(--bg-2)}
+.disc-txt{flex:1;min-width:0}
+.disc-name{font-weight:600;font-size:16px;display:flex;align-items:center;
+  gap:9px;flex-wrap:wrap}
+.disc-sub{font-size:13px;color:var(--ink-3);margin-top:2px}
+.disc-chev{width:22px;height:22px;flex-shrink:0;position:relative}
+.disc-chev::before,.disc-chev::after{content:'';position:absolute;background:var(--ink-3);
+  border-radius:2px;transition:transform .22s,opacity .22s}
+.disc-chev::before{left:4px;top:10px;width:14px;height:2px}
+.disc-chev::after{left:10px;top:4px;width:2px;height:14px}
+.disc.opened .disc-chev::after{transform:scaleY(0);opacity:0}
+.disc-body{display:none;padding:0 18px 18px;border-top:1px solid var(--line-2)}
+.disc.opened .disc-body{display:block;animation:slidein .22s ease}
+@keyframes slidein{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.badge{font-family:var(--lat);font-size:10.5px;font-weight:700;letter-spacing:.05em;
+  padding:2.5px 8px;border-radius:20px;background:var(--line-2);color:var(--ink-3);
+  text-transform:uppercase;white-space:nowrap}
+.badge.os{background:#E8F4FB;color:#0B6E96}
+.badge.social{background:#F3EEFB;color:#5B3FA0}
+.badge.games{background:#FFF1E6;color:#B25A00}
+.badge.messenger{background:#E9F7EF;color:#0A6B3D}
+.badge.ok{background:#E5F5EC;color:var(--green)}
+.badge.na{background:#F0F2F4;color:var(--ink-3)}
+
+/* Шаги гайда */
+.steps{list-style:none;counter-reset:s;margin-top:14px}
+.steps li{counter-increment:s;position:relative;padding-left:34px;margin-bottom:12px;
+  font-size:15.5px;color:var(--ink-2);line-height:1.6}
+.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:23px;height:23px;
+  border-radius:7px;background:var(--line-2);color:var(--navy);font-family:var(--lat);
+  font-size:11.5px;font-weight:700;display:grid;place-items:center}
+.steps li.sdone::before{background:var(--green);color:#FFF;content:'✓'}
+.step-row{display:flex;align-items:flex-start;gap:10px}
+.step-tick{flex-shrink:0;width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line);
+  background:#FFF;display:grid;place-items:center;font-size:12px;color:transparent;
+  transition:all .16s;margin-top:1px}
+.step-tick.on{background:var(--green);border-color:var(--green);color:#FFF}
+.step-tick:disabled{opacity:.4;cursor:not-allowed}
+
+/* Отметки гайда */
+.marks{display:flex;gap:9px;margin-top:16px;padding-top:15px;
+  border-top:1px solid var(--line-2);flex-wrap:wrap}
+.mark{padding:8px 15px;border:1.5px solid var(--line);border-radius:9px;
+  font-size:13.5px;font-weight:600;color:var(--ink-2);transition:all .16s}
+.mark:hover:not(:disabled){border-color:var(--cyan);color:var(--cyan-d)}
+.mark.on{background:var(--green);border-color:var(--green);color:#FFF}
+.mark.on[data-mark="na"]{background:var(--ink-3);border-color:var(--ink-3)}
+.mark:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── Возрастной слайдер (из D) ───────────────────────────── */
+.ager{background:linear-gradient(135deg,#F7FBFE,#FFF);border:1px solid var(--line);
+  border-radius:16px;padding:28px 30px;margin:22px 0}
+@media(max-width:640px){.ager{padding:22px 18px}}
+.ager-val{display:flex;align-items:baseline;gap:11px;margin-bottom:4px}
+.ager-num{font-family:var(--lat);font-size:clamp(44px,9vw,68px);font-weight:700;
+  line-height:1;color:var(--cyan-d);letter-spacing:-.03em}
+.ager-unit{font-size:17px;color:var(--ink-3)}
+.slider{width:100%;margin:20px 0 6px;-webkit-appearance:none;appearance:none;
+  background:transparent;cursor:grab}
+.slider::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--line)}
+.slider::-moz-range-track{height:6px;border-radius:3px;background:var(--line)}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;margin-top:-11px;
+  border-radius:50%;background:var(--cyan);border:3px solid #FFF;
+  box-shadow:0 2px 8px rgba(15,44,76,.25)}
+.slider::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--cyan);
+  border:3px solid #FFF;box-shadow:0 2px 8px rgba(15,44,76,.25)}
+.ager-scale{display:flex;justify-content:space-between;font-family:var(--lat);
+  font-size:11.5px;color:var(--ink-3);font-weight:600}
+.stagebox{border-top:1px solid var(--line);padding-top:22px;margin-top:20px}
+.stage-k{font-family:var(--lat);font-size:10.5px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-3);margin:14px 0 5px}
+.stage-v{font-size:15.5px;color:var(--ink-2)}
+.stage-risks{margin:0;padding-left:19px;color:var(--ink-2);font-size:15.5px}
+.stage-risks li{margin-bottom:4px}
+.stage-age{font-family:var(--lat);font-size:11.5px;font-weight:700;padding:3px 9px;
+  border-radius:20px;background:var(--line-2);color:var(--navy)}
+
+/* ── Выбор устройств (из C) ──────────────────────────────── */
+.devgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));
+  gap:10px;margin:18px 0}
+.dev{border:1.5px solid var(--line);border-radius:12px;padding:14px 15px;text-align:left;
+  background:#FFF;transition:all .16s}
+.dev:hover{border-color:var(--cyan)}
+.dev.on{border-color:var(--cyan);background:#F2FAFE;box-shadow:0 0 0 2px rgba(28,171,226,.14)}
+.dev-nm{font-weight:600;font-size:15px;margin-bottom:2px}
+.dev-ft{font-size:12.5px;color:var(--ink-3)}
+.dev-tick{float:right;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--line);
+  display:grid;place-items:center;font-size:11px;color:transparent}
+.dev.on .dev-tick{background:var(--cyan);border-color:var(--cyan);color:#FFF}
+
+/* ── Защищённость % (из C) ───────────────────────────────── */
+.shield{display:flex;align-items:center;gap:18px;background:#FFF;border:1px solid var(--line);
+  border-radius:14px;padding:20px 22px;margin:20px 0;box-shadow:var(--sh)}
+.ring{width:72px;height:72px;flex-shrink:0}
+.ring-bg{fill:none;stroke:var(--line-2);stroke-width:8}
+.ring-fg{fill:none;stroke:var(--green);stroke-width:8;stroke-linecap:round;
+  transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)}
+.shield-n{font-family:var(--lat);font-size:26px;font-weight:700;line-height:1}
+.shield-lb{font-size:13px;color:var(--ink-3);margin-top:3px}
+
+/* ── Симулятор (из E) ────────────────────────────────────── */
+.sim{background:linear-gradient(160deg,#EAF6FC,#F5F9FC);border:1px solid var(--line);
+  border-radius:16px;padding:22px;margin:18px 0;display:flex;gap:24px;align-items:flex-start}
+@media(max-width:700px){.sim{flex-direction:column;align-items:center;gap:16px}}
+.phone{width:216px;flex-shrink:0;background:#1B2733;border-radius:26px;padding:9px;
+  box-shadow:0 8px 26px rgba(15,44,76,.22)}
+.phone-scr{background:#FFF;border-radius:19px;overflow:hidden;min-height:342px;
+  display:flex;flex-direction:column}
+.phone-bar{background:var(--line-2);padding:9px 13px;font-family:var(--lat);font-size:11.5px;
+  font-weight:700;color:var(--navy);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:7px}
+.phone-back{color:var(--cyan-d);font-size:14px;line-height:1}
+.phone-list{flex:1;overflow:hidden}
+.prow{display:flex;align-items:center;justify-content:space-between;gap:9px;
+  padding:11px 13px;border-bottom:1px solid var(--line-2);font-size:12.5px;
+  font-family:var(--lat);color:var(--ink-2);text-align:left;width:100%}
+.prow.target{cursor:pointer;color:var(--navy);font-weight:600}
+.prow.target:hover{background:#F2FAFE}
+.prow.pulse{animation:pulse 1.9s ease-in-out infinite;background:#F2FAFE}
+@keyframes pulse{0%,100%{box-shadow:inset 3px 0 0 var(--cyan)}
+  50%{box-shadow:inset 3px 0 0 var(--cyan);background:#E6F5FC}}
+.prow-ch{color:var(--ink-3);font-size:13px}
+.pswitch{width:34px;height:20px;border-radius:20px;background:var(--line);position:relative;
+  flex-shrink:0;transition:background .22s}
+.pswitch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;
+  border-radius:50%;background:#FFF;transition:transform .22s;
+  box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.pswitch.on{background:var(--green)}
+.pswitch.on::after{transform:translateX(14px)}
+.sim-side{flex:1;min-width:0}
+.sim-task{font-size:14.5px;color:var(--ink-2);margin-bottom:12px}
+.sim-hint{font-size:13px;color:var(--cyan-d);font-weight:600}
+.sim-done{color:var(--green);font-weight:600;font-size:14.5px}
+
+/* ── Библиотека: поиск + фильтры (из PDF) ────────────────── */
+.lib-head{padding:26px 0 4px}
+.lib-h{font-size:clamp(22px,3.4vw,29px);font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+.lib-sub{color:var(--ink-2);margin-bottom:20px}
+.search{position:relative;margin-bottom:16px}
+.search input{width:100%;padding:14px 46px 14px 17px;border:1.5px solid var(--line);
+  border-radius:12px;font:inherit;font-size:15.5px;background:#FFF;color:var(--ink)}
+.search input:focus{outline:none;border-color:var(--cyan);
+  box-shadow:0 0 0 3px rgba(28,171,226,.14)}
+.search input::placeholder{color:var(--ink-3)}
+.search-ic{position:absolute;right:15px;top:50%;transform:translateY(-50%);
+  color:var(--ink-3);pointer-events:none}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{padding:7px 14px;border:1.5px solid var(--line);border-radius:20px;
+  font-size:13px;font-weight:600;color:var(--ink-2);background:#FFF;transition:all .16s}
+.chip:hover{border-color:var(--cyan)}
+.chip.on{background:var(--cyan);border-color:var(--cyan);color:#FFF}
+.found{font-family:var(--lat);font-size:13px;font-weight:600;color:var(--ink-3);
+  margin-bottom:14px}
+.empty{text-align:center;padding:46px 20px;color:var(--ink-3)}
+
+/* ── Чеклист / план ──────────────────────────────────────── */
+.cl{list-style:none}
+.cl li{display:flex;gap:12px;align-items:flex-start;padding:13px 0;
+  border-bottom:1px solid var(--line-2)}
+.cl li:last-child{border-bottom:none}
+.cl-tick{flex-shrink:0;width:23px;height:23px;border-radius:7px;border:1.5px solid var(--line);
+  background:#FFF;display:grid;place-items:center;font-size:12px;color:transparent;
+  transition:all .16s;margin-top:1px}
+.cl-tick.on{background:var(--green);border-color:var(--green);color:#FFF}
+.cl-txt{font-size:15.5px;color:var(--ink-2)}
+
+/* Скрипты диалога */
+.scripts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+@media(max-width:640px){.scripts{grid-template-columns:1fr}}
+.sc{border-radius:13px;padding:18px 20px;border:1px solid}
+.sc.do{background:#F4FBF7;border-color:#BFE5CE}
+.sc.dont{background:#FEF5F4;border-color:#F5CFCB}
+.sc-h{font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:7px;font-size:15px}
+.sc.do .sc-h{color:var(--green)} .sc.dont .sc-h{color:var(--red)}
+.sc ul{list-style:none} .sc li{font-size:14.5px;color:var(--ink-2);
+  margin-bottom:9px;padding-left:15px;position:relative;line-height:1.55}
+.sc li::before{content:'—';position:absolute;left:0;color:var(--ink-3)}
+
+/* ── Вопросы ─────────────────────────────────────────────── */
+.q{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;
+  padding:22px 24px;margin:22px 0}
+@media(max-width:640px){.q{padding:18px 16px}}
+.q-lb{font-family:var(--lat);font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--cyan-d);margin-bottom:9px}
+.q-t{font-size:16.5px;font-weight:600;line-height:1.45;margin-bottom:15px}
+.opt{display:block;width:100%;text-align:left;padding:13px 16px;border:1.5px solid var(--line);
+  border-radius:10px;background:#FFF;margin-bottom:8px;font-size:15px;
+  color:var(--ink-2);transition:all .15s}
+.opt:hover:not(:disabled){border-color:var(--cyan)}
+.opt.sel{border-color:var(--cyan);background:#F2FAFE}
+.opt.right{border-color:var(--green);background:#F2FBF6;color:var(--ink)}
+.opt.wrong{border-color:var(--red);background:#FEF6F5}
+.opt:disabled{cursor:default}
+.q-check{margin-top:11px;padding:10px 20px;background:var(--cyan);color:#FFF;
+  border-radius:9px;font-weight:600;font-size:14.5px}
+.q-check:disabled{background:var(--line);color:var(--ink-3);cursor:default}
+.q-explain{display:none;margin-top:13px;padding:15px 17px;border-radius:10px;font-size:14.5px;
+  line-height:1.55}
+.q-explain.show{display:block}
+.q-explain.ok{background:#F2FBF6;border:1px solid #BFE5CE}
+.q-explain.no{background:#FEF6F5;border:1px solid #F5CFCB}
+.q-verdict{font-weight:700} .q-explain.ok .q-verdict{color:var(--green)}
+.q-explain.no .q-verdict{color:var(--red)}
+.q-retry{margin-top:11px;padding:8px 16px;border:1.5px solid var(--line);border-radius:9px;
+  font-size:14px;font-weight:600;display:none}
+
+/* Сценарии (из C) */
+.fb{display:none;margin-top:13px;padding:15px 17px;border-radius:10px;font-size:14.5px;
+  background:#F2FBF6;border:1px solid #BFE5CE}
+.fb.show{display:block}
+.fb.warn{background:#FFFBF0;border-color:#F5E3B8}
+.fb.bad{background:#FEF6F5;border-color:#F5CFCB}
+.fb-v{font-weight:700;margin-bottom:5px}
+
+/* ── Контакты ────────────────────────────────────────────── */
+.contact{border:1px solid var(--line);border-radius:13px;padding:18px 20px;
+  margin-bottom:11px;background:#FFF}
+.contact-nm{font-weight:700;margin-bottom:4px}
+.contact-tel{font-family:var(--lat);font-size:17px;font-weight:700;color:var(--cyan-d);
+  display:block;margin:5px 0;text-decoration:none}
+.contact-d{font-size:14px;color:var(--ink-2)}
+
+/* Источники */
+.src{list-style:none;counter-reset:x;font-size:14px}
+.src li{counter-increment:x;position:relative;padding-left:31px;margin-bottom:10px;
+  color:var(--ink-2);line-height:1.5}
+.src li::before{content:counter(x)'.';position:absolute;left:0;font-family:var(--lat);
+  font-weight:700;color:var(--ink-3);font-size:12.5px}
+.src a{word-break:break-word}
+
+/* ── Итог ────────────────────────────────────────────────── */
+.result{display:none;text-align:center;padding:34px 26px;border-radius:16px;margin-top:22px}
+.result.show{display:block}
+.result.pass{background:#F2FBF6;border:1px solid #BFE5CE}
+.result.fail{background:#FFFBF0;border:1px solid #F5E3B8}
+.result-n{font-family:var(--lat);font-size:44px;font-weight:700;line-height:1}
+.result h3{font-size:21px;margin:10px 0 8px}
+.result p{color:var(--ink-2);font-size:15.5px;max-width:52ch;margin:0 auto}
+
+/* План (из B) */
+.plan{background:#FFF;border:1px solid var(--line);border-radius:14px;padding:24px 26px;
+  margin:20px 0;box-shadow:var(--sh)}
+.plan h4{font-size:17px;margin-bottom:14px}
+.plan-row{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--line-2);
+  font-size:15px;color:var(--ink-2)}
+.plan-row:last-child{border-bottom:none}
+.plan-ic{color:var(--green);flex-shrink:0;font-weight:700}
+
+/* ── Нижняя навигация ────────────────────────────────────── */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:45;background:rgba(255,255,255,.96);
+  backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:12px 22px;
+  padding-bottom:max(12px,env(safe-area-inset-bottom))}
+.nav-in{max-width:var(--wrap);margin:0 auto;display:flex;align-items:center;gap:14px}
+.gatemsg{flex:1;font-size:13.5px;color:var(--amber);display:flex;align-items:center;gap:7px;
+  min-width:0;line-height:1.35}
+.gatemsg.ready{color:var(--green)}
+.btn-back{padding:10px 17px;border:1.5px solid var(--line);border-radius:10px;
+  font-weight:600;font-size:14.5px;color:var(--ink-2);flex-shrink:0}
+.btn-back:disabled{opacity:.4;cursor:default}
+.btn-next{padding:11px 25px;background:var(--cyan);color:#FFF;border-radius:10px;
+  font-weight:600;font-size:15px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.btn-next:hover:not(:disabled){background:var(--cyan-d)}
+.btn-next:disabled{background:var(--line);color:var(--ink-3);cursor:not-allowed}
+@media(max-width:560px){
+  .gatemsg{font-size:12.5px} .btn-next{padding:11px 18px;font-size:14.5px}
+  .btn-back{padding:10px 13px}
+}
+.page-end{height:1px}
+
+@media print{
+  .top,.nav,.stepper,.modes,.reset{display:none!important}
+  body{background:#FFF} .card{box-shadow:none;border:none;padding:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="18" fill="#1CABE2"/>
+        <path d="M20 9c-4 3-7 6-7 11 0 4 3 7 7 7s7-3 7-7c0-5-3-8-7-11z" fill="#FFF"/>
+      </svg>
+      <span class="brand-txt">UNICEF Armenia</span>
+    </div>
+    <div class="modes" role="tablist">
+      <button class="mode" role="tab" id="tab-course" aria-selected="true">Դասընթաց</button>
+      <button class="mode" role="tab" id="tab-lib" aria-selected="false">Ուղեցույցներ</button>
+    </div>
+    <button class="reset" id="resetbtn">Զրոյացնել</button>
+  </div>
+  <div class="pbar"><div class="pbar-f" id="pbar"></div></div>
+</header>
+
+<main class="wrap">
+  <!-- Режим 1: курс с блокировкой (D9) -->
+  <section class="view" id="view-course">
+    <nav class="stepper" id="stepper" aria-label="Քայլեր"></nav>
+    <article class="card" id="page"></article>
+  </section>
+
+  <!-- Режим 2: библиотека — поиск и фильтры (из PDF) -->
+  <section class="view" id="view-lib" hidden>
+    <div class="lib-head">
+      <h2 class="lib-h">Ուղեցույցների գրադարան</h2>
+      <p class="lib-sub">Գտեք ձեր սարքը կամ հավելվածը և բացեք քայլերը։</p>
+      <div class="search">
+        <input type="search" id="q" placeholder="Որոնել ըստ սարքի, հավելվածի կամ կարգավորման…"
+               aria-label="Որոնել ուղեցույց">
+        <svg class="search-ic" width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+        </svg>
+      </div>
+      <div class="chips" id="chips"></div>
+      <div class="found" id="found"></div>
+    </div>
+    <div id="liblist"></div>
+  </section>
+</main>
+
+<nav class="nav" id="navbar">
+  <div class="nav-in">
+    <button class="btn-back" id="btn-back">Հետ</button>
+    <div class="gatemsg" id="gatemsg"></div>
+    <button class="btn-next" id="btn-next">
+      <span id="nextlabel">Առաջ</span>
+      <svg id="lockicon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="display:none">
+        <rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<script src="../../shared/module-01.js"></script>
+<script>
+/* ═══ Ф — сводный вариант. Логика ═══════════════════════════ */
+const M = MODULE_01;
+const KEY = 'unicef-m01-f';
+const $ = s => document.querySelector(s);
+
+const esc = t => String(t).replace(/[&<>"]/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* Разметка контента: [[EN|RU]], **жирный**, {{n}} */
+function md(t){
+  return esc(t)
+    .replace(/\[\[([^\|\]]+)\|([^\]]+)\]\]/g,
+      (_,en,ru)=>`<span class="setting">${en}</span> <span class="setting-ru">· «${ru}»</span>`)
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\{\{(\d+)\}\}/g,(_,n)=>`<sup class="fn">${n}</sup>`);
+}
+/* Чистый текст без разметки — для поиска */
+const plain = t => String(t)
+  .replace(/\[\[([^\|\]]+)\|([^\]]+)\]\]/g,'$1 $2')
+  .replace(/\*\*|\{\{\d+\}\}/g,'');
+
+/* ── Состояние ──────────────────────────────────────────── */
+let S = (()=>{ try{ return JSON.parse(localStorage.getItem(KEY))||{} }catch(e){ return {} } })();
+S.marks   = S.marks   || {};   // guideId -> 'done' | 'na'
+S.steps   = S.steps   || {};   // 'guideId:i' -> true
+S.cl      = S.cl      || {};   // индекс чеклиста -> true
+S.own     = S.own     || {};   // guideId -> true (мои устройства)
+S.sim     = S.sim     || {};   // 'guideId:i' -> true (пройдено в симуляторе)
+S.age     = S.age     ?? null;
+S.unlocked= S.unlocked|| 0;
+const save = ()=>{ try{ localStorage.setItem(KEY,JSON.stringify(S)) }catch(e){} };
+
+const Q = {}; M.quiz.questions.forEach(q=>Q[q.id]=q);
+const stageFor = a => a<8 ? M.why.stages[0] : a<13 ? M.why.stages[1] : M.why.stages[2];
+const owned = () => M.guides.filter(g=>S.own[g.id]);
+/* Если родитель ничего не выбрал — показываем все гайды */
+const myGuides = () => owned().length ? owned() : M.guides;

@@ -1,0 +1,41 @@
+- generic [ref=f12e4]:
+  - generic [ref=f12e5]:
+    - generic [ref=f12e7]:
+      - generic [ref=f12e8]: ՄՈԴՈՒԼ 1 · Ծնողական վերահսկողություն
+      - generic [ref=f12e9]: 10%
+    - button "Փակել" [ref=f12e13] [cursor=pointer]: ✕
+  - generic [ref=f12e14]:
+    - complementary [ref=f12e15]:
+      - navigation [ref=f12e16]:
+        - button "Ներածություն Վիկտորինա" [ref=f12e18] [cursor=pointer]:
+          - generic [ref=f12e20]: Ներածություն
+          - generic [ref=f12e21]: Վիկտորինա
+        - button "Ինչու է վերահսկողությունը կարևոր" [ref=f12e23] [cursor=pointer]
+        - generic [ref=f12e26]:
+          - button "Գործիքներ և կարգավորումներ" [ref=f12e27] [cursor=pointer]
+          - generic [ref=f12e29]:
+            - button "Համակարգեր" [ref=f12e30] [cursor=pointer]
+            - button "🔒 Սոցիալական ցանցեր" [ref=f12e32]
+            - button "🔒 Խաղեր և կոնսոլներ" [ref=f12e34]
+            - button "🔒 Մեսենջերներ" [ref=f12e36]
+            - button "🔒 Գործնական քայլաշար" [ref=f12e38]
+        - button "🔒 Հավասարակշռություն և փոխվստահություն" [ref=f12e41]
+        - button "🔒 Շտապ օգնություն և աղբյուրներ" [ref=f12e44]
+    - generic [ref=f12e47]:
+      - generic [ref=f12e48]: Ներածություն
+      - figure [ref=f12e51]:
+        - generic [ref=f12e52]:
+          - generic [ref=f12e53]: Ինչպե՞ս հետևել երեխայի առցանց գործունեությանը և ապահովել նրա անվտանգությունը՝ առանց անձնական տարածքը խախտելու և վստահությունը կորցնելու։
+          - img "Ծնող, որը մտորում է թվային անվտանգության շուրջ" [ref=f12e57]
+        - generic [ref=f12e58]:
+          - heading "Նպատակ" [level=2] [ref=f12e59]
+          - paragraph [ref=f12e60]: Սովորել ինչպես կարգավորել և կիրառել ծնողական վերահսկողության գործիքները տարբեր սարքերում և հավելվածներում՝ պահպանելով հավասարակշռությունը երեխայի անվտանգության, ազատության և ընտանեկան վստահության միջև։
+      - generic [ref=f12e65]:
+        - button "← Նախորդ" [disabled]:
+          - generic: ←
+          - text: Նախորդ
+        - generic [ref=f12e66]: Ներածություն
+        - button "Անցնել վիկտորինային → 1 հարց այս բաժնից" [ref=f12e67] [cursor=pointer]:
+          - generic [ref=f12e68]:
+            - generic [ref=f12e69]: Անցնել վիկտորինային →
+            - generic [ref=f12e70]: 1 հարց այս բաժնից
