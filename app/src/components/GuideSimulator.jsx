@@ -29,7 +29,9 @@ export default function GuideSimulator({ guide }) {
   );
 
   const advance = () => { setToggled(false); setAt((i) => i + 1); };
-  const flip = () => { setToggled(true); setTimeout(advance, 320); };
+  // Переключателю нужно успеть доехать, но не настолько, чтобы это
+  // читалось отдельным движением перед сменой экрана.
+  const flip = () => { setToggled(true); setTimeout(advance, 240); };
 
   return (
     <div>
@@ -66,7 +68,7 @@ export default function GuideSimulator({ guide }) {
       {/* Корпус устройства */}
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '100%', maxWidth: 320, background: '#151A21', borderRadius: 30, padding: 10, boxShadow: '0 24px 50px -24px rgba(21,26,33,.5)' }}>
-          <div style={{ background: '#F2F4F8', borderRadius: 22, overflow: 'hidden', minHeight: 300, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ background: '#F2F4F8', borderRadius: 22, overflow: 'hidden', height: 320, display: 'flex', flexDirection: 'column' }}>
             <div style={{ height: 20, display: 'grid', placeItems: 'center' }}>
               <span style={{ width: 62, height: 4, borderRadius: 3, background: 'rgba(255,255,255,.4)' }} />
             </div>
@@ -89,14 +91,18 @@ export default function GuideSimulator({ guide }) {
               </div>
             ) : (
               <>
+                {/* Стрелка «назад» есть не на каждом экране, но место под неё
+                    держится всегда — иначе заголовок скачет вбок на первом же
+                    переходе. Симметричная распорка справа держит центровку. */}
                 <div style={{ background: '#fff', padding: '10px 15px', display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid #E4E8F2' }}>
-                  {at > 0 && <span style={{ fontSize: 13, color: '#1CABE2', fontWeight: 700 }}>‹</span>}
-                  <span style={{ flex: 1, textAlign: 'center', fontSize: 13, fontWeight: 700, color: '#151A21', marginRight: at > 0 ? 14 : 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <span style={{ width: 8, flexShrink: 0, fontSize: 13, color: '#1CABE2', fontWeight: 700, visibility: at > 0 ? 'visible' : 'hidden' }}>‹</span>
+                  <span style={{ flex: 1, textAlign: 'center', fontSize: 13, fontWeight: 700, color: '#151A21', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {sc.title || guide.sub?.split('(')[0]?.trim() || guide.name}
                   </span>
+                  <span style={{ width: 8, flexShrink: 0 }} aria-hidden />
                 </div>
 
-                <div key={sc.key} style={{ flex: 1, background: '#fff', animation: 'msSimIn .3s cubic-bezier(.2,.85,.2,1) both' }}>
+                <div key={sc.key} style={{ flex: 1, background: '#fff', animation: 'msSimIn .16s ease-out both' }}>
                   {sc.kind === 'act' && (
                     <div style={{ padding: '26px 20px', display: 'grid', placeItems: 'center', gap: 14, textAlign: 'center' }}>
                       <span style={{ width: 52, height: 52, borderRadius: 16, background: 'linear-gradient(135deg,#1CABE2,#24A783)', display: 'grid', placeItems: 'center' }}>
