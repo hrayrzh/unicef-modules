@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import FigureWithBubble from './FigureWithBubble';
+import GuideSimulator from './GuideSimulator';
 
 // ((term||explanation)) marks a term that is emphasised and explained on
 // hover/focus. §5 — the tooltip is CSS-only and inline, so it survives an
@@ -40,6 +42,9 @@ export default function Block({ block: b, step, index, state, update, anim, dela
   const key = `${step}:${index}`;
   const isOpen = !!state.opened[key];
   const mark = state.marks[key];
+  // Какая подача гайда открыта. Локальное состояние, не прогресс: способ
+  // чтения не должен попадать в сохранённый прогресс и переживать перезагрузку.
+  const [view, setView] = useState('sim');
 
   const toggle = () =>
     update((prev) => ({ opened: { ...prev.opened, [key]: !prev.opened[key] } }));
@@ -181,7 +186,30 @@ export default function Block({ block: b, step, index, state, update, anim, dela
         )}
         {isOpen && (
           <div style={{ padding: '4px 24px 24px 62px', display: 'flex', flexDirection: 'column', gap: 13, animation: 'msFadeUp .32s cubic-bezier(.2,.85,.2,1) both' }}>
-            {(b.steps || []).map((t, i) => (
+            {/* Требование заказчика: инструкция показывается наглядно И остаётся
+                текстовым пошаговиком. Не «или» — обе подачи доступны в один клик,
+                потому что на симуляторе учат путь, а по списку сверяются, когда
+                уже настраивают своё устройство. */}
+            <div style={{ display: 'flex', gap: 6, marginBottom: 4 }}>
+              {[['sim', 'Սիմուլյատոր'], ['text', 'Տեքստային քայլաշար']].map(([id, label]) => (
+                <button
+                  key={id}
+                  onClick={() => setView(id)}
+                  style={{
+                    padding: '7px 14px', borderRadius: 100, fontSize: 12.5, fontWeight: 600, cursor: 'pointer',
+                    border: `1px solid ${view === id ? '#1CABE2' : 'rgba(21,26,33,.14)'}`,
+                    background: view === id ? 'rgba(28,171,226,.12)' : 'transparent',
+                    color: view === id ? '#0F7FA8' : '#6E7787',
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {view === 'sim' && <GuideSimulator guide={b} />}
+
+            {view === 'text' && (b.steps || []).map((t, i) => (
               <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
                 <span style={{ flexShrink: 0, display: 'grid', placeItems: 'center', width: 24, height: 24, borderRadius: 8, background: 'rgba(28,171,226,.14)', color: '#0F7FA8', fontSize: 12, fontWeight: 600 }}>{i + 1}</span>
                 <span style={{ fontSize: 15, lineHeight: 1.72, color: '#2B313A' }}>{t}</span>

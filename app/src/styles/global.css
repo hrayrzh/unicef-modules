@@ -120,6 +120,23 @@ button { font-family: inherit; }
   .ms-footer-nav button { font-size: 11.5px !important; padding: 9px 12px !important; }
 }
 
+/* Симулятор: цель подсвечена пульсацией — без неё непонятно, куда нажимать.
+   Обводка рисуется псевдоэлементом, чтобы не двигать саму строку меню. */
+.ms-sim-target::after {
+  content: ''; position: absolute; inset: 2px 6px; border-radius: 10px;
+  border: 2px solid #1CABE2; pointer-events: none;
+  animation: msSimPulse 1.8s ease-out infinite;
+}
+@keyframes msSimPulse {
+  0% { opacity: .9; transform: scale(1); }
+  70%, 100% { opacity: 0; transform: scale(1.04); }
+}
+.ms-sim-switch { animation: msSimRing 1.8s ease-out infinite; border-radius: 100px; }
+@keyframes msSimRing {
+  0% { box-shadow: 0 0 0 0 rgba(28,171,226,.5); }
+  70%, 100% { box-shadow: 0 0 0 8px rgba(28,171,226,0); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: .001ms !important;
@@ -127,4 +144,7 @@ button { font-family: inherit; }
     transition-duration: .001ms !important;
     scroll-behavior: auto !important;
   }
+  /* Пульсация выключена — цель обозначается статичной обводкой. */
+  .ms-sim-target::after { opacity: 1; transform: none; }
+  .ms-sim-switch { box-shadow: 0 0 0 3px rgba(28,171,226,.35); }
 }
