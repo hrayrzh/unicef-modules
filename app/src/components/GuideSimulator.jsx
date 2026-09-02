@@ -56,10 +56,11 @@ export default function GuideSimulator({ guide }) {
         {screens.map((s, i) => (
           <span
             key={s.key}
+            // Ширина одинаковая у всех: активная точка была шире остальных,
+            // и на каждом переходе весь ряд разъезжался. Отличается цветом.
             style={{
-              width: i === at ? 26 : 18, height: 4, borderRadius: 2,
+              width: 18, height: 4, borderRadius: 2,
               background: i < at ? '#24A783' : i === at ? '#1CABE2' : 'rgba(21,26,33,.14)',
-              transition: 'all .3s cubic-bezier(.2,.85,.2,1)',
             }}
           />
         ))}
@@ -75,7 +76,7 @@ export default function GuideSimulator({ guide }) {
 
             {finished ? (
               <div style={{ flex: 1, background: '#fff', display: 'grid', placeItems: 'center', padding: 24, textAlign: 'center', gap: 12 }}>
-                <span style={{ width: 58, height: 58, borderRadius: '50%', background: '#24A783', display: 'grid', placeItems: 'center', animation: 'msPop .45s cubic-bezier(.2,.85,.2,1) both' }}>
+                <span style={{ width: 58, height: 58, borderRadius: '50%', background: '#24A783', display: 'grid', placeItems: 'center',  }}>
                   <svg viewBox="0 0 24 24" width="28" height="28" fill="none">
                     <path d="M5 12.5l4.6 4.6L19 7.5" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -102,7 +103,7 @@ export default function GuideSimulator({ guide }) {
                   <span style={{ width: 8, flexShrink: 0 }} aria-hidden />
                 </div>
 
-                <div key={sc.key} style={{ flex: 1, background: '#fff', animation: 'msSimIn .16s ease-out both' }}>
+                <div key={sc.key} style={{ flex: 1, background: '#fff' }}>
                   {sc.kind === 'act' && (
                     <div style={{ padding: '26px 20px', display: 'grid', placeItems: 'center', gap: 14, textAlign: 'center' }}>
                       <span style={{ width: 52, height: 52, borderRadius: 16, background: 'linear-gradient(135deg,#1CABE2,#24A783)', display: 'grid', placeItems: 'center' }}>
