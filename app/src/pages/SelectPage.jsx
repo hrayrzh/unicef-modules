@@ -86,6 +86,7 @@ export default function SelectPage() {
 
       {/* The arc of cards */}
       <div
+        className="ms-deck-stage"
         style={{
           position: 'fixed', left: '50%', top: 'calc(31vh + var(--R))', width: 0, height: 0, zIndex: 20,
           '--ch': 'clamp(220px, min(52vw, 45vh), 620px)',
@@ -155,21 +156,34 @@ export default function SelectPage() {
       </div>
 
       {/* Active module summary + CTA */}
-      <div style={{ position: 'fixed', left: '50%', bottom: '3.4vh', transform: 'translateX(-50%)', zIndex: 30, width: 'min(620px, 80vw)', textAlign: 'center' }}>
+      <div className="ms-select-cta" style={{ position: 'fixed', left: '50%', bottom: '3.4vh', transform: 'translateX(-50%)', zIndex: 30, width: 'min(620px, 80vw)', textAlign: 'center' }}>
         <div style={{ animation: 'msRise .5s cubic-bezier(.2,.85,.2,1) both' }}>
           <div style={{ fontSize: 11.5, letterSpacing: '.18em', textTransform: 'uppercase', color: a.accent, transition: 'color .5s' }}>{a.kicker}</div>
           <h1 style={{ margin: '14px 0 0', fontSize: 'clamp(28px, 3.4vw, 44px)', lineHeight: 1.08, letterSpacing: '-1.6px', fontWeight: 600 }}>{a.title}</h1>
+          {a.subtitle && (
+            <p style={{ margin: '10px auto 0', maxWidth: 520, fontSize: 15.5, lineHeight: 1.4, color: '#C7CEDA', fontWeight: 400 }}>{a.subtitle}</p>
+          )}
           <p style={{ margin: '14px auto 0', maxWidth: 500, fontSize: 14.5, lineHeight: 1.65, color: '#9BA4B2', fontWeight: 300 }}>{a.blurb}</p>
           <div style={{ marginTop: 26, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
+            {/* Модули 2–5 ещё не написаны: кнопка не ведёт на заглушку, а честно
+                говорит, что открывать нечего. */}
             <button
-              className="ms-lift"
-              onClick={start}
-              style={{ padding: '15px 28px', borderRadius: 13, border: 'none', background: '#1CABE2', color: '#10141A', fontSize: 14.5, fontWeight: 600, cursor: 'pointer', boxShadow: '0 14px 34px -12px rgba(28,171,226,.55)' }}
+              className={a.ready ? 'ms-lift' : undefined}
+              onClick={a.ready ? start : undefined}
+              disabled={!a.ready}
+              style={{
+                padding: '15px 28px', borderRadius: 13, border: 'none',
+                background: a.ready ? '#1CABE2' : 'rgba(246,244,239,.10)',
+                color: a.ready ? '#10141A' : '#6E7787',
+                fontSize: 14.5, fontWeight: 600,
+                cursor: a.ready ? 'pointer' : 'not-allowed',
+                boxShadow: a.ready ? '0 14px 34px -12px rgba(28,171,226,.55)' : 'none',
+              }}
             >
-              {done[active] ? 'Վերանայել մոդուլը' : 'Սկսել մոդուլը'}
+              {!a.ready ? 'Դեռ հասանելի չէ' : done[active] ? 'Վերանայել մոդուլը' : 'Սկսել մոդուլը'}
             </button>
             <span style={{ fontSize: 12.5, color: '#6E7787' }}>
-              {done[active] ? 'Ավարտված է' : '9 բաժին, ապա՝ վիկտորինա'}
+              {!a.ready ? 'Պատրաստվում է' : done[active] ? 'Ավարտված է' : '9 բաժին, ապա՝ վիկտորինա'}
             </span>
             {/* D11 — explicit progress reset, so a reviewer can retest the
                 gating from a clean state. */}

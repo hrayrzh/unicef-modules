@@ -3,12 +3,24 @@
 import confusedParent from '../assets/young-man-scratching-head-in-confusion-unsure-about-something-he-is-thinking-through-vector-Photoroom.png';
 import speechBubble from '../assets/speech-bubble-rect.png';
 
+// Модуль 1 — официальное название из документа заказчика (source/module-01-v2.txt).
+// Модули 2–5 ещё не написаны: показываем честную заглушку, а не выдуманное
+// название. Ложный заголовок на первом же экране обманывает стейкхолдера,
+// который открывает приложение, — пустая карточка честнее.
 export const MODULES = [
-    { kicker: "Module one", title: "Digital footprints and privacy", blurb: "Placeholder summary. What a child leaves behind online, who can see it, and which settings matter most.", accent: "#1CABE2", wash: "linear-gradient(160deg, #F7F5F0 0%, #E4EFE9 100%)", glow: "rgba(28,171,226,.5)" },
-    { kicker: "Module two", title: "Scams, phishing and fake accounts", blurb: "Placeholder summary. How the common tricks look from a child's screen, and the habits that stop them working.", accent: "#8FA8FF", wash: "linear-gradient(160deg, #F5F5F2 0%, #E2E6F6 100%)", glow: "rgba(51,85,255,.42)" },
-    { kicker: "Module three", title: "Screen time, sleep and attention", blurb: "Placeholder summary. Agreements that hold, why sleep comes first, and what to do about the evening argument.", accent: "#FFB37A", wash: "linear-gradient(160deg, #F8F4EE 0%, #F3E3D4 100%)", glow: "rgba(255,150,90,.4)" },
-    { kicker: "Module four", title: "Cyberbullying: spotting it, responding", blurb: "Placeholder summary. The early signs, the difference between a fallout and bullying, and the first three steps.", accent: "#C9A6FF", wash: "linear-gradient(160deg, #F6F4F8 0%, #E8E1F4 100%)", glow: "rgba(140,100,240,.4)" },
-    { kicker: "Module five", title: "Talking with children about what they see", blurb: "Placeholder summary. Opening the conversation, keeping it open, and answering questions you were not ready for.", accent: "#7FDCE8", wash: "linear-gradient(160deg, #F3F6F7 0%, #DCEDF1 100%)", glow: "rgba(40,180,200,.42)" }
+    { kicker: "Մոդուլ 1", title: "Ծնողական վերահսկողություն",
+      subtitle: "Սարքերի և հավելվածների անվտանգ կարգավորում",
+      blurb: "Քայլ առ քայլ՝ ինչպես կարգավորել ամեն սարքն ու հավելվածը, և ինչպես ապահովել անվտանգությունը՝ առանց վստահությունը կորցնելու։",
+      ready: true,
+      accent: "#1CABE2", wash: "linear-gradient(160deg, #F7F5F0 0%, #E4EFE9 100%)", glow: "rgba(28,171,226,.5)" },
+    { kicker: "Մոդուլ 2", title: "Շուտով", blurb: "Այս մոդուլը դեռ պատրաստ չէ։", ready: false,
+      accent: "#8FA8FF", wash: "linear-gradient(160deg, #F5F5F2 0%, #E2E6F6 100%)", glow: "rgba(51,85,255,.42)" },
+    { kicker: "Մոդուլ 3", title: "Շուտով", blurb: "Այս մոդուլը դեռ պատրաստ չէ։", ready: false,
+      accent: "#FFB37A", wash: "linear-gradient(160deg, #F8F4EE 0%, #F3E3D4 100%)", glow: "rgba(255,150,90,.4)" },
+    { kicker: "Մոդուլ 4", title: "Շուտով", blurb: "Այս մոդուլը դեռ պատրաստ չէ։", ready: false,
+      accent: "#C9A6FF", wash: "linear-gradient(160deg, #F6F4F8 0%, #E8E1F4 100%)", glow: "rgba(140,100,240,.4)" },
+    { kicker: "Մոդուլ 5", title: "Շուտով", blurb: "Այս մոդուլը դեռ պատրաստ չէ։", ready: false,
+      accent: "#7FDCE8", wash: "linear-gradient(160deg, #F3F6F7 0%, #DCEDF1 100%)", glow: "rgba(40,180,200,.42)" }
   ];
 
 export const M1 = {

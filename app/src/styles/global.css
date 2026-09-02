@@ -97,13 +97,27 @@ button { font-family: inherit; }
      of the figure, and it also breaks the bubble text's cqw proportion. */
   .ms-figure { flex-direction: column; align-items: flex-start !important; gap: 20px !important; }
   .ms-figure-stage {
-    --ms-w-mobile: 130px;
+    /* !important on the variable itself, not just on `width`: the component
+       sets --ms-w-mobile inline from its `width` prop, and an inline custom
+       property beats a rule. Without it the variable stays at the desktop
+       width, the bubble renders ~1.95x that and gets clipped by the screen. */
+    --ms-w-mobile: 130px !important;
     width: var(--ms-w-mobile) !important;
     margin-top: calc(var(--ms-w-mobile) * var(--ms-headroom-ratio)) !important;
   }
   .ms-table { display: block !important; overflow-x: auto; }
   .ms-pair { grid-template-columns: 1fr !important; }
-  .ms-footer-nav { flex-wrap: wrap; }
+  /* Экран выбора модуля: CTA и нижняя навигация оба были fixed с одинаковым
+     bottom. На широком экране они расходятся по горизонтали, на телефоне —
+     накладываются друг на друга. Разводим по вертикали и ужимаем колоду,
+     чтобы карточка не наезжала на заголовок. */
+  /* Колода зажата между шапкой сверху и блоком CTA снизу. Карточка ставится
+     от центра дуги: её верх = top − R − ch/2, поэтому и высоту, и смещение
+     подбираем так, чтобы она не заходила ни под шапку, ни под кнопку. */
+  .ms-deck-stage { --ch: clamp(150px, 24vh, 190px) !important; top: calc(30vh + var(--R)) !important; }
+  .ms-select-cta { bottom: 104px !important; width: min(620px, 92vw) !important; }
+  .ms-footer-nav { bottom: 16px !important; gap: 8px; }
+  .ms-footer-nav button { font-size: 11.5px !important; padding: 9px 12px !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
