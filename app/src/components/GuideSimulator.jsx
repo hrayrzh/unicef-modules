@@ -19,6 +19,15 @@ export default function GuideSimulator({ guide }) {
   const sc = finished ? null : screens[at];
   const step = finished ? null : guide.steps[sc.stepIndex];
 
+  const DONE_TEXT = 'Այս ուղեցույցի բոլոր քայլերն անցել եք սիմուլյատորի վրա։';
+  // Шаги разной длины, и блок задания менял высоту на каждом переходе —
+  // устройство под ним прыгало вверх-вниз. Самый длинный текст держит высоту
+  // невидимой копией, актуальный текст лежит поверх: блок больше не дышит.
+  const tallest = useMemo(
+    () => [...(guide.steps || []), DONE_TEXT].reduce((a, b) => (b.length > a.length ? b : a), ''),
+    [guide],
+  );
+
   const advance = () => { setToggled(false); setAt((i) => i + 1); };
   const flip = () => { setToggled(true); setTimeout(advance, 320); };
 
@@ -31,8 +40,12 @@ export default function GuideSimulator({ guide }) {
             ? 'Ավարտված է'
             : `Քայլ ${sc.stepIndex + 1} / ${guide.steps.length}`}
         </div>
-        <div style={{ fontSize: 14.5, lineHeight: 1.7, color: '#2B313A' }}>
-          {finished ? 'Այս ուղեցույցի բոլոր քայլերն անցել եք սիմուլյատորի վրա։' : step}
+        <div style={{ position: 'relative' }}>
+          {/* Держит высоту — виден только самый длинный шаг, и то прозрачно. */}
+          <div aria-hidden style={{ fontSize: 14.5, lineHeight: 1.7, visibility: 'hidden' }}>{tallest}</div>
+          <div style={{ position: 'absolute', inset: 0, fontSize: 14.5, lineHeight: 1.7, color: '#2B313A' }}>
+            {finished ? DONE_TEXT : step}
+          </div>
         </div>
       </div>
 
@@ -83,7 +96,7 @@ export default function GuideSimulator({ guide }) {
                   </span>
                 </div>
 
-                <div key={sc.key} style={{ flex: 1, background: '#fff', animation: 'msInFwd .34s cubic-bezier(.2,.85,.2,1) both' }}>
+                <div key={sc.key} style={{ flex: 1, background: '#fff', animation: 'msSimIn .3s cubic-bezier(.2,.85,.2,1) both' }}>
                   {sc.kind === 'act' && (
                     <div style={{ padding: '26px 20px', display: 'grid', placeItems: 'center', gap: 14, textAlign: 'center' }}>
                       <span style={{ width: 52, height: 52, borderRadius: 16, background: 'linear-gradient(135deg,#1CABE2,#24A783)', display: 'grid', placeItems: 'center' }}>
