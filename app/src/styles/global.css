@@ -133,3 +133,86 @@ button { font-family: inherit; }
   border: 2px solid #1CABE2; pointer-events: none;
 }
 .ms-sim-switch { box-shadow: 0 0 0 3px rgba(28,171,226,.28); border-radius: 100px; }
+
+/* Кнопка «Օգնություն» — требования рецензента №36 и №37.
+   Тёплый красный намеренно выпадает из палитры: весь модуль держится на
+   UNICEF cyan, и помощь — единственное пятно другого цвета. Так её находят
+   глазами, не читая надпись. */
+.ms-help-btn {
+  flex-shrink: 0; display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px; border-radius: 10px; cursor: pointer;
+  background: #D93A3A; border: none; color: #fff;
+  font-size: 12.5px; font-weight: 600; line-height: 1;
+  box-shadow: 0 6px 16px -8px rgba(217,58,58,.8);
+  transition: background .2s ease, transform .2s cubic-bezier(.2,.85,.2,1);
+}
+.ms-help-btn:hover { background: #C22F2F; transform: translateY(-1px); }
+.ms-help-btn-label { white-space: nowrap; }
+
+.ms-help-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; background: rgba(14,18,24,.62);
+  animation: msFadeIn .18s ease both;
+}
+.ms-help-panel {
+  width: min(560px, 100%); max-height: min(86vh, 760px);
+  display: flex; flex-direction: column; overflow: hidden;
+  border-radius: 18px; background: #FFFDFA; color: #151A21;
+  box-shadow: 0 30px 70px -20px rgba(14,18,24,.6);
+  animation: msPop .22s cubic-bezier(.2,.85,.2,1) both;
+}
+.ms-help-panel:focus { outline: none; }
+.ms-help-head {
+  flex-shrink: 0; display: flex; align-items: flex-start; gap: 16px;
+  padding: 22px 22px 18px; border-bottom: 1px solid rgba(21,26,33,.1);
+  /* Тонкая красная линия сверху — та же метка цвета, что и на кнопке. */
+  box-shadow: inset 0 3px 0 #D93A3A;
+}
+.ms-help-kicker {
+  font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+  font-weight: 700; color: #D93A3A;
+}
+.ms-help-lead { margin: 9px 0 0; font-size: 14px; line-height: 1.65; color: #39415C; }
+.ms-help-close { flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: rgba(21,26,33,.06); border: 1px solid rgba(21,26,33,.14); color: #151A21; font-size: 16px; line-height: 1; cursor: pointer; transition: background .22s ease, transform .22s cubic-bezier(.2,.85,.2,1); }
+.ms-help-body { overflow-y: auto; padding: 20px 22px 24px; }
+.ms-help-h { margin: 0 0 12px; font-size: 12px; letter-spacing: .13em; text-transform: uppercase; color: #6E7787; font-weight: 700; }
+.ms-help-when { margin: 0 0 24px; padding-left: 20px; display: flex; flex-direction: column; gap: 9px; }
+.ms-help-when li { font-size: 13.5px; line-height: 1.62; color: #2B313A; }
+.ms-help-when li::marker { color: #D93A3A; }
+
+.ms-help-contacts { display: flex; flex-direction: column; gap: 12px; }
+.ms-help-card { padding: 15px 16px; border-radius: 13px; background: #F5F3EE; border: 1px solid rgba(21,26,33,.09); }
+/* Полиция — единственный по-настоящему экстренный номер, отмечен цветом. */
+.ms-help-card.is-urgent { background: rgba(217,58,58,.07); border-color: rgba(217,58,58,.28); }
+.ms-help-name { font-size: 14.5px; font-weight: 700; line-height: 1.35; }
+.ms-help-role { margin: 6px 0 0; font-size: 12.5px; line-height: 1.6; color: #5A6270; }
+.ms-help-actions { margin-top: 13px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ms-help-call {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 15px; border-radius: 100px;
+  background: #D93A3A; color: #fff !important; text-decoration: none !important;
+  font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums;
+  transition: background .2s ease;
+}
+.ms-help-call:hover { background: #C22F2F; }
+.ms-help-link {
+  display: inline-flex; align-items: center;
+  padding: 9px 14px; border-radius: 100px;
+  border: 1px solid rgba(21,26,33,.18); color: #0F7FA8 !important;
+  font-size: 12.5px; font-weight: 600; text-decoration: none !important;
+}
+.ms-help-link:hover { border-color: #1CABE2; }
+
+@media (max-width: 560px) {
+  /* Шапка читалки узкая — от кнопки остаётся телефонная иконка. */
+  .ms-help-btn { padding: 8px 10px; }
+  .ms-help-btn-label { display: none; }
+  .ms-help-overlay { padding: 0; align-items: flex-end; }
+  .ms-help-panel { width: 100%; max-height: 92vh; border-radius: 18px 18px 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-help-overlay, .ms-help-panel { animation: none; }
+  .ms-help-btn:hover { transform: none; }
+}

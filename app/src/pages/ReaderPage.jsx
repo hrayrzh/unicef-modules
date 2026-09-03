@@ -9,6 +9,7 @@ import { useProgressStore } from '../store/progress';
 import Block from '../components/Block';
 import Quiz from '../components/Quiz';
 import FinalQuiz from '../components/FinalQuiz';
+import HelpButton from '../components/HelpButton';
 
 /**
  * Reads the module/section straight out of the URL, so a section is linkable
@@ -150,6 +151,9 @@ export default function ReaderPage() {
             </div>
           )}
         </div>
+        {/* №36 — помощь доступна с любого экрана модуля. Шапка не скроллится,
+            поэтому кнопка видна и в начале раздела, и в конце квиза. */}
+        <HelpButton />
         <button className="ms-close" onClick={closeReader} aria-label="Փակել" style={{ flexShrink: 0, display: 'grid', placeItems: 'center', width: 34, height: 34, borderRadius: 10, background: 'rgba(21,26,33,.06)', border: '1px solid rgba(21,26,33,.14)', color: '#151A21', fontSize: 18, lineHeight: 1, cursor: 'pointer', transition: 'background .22s ease, transform .22s cubic-bezier(.2,.85,.2,1)' }}>
           ✕
         </button>
