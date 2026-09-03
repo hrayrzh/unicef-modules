@@ -34,6 +34,26 @@ function renderInline(text) {
   return out;
 }
 
+/** Лампочка для блока подсказки (№11) — рисуется, а не грузится: §5. */
+function BulbIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" aria-hidden="true">
+      <path d="M9 17.2h6M10 20.5h4M12 3.2a5.8 5.8 0 013.5 10.4c-.6.5-.9 1-.9 1.6H9.4c0-.6-.3-1.1-.9-1.6A5.8 5.8 0 0112 3.2z"
+        stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/** Звёздочка для блока «Հետաքրքիր է» (№9). */
+function StarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" aria-hidden="true">
+      <path d="M12 3.6l2.5 5.2 5.7.8-4.1 4 1 5.7-5.1-2.7-5.1 2.7 1-5.7-4.1-4 5.7-.8z"
+        stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 /**
  * Renders one content block. The gating rules (D9) live in the parent —
  * this component only reports opens/marks upward.
@@ -60,7 +80,7 @@ export default function Block({ block: b, step, index, state, update, anim, dela
   );
 
   if (b.k === 'p') {
-    return wrap(<p style={{ margin: 0, fontSize: 16, lineHeight: 1.8, color: '#2B313A' }}>{b.text}</p>);
+    return wrap(<p style={{ margin: 0, fontSize: 16, lineHeight: 1.8, color: '#2B313A' }}>{renderInline(b.text)}</p>);
   }
 
   if (b.k === 'h') {
@@ -91,7 +111,7 @@ export default function Block({ block: b, step, index, state, update, anim, dela
     return wrap(
       <div style={{ padding: '22px 24px', borderRadius: 16, background: 'rgba(28,171,226,.08)', borderLeft: '3px solid #1CABE2' }}>
         <div style={{ fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: '#0F7FA8', fontWeight: 600 }}>{b.title}</div>
-        <p style={{ margin: '11px 0 0', fontSize: 15.5, lineHeight: 1.75, color: '#2B313A' }}>{b.text}</p>
+        <p style={{ margin: '11px 0 0', fontSize: 15.5, lineHeight: 1.75, color: '#2B313A' }}>{renderInline(b.text)}</p>
       </div>,
     );
   }
@@ -102,7 +122,7 @@ export default function Block({ block: b, step, index, state, update, anim, dela
         {(b.items || []).map((t, i) => (
           <div key={i} style={{ display: 'flex', gap: 13, alignItems: 'flex-start' }}>
             <span style={{ flexShrink: 0, marginTop: 9, width: 5, height: 5, borderRadius: '50%', background: '#1CABE2' }} />
-            <span style={{ fontSize: 15, lineHeight: 1.75, color: '#2B313A' }}>{typeof t === 'string' ? t : t.text}</span>
+            <span style={{ fontSize: 15, lineHeight: 1.75, color: '#2B313A' }}>{renderInline(typeof t === 'string' ? t : t.text)}</span>
           </div>
         ))}
       </div>,
@@ -112,13 +132,73 @@ export default function Block({ block: b, step, index, state, update, anim, dela
   if (b.k === 'links') {
     return wrap(
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {(b.items || []).map((it, i) => (
-          <div key={i} className="ms-slide" style={{ padding: '17px 20px', borderRadius: 14, background: '#FFFFFF', border: '1px solid rgba(21,26,33,.1)', transition: 'transform .2s cubic-bezier(.2,.85,.2,1), border-color .2s' }}>
-            <div style={{ fontSize: 15, fontWeight: 600 }}>{it.title}</div>
-            <div style={{ marginTop: 5, fontSize: 13, lineHeight: 1.6, color: '#5A6270' }}>{it.meta}</div>
-          </div>
-        ))}
+        {(b.items || []).map((it, i) => {
+          const body = (
+            <>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 9 }}>
+                <span style={{ fontSize: 15, fontWeight: 600, color: '#151A21' }}>{it.title}</span>
+                {it.url && <span aria-hidden style={{ fontSize: 13, color: '#1CABE2' }}>↗</span>}
+              </div>
+              <div style={{ marginTop: 5, fontSize: 13, lineHeight: 1.6, color: '#5A6270' }}>{it.meta}</div>
+            </>
+          );
+          // Адрес в документе был живой ссылкой — здесь он тоже кликается,
+          // а не просто напечатан. Карточки без адреса остаются текстом.
+          return it.url ? (
+            <a key={i} className="ms-slide ms-linkcard" href={it.url} target="_blank" rel="noreferrer noopener">
+              {body}
+            </a>
+          ) : (
+            <div key={i} className="ms-slide ms-linkcard is-plain">{body}</div>
+          );
+        })}
       </div>,
+    );
+  }
+
+  // №9 — «Հետաքրքիր է» отдельным раскрывающимся окном с иконкой.
+  // №11 — дополнительная информация через иконку-лампочку.
+  // Оба — необязательное углубление: свёрнуты по умолчанию, чтобы не
+  // разрывать основной текст, и не участвуют в гейте (D9) — модуль нельзя
+  // застопорить на факультативном блоке.
+  if (b.k === 'did' || b.k === 'tip') {
+    const isTip = b.k === 'tip';
+    return wrap(
+      <details className={isTip ? 'ms-aside is-tip' : 'ms-aside is-did'}>
+        <summary className="ms-aside-head">
+          <span className="ms-aside-icon" aria-hidden>{isTip ? <BulbIcon /> : <StarIcon />}</span>
+          <span className="ms-aside-title">{b.title || (isTip ? 'Խորհուրդ' : 'Հետաքրքիր է')}</span>
+          <span className="ms-aside-more" aria-hidden />
+        </summary>
+        <div className="ms-aside-body">
+          {b.text && <p className="ms-aside-text">{renderInline(b.text)}</p>}
+          {(b.items || []).map((t, i) => (
+            <div key={i} className="ms-aside-item">
+              <span className="ms-aside-dot" aria-hidden />
+              <span>{renderInline(t)}</span>
+            </div>
+          ))}
+        </div>
+      </details>,
+    );
+  }
+
+  // №39 — источники в конце модуля: свёрнуты в компактный список, полное
+  // описание раскрывается по наведению и по фокусу с клавиатуры.
+  if (b.k === 'sources') {
+    return wrap(
+      <ol className="ms-src">
+        {(b.items || []).map((s, i) => (
+          <li key={i} className="ms-src-item">
+            <a className="ms-src-link" href={s.url} target="_blank" rel="noreferrer noopener">
+              <span className="ms-src-n">{i + 1}</span>
+              <span className="ms-src-title">{s.title}</span>
+              <span className="ms-src-host">{s.host}</span>
+              <span className="ms-tip ms-src-tip" role="tooltip">{s.note}</span>
+            </a>
+          </li>
+        ))}
+      </ol>,
     );
   }
 
@@ -142,7 +222,7 @@ export default function Block({ block: b, step, index, state, update, anim, dela
               <span style={{ flexShrink: 0, display: 'grid', placeItems: 'center', width: 22, height: 22, borderRadius: 7, background: on ? '#1CABE2' : 'transparent', border: `1.5px solid ${on ? '#1CABE2' : 'rgba(21,26,33,.28)'}`, color: on ? '#0E1218' : 'transparent', fontSize: 12, transition: 'background .2s, border-color .2s' }}>
                 {on ? '✓' : ''}
               </span>
-              <span style={{ fontSize: 15, lineHeight: 1.7, color: on ? '#5A6270' : '#151A21' }}>{typeof t === 'string' ? t : t.text}</span>
+              <span style={{ fontSize: 15, lineHeight: 1.7, color: on ? '#5A6270' : '#151A21' }}>{renderInline(typeof t === 'string' ? t : t.text)}</span>
             </div>
           );
         })}
@@ -212,7 +292,7 @@ export default function Block({ block: b, step, index, state, update, anim, dela
             {view === 'text' && (b.steps || []).map((t, i) => (
               <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
                 <span style={{ flexShrink: 0, display: 'grid', placeItems: 'center', width: 24, height: 24, borderRadius: 8, background: 'rgba(28,171,226,.14)', color: '#0F7FA8', fontSize: 12, fontWeight: 600 }}>{i + 1}</span>
-                <span style={{ fontSize: 15, lineHeight: 1.72, color: '#2B313A' }}>{t}</span>
+                <span style={{ fontSize: 15, lineHeight: 1.72, color: '#2B313A' }}>{renderInline(t)}</span>
               </div>
             ))}
             {/* Both marks are only reachable here, inside an opened guide. */}
@@ -348,7 +428,7 @@ export default function Block({ block: b, step, index, state, update, anim, dela
               <div style={{ fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: '#0F7FA8', fontWeight: 600 }}>✓ {b.doTitle}</div>
               <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 11 }}>
                 {(b.doItems || []).map((t, i) => (
-                  <div key={i} style={{ fontSize: 14.5, lineHeight: 1.7, color: '#2B313A' }}>{t}</div>
+                  <div key={i} style={{ fontSize: 14.5, lineHeight: 1.7, color: '#2B313A' }}>{renderInline(t)}</div>
                 ))}
               </div>
             </div>
@@ -356,7 +436,7 @@ export default function Block({ block: b, step, index, state, update, anim, dela
               <div style={{ fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: '#C74232', fontWeight: 600 }}>✕ {b.dontTitle}</div>
               <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 11 }}>
                 {(b.dontItems || []).map((t, i) => (
-                  <div key={i} style={{ fontSize: 14.5, lineHeight: 1.7, color: '#2B313A' }}>{t}</div>
+                  <div key={i} style={{ fontSize: 14.5, lineHeight: 1.7, color: '#2B313A' }}>{renderInline(t)}</div>
                 ))}
               </div>
             </div>
