@@ -1,0 +1,94 @@
+# Публикация на GitHub Pages.
+#
+# Зачем сборка в CI, а не коммит `app/dist/`: сборка лежит в .gitignore,
+# потому что в репозитории работают двое и минифицированные файлы давали
+# конфликт на каждом слиянии. Из-за этого живая ссылка застыла на сборке,
+# закоммиченной когда-то давно, и переставала отражать код. Здесь она
+# собирается заново на каждый push в main.
+#
+# Публикуется не весь репозиторий, а только то, что предназначено для показа.
+# Внутренние материалы — CLAUDE.md, source/ с документами и комментариями
+# рецензента, исходный .docx/.pdf заказчика — на сайт не попадают: ссылку на
+# Pages раздают стейкхолдерам, и рабочие заметки там быть не должны.
+
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Параллельные деплои перетирали бы друг друга; правки в очереди не отменяем.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Собрать приложение
+        working-directory: app
+        run: |
+          npm ci
+          npm run build
+
+      - name: Собрать сайт
+        run: |
+          mkdir -p _site
+
+          # Витрина и замороженные прототипы (D14) — архив для показа.
+          cp index.html robots.txt _site/
+          cp -r concepts _site/concepts
+          cp -r shared _site/shared      # прототипы читают shared/module-01.js
+
+          # Приложение остаётся по прежнему адресу /app/dist/ — эта ссылка
+          # уже разослана, менять её значит ломать чужие закладки.
+          mkdir -p _site/app
+          cp -r app/dist _site/app/dist
+
+          # На /app/ лежал dev-вариант index.html: он тянет /src/main.jsx,
+          # которого в собранном виде нет, и страница открывалась пустой.
+          # Отправляем на настоящую сборку.
+          cat > _site/app/index.html <<'HTML'
+          <!DOCTYPE html>
+          <html lang="hy">
+          <head>
+            <meta charset="utf-8">
+            <meta name="robots" content="noindex, nofollow">
+            <meta http-equiv="refresh" content="0; url=./dist/">
+            <title>SafeSteps</title>
+          </head>
+          <body><a href="./dist/">SafeSteps · Ծնողական վերահսկողություն</a></body>
+          </html>
+          HTML
+
+          echo "--- опубликовано:"
+          find _site -maxdepth 2 -not -path '*/assets/*' | sort
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
