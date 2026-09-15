@@ -91,14 +91,18 @@ export default function HelpButton() {
                     <div className="ms-help-name">{c.name}</div>
                     <p className="ms-help-role">{c.role}</p>
                     <div className="ms-help-actions">
-                      {/* Кнопка звонка в виде телефона — №37 дословно. */}
-                      <a className="ms-help-call" href={`tel:${c.tel}`}>
-                        <PhoneIcon size={14} />
-                        <span>{c.label}</span>
-                      </a>
+                      {/* Кнопка звонка в виде телефона — №37 дословно. У контакта
+                          без телефона её место занимает кнопка на сайт. */}
+                      {c.tel ? (
+                        <a className="ms-help-call" href={`tel:${c.tel}`}>
+                          <PhoneIcon size={14} />
+                          <span>{c.label}</span>
+                        </a>
+                      ) : null}
                       {c.url && (
                         <a className="ms-help-link" href={c.url} target="_blank" rel="noreferrer noopener">
-                          {c.urlLabel}
+                          <span>{c.urlLabel}</span>
+                          <LinkIcon size={13} />
                         </a>
                       )}
                     </div>
@@ -113,7 +117,18 @@ export default function HelpButton() {
   );
 }
 
-function PhoneIcon({ size }) {
+/** Внешняя ссылка: стрелка из рамки. Рисуется, не грузится — §5.
+    Общая для кнопки помощи и карточек ссылок (Block.jsx › links). */
+export function LinkIcon({ size }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+      <path d="M14 4h6v6M20 4l-9 9M18 13v5a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2h5"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function PhoneIcon({ size }) {
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
       <path

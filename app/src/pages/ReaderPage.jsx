@@ -134,7 +134,7 @@ export default function ReaderPage() {
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 80, display: 'flex', flexDirection: 'column', background: '#F7F5F0', fontFamily: "'Noto Sans Armenian', 'Sora', Mshtakan, Sylfaen, system-ui, sans-serif", color: '#151A21' }}>
-      <div style={{ flexShrink: 0, padding: '12px 20px 12px 40px', display: 'flex', alignItems: 'center', gap: 20 }}>
+      <div className="ms-reader-head" style={{ flexShrink: 0, padding: '12px 20px 12px 40px', display: 'flex', alignItems: 'center', gap: 20 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16 }}>
             <span style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E7787' }}>
@@ -162,15 +162,15 @@ export default function ReaderPage() {
       <div className="ms-reader-body" style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'stretch' }}>
         {hasContent && (
           <aside className="ms-reader-nav" style={{ flex: '0 0 272px', borderRight: '1px solid rgba(21,26,33,.1)', borderTop: '1px solid rgba(21,26,33,.1)', overflowY: 'auto', padding: '22px 22px 30px 40px' }}>
-            <nav style={{ marginTop: 2, display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <nav className="ms-nav" style={{ marginTop: 2, display: 'flex', flexDirection: 'column', gap: 20 }}>
               {navItems.map((g, gi) => (
-                <div key={gi}>
+                <div key={gi} className="ms-nav-group">
                   {g.solo ? (
-                    <NavRow item={g.first} onPick={gotoStep} phase={phase} size={13.5} />
+                    <NavRow item={g.first} onPick={gotoStep} size={13.5} />
                   ) : (
-                    <div>
+                    <div className="ms-nav-group">
                       <div
-                        className="ms-row"
+                        className="ms-row ms-nav-group-head"
                         role="button"
                         tabIndex={0}
                         onClick={() => { if (!g.gLocked) gotoStep(g.gLead); }}
@@ -181,9 +181,9 @@ export default function ReaderPage() {
                           {g.title}
                         </span>
                       </div>
-                      <div style={{ marginTop: 2, display: 'flex', flexDirection: 'column', paddingLeft: 14, borderLeft: '1px solid rgba(21,26,33,.12)', marginLeft: 2 }}>
+                      <div className="ms-nav-children" style={{ marginTop: 2, display: 'flex', flexDirection: 'column', paddingLeft: 14, borderLeft: '1px solid rgba(21,26,33,.12)', marginLeft: 2 }}>
                         {g.children.map((c) => (
-                          <NavRow key={c.i} item={c} onPick={gotoStep} phase={phase} size={12.5} />
+                          <NavRow key={c.i} item={c} onPick={gotoStep} size={12.5} />
                         ))}
                       </div>
                     </div>
@@ -213,7 +213,7 @@ export default function ReaderPage() {
               {/* The intro's title repeats its kicker, so it is not printed
                   twice — the kicker above already names the section. */}
               {title !== stepLabel(step) && (
-                <h1 style={{ margin: '12px 0 0', fontFamily: "'Noto Serif Armenian', 'Spectral', serif", fontSize: 34, lineHeight: 1.22, letterSpacing: '-.6px', fontWeight: 600, animation: 'msTitleIn .55s cubic-bezier(.2,.85,.2,1) both', animationDelay: '.06s' }}>
+                <h1 className="ms-reader-title" style={{ margin: '12px 0 0', fontFamily: "'Noto Serif Armenian', 'Spectral', serif", fontSize: 34, lineHeight: 1.22, letterSpacing: '-.6px', fontWeight: 600, animation: 'msTitleIn .55s cubic-bezier(.2,.85,.2,1) both', animationDelay: '.06s' }}>
                   {title}
                 </h1>
               )}
@@ -247,16 +247,16 @@ export default function ReaderPage() {
               <div style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: '#1CABE2', animation: 'msKickerIn .45s cubic-bezier(.2,.85,.2,1) both' }}>
                 {stepLabel(step)} · Վիկտորինա
               </div>
-              <h1 style={{ margin: '12px 0 0', fontFamily: "'Noto Serif Armenian', 'Spectral', serif", fontSize: 30, lineHeight: 1.24, letterSpacing: '-.5px', fontWeight: 600, animation: 'msTitleIn .55s cubic-bezier(.2,.85,.2,1) both', animationDelay: '.06s' }}>
+              <h1 className="ms-reader-title" style={{ margin: '12px 0 0', fontFamily: "'Noto Serif Armenian', 'Spectral', serif", fontSize: 30, lineHeight: 1.24, letterSpacing: '-.5px', fontWeight: 600, animation: 'msTitleIn .55s cubic-bezier(.2,.85,.2,1) both', animationDelay: '.06s' }}>
                 {title}
               </h1>
               <div style={{ marginTop: 10, fontSize: 14.5, lineHeight: 1.7, color: '#5A6270' }}>
                 Պատասխանեք հարցին՝ հաջորդ բաժինը բացելու համար։
               </div>
               <Quiz step={step} state={state} update={update} onScrollTop={scrollTop} />
-              <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(21,26,33,.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18 }}>
+              <div className="ms-reader-footer" style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(21,26,33,.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18 }}>
                 <button
-                  className="ms-lift"
+                  className="ms-lift ms-prev-btn"
                   onClick={() => { update((prev) => ({ phase: 'read', dir: -1, tick: (prev.tick || 0) + 1 })); scrollTop(); }}
                   style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 18px 12px 14px', borderRadius: 11, background: 'transparent', border: '1px solid rgba(21,26,33,.16)', color: '#151A21', fontSize: 13.5, fontWeight: 500, cursor: 'pointer' }}
                 >
@@ -270,7 +270,7 @@ export default function ReaderPage() {
           {hasContent && isFinalStep(step) && (
             <div style={{ maxWidth: 780, margin: '0 auto' }}>
               <div style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: '#1CABE2' }}>Ամփոփիչ վիկտորինա</div>
-              <h1 style={{ margin: '12px 0 0', fontFamily: "'Noto Serif Armenian', 'Spectral', serif", fontSize: 34, lineHeight: 1.22, letterSpacing: '-.6px', fontWeight: 600 }}>
+              <h1 className="ms-reader-title" style={{ margin: '12px 0 0', fontFamily: "'Noto Serif Armenian', 'Spectral', serif", fontSize: 34, lineHeight: 1.22, letterSpacing: '-.6px', fontWeight: 600 }}>
                 Ամբողջ մոդուլի ստուգում
               </h1>
               <FinalQuiz
@@ -288,11 +288,21 @@ export default function ReaderPage() {
   );
 }
 
-function NavRow({ item, onPick, phase, size }) {
+function NavRow({ item, onPick, size }) {
   const { i, title, cur, seen, locked } = item;
+  const ref = useRef(null);
+  // On a phone the list is a horizontal strip, and the current section may
+  // sit off-screen to the right. Bring it into view; on the desktop column
+  // the same call only scrolls if the row is out of the sidebar.
+  useEffect(() => {
+    if (!cur || !ref.current) return;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    ref.current.scrollIntoView({ block: 'nearest', inline: 'center', behavior: reduce ? 'auto' : 'smooth' });
+  }, [cur]);
   return (
     <div
-      className="ms-row"
+      ref={ref}
+      className="ms-row ms-nav-row"
       role="button"
       tabIndex={0}
       aria-current={cur ? 'step' : undefined}
@@ -300,31 +310,26 @@ function NavRow({ item, onPick, phase, size }) {
       onKeyDown={(e) => { if ((e.key === 'Enter' || e.key === ' ') && !locked) { e.preventDefault(); onPick(i); } }}
       style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 4, padding: '9px 12px', marginLeft: -12, borderRadius: 10, cursor: locked ? 'not-allowed' : 'pointer', background: cur ? 'rgba(28,171,226,.12)' : 'transparent', transition: 'background .25s ease' }}
     >
-      {cur && <span style={{ position: 'absolute', left: 0, top: 8, bottom: 8, width: 2, borderRadius: 2, background: '#1CABE2', transformOrigin: '50% 50%', animation: 'msBar .45s cubic-bezier(.2,.85,.2,1) both' }} />}
-      <span style={{ fontSize: size, lineHeight: 1.4, color: cur ? '#0F7FA8' : locked ? '#B7BDC6' : seen ? '#2B313A' : '#8A919D', fontWeight: cur ? 600 : 400, transition: 'color .35s ease, transform .35s cubic-bezier(.2,.85,.2,1)', transform: `translateX(${cur ? 4 : 0}px)` }}>
+      {cur && <span className="ms-nav-bar" style={{ position: 'absolute', left: 0, top: 8, bottom: 8, width: 2, borderRadius: 2, background: '#1CABE2', transformOrigin: '50% 50%', animation: 'msBar .45s cubic-bezier(.2,.85,.2,1) both' }} />}
+      <span className="ms-nav-label" style={{ fontSize: size, lineHeight: 1.4, color: cur ? '#0F7FA8' : locked ? '#B7BDC6' : seen ? '#2B313A' : '#8A919D', fontWeight: cur ? 600 : 400, transition: 'color .35s ease, transform .35s cubic-bezier(.2,.85,.2,1)', transform: `translateX(${cur ? 4 : 0}px)` }}>
         {locked ? '🔒 ' : ''}{title}
       </span>
-      {cur && hasQuiz(i) && (
-        <span style={{ alignSelf: 'flex-end', fontSize: 8.5, letterSpacing: '.1em', textTransform: 'uppercase', fontWeight: 600, color: phase === 'quiz' ? '#0F7FA8' : '#C3C9D2', transition: 'color .3s ease' }}>
-          Վիկտորինա
-        </span>
-      )}
     </div>
   );
 }
 
 function Footer({ step, phase, state, advanceOk, onPrev, onNext }) {
   return (
-    <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(21,26,33,.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18 }}>
+    <div className="ms-reader-footer" style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(21,26,33,.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18 }}>
       <button
-        className="ms-lift"
+        className="ms-lift ms-prev-btn"
         onClick={onPrev}
         disabled={step === 0}
         style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 18px 12px 14px', borderRadius: 11, background: 'transparent', border: '1px solid rgba(21,26,33,.16)', color: '#151A21', fontSize: 13.5, fontWeight: 500, cursor: step === 0 ? 'default' : 'pointer', opacity: step > 0 ? 1 : 0.35, pointerEvents: step > 0 ? 'auto' : 'none' }}
       >
         <span style={{ fontSize: 15 }}>←</span> Նախորդ
       </button>
-      <span style={{ fontSize: 12, color: '#6E7787', fontVariantNumeric: 'tabular-nums' }}>{stepLabel(step)}</span>
+      <span className="ms-footer-label" style={{ fontSize: 12, color: '#6E7787', fontVariantNumeric: 'tabular-nums' }}>{stepLabel(step)}</span>
       <NextButton advanceOk={advanceOk} onNext={onNext} step={step} phase={phase} state={state} />
     </div>
   );
@@ -334,7 +339,7 @@ function Footer({ step, phase, state, advanceOk, onPrev, onNext }) {
 function NextButton({ advanceOk, onNext, step, phase, state }) {
   return (
     <button
-      className="ms-lift"
+      className="ms-lift ms-next-btn"
       onClick={onNext}
       aria-disabled={!advanceOk}
       title={advanceOk ? undefined : nextHint(state, step)}

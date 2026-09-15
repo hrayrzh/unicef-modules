@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MODULES } from '../data/module01';
 import { useProgressStore } from '../store/progress';
@@ -25,6 +25,30 @@ export default function SelectPage() {
     navigate(`/module/${active + 1}`);
   }, [active, navigate]);
 
+  // Swipe left/right anywhere on the screen moves the deck. Pointer events
+  // cover touch, mouse drag and pen alike. A recognised swipe suppresses the
+  // click that the browser fires on release, so the card under the finger
+  // doesn't also open or refocus.
+  const swipe = useRef({ x: 0, y: 0, id: null, fired: false });
+  const SWIPE_MIN = 48;
+  const onPointerDown = (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    swipe.current = { x: e.clientX, y: e.clientY, id: e.pointerId, fired: false };
+  };
+  const onPointerUp = (e) => {
+    const s = swipe.current;
+    if (s.id !== e.pointerId) return;
+    s.id = null;
+    const dx = e.clientX - s.x;
+    const dy = e.clientY - s.y;
+    if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    s.fired = true;
+    jump(dx < 0 ? active + 1 : active - 1);
+  };
+  const onClickCapture = (e) => {
+    if (swipe.current.fired) { swipe.current.fired = false; e.stopPropagation(); e.preventDefault(); }
+  };
+
   useEffect(() => {
     const onKey = (e) => {
       if (['ArrowDown', 'ArrowRight'].includes(e.key)) { e.preventDefault(); jump(active + 1); }
@@ -36,8 +60,15 @@ export default function SelectPage() {
   }, [active, jump, start]);
 
   return (
-    <div style={{ position: 'relative', height: '100dvh', overflow: 'hidden' }}>
+    <div
+      style={{ position: 'relative', height: '100dvh', overflow: 'hidden', touchAction: 'pan-y', userSelect: 'none' }}
+      onPointerDown={onPointerDown}
+      onPointerUp={onPointerUp}
+      onPointerCancel={() => { swipe.current.id = null; }}
+      onClickCapture={onClickCapture}
+    >
       <header
+        className="ms-select-head"
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40,
           padding: '22px 34px', display: 'flex', alignItems: 'center', gap: 20,
@@ -54,8 +85,8 @@ export default function SelectPage() {
           </div>
         </div>
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 26 }}>
-          <span style={{ fontSize: 12, letterSpacing: '.16em', textTransform: 'uppercase', color: '#7C8593' }}>Ընտրեք մոդուլը</span>
-          <span style={{ display: 'flex', alignItems: 'baseline', gap: 3, fontVariantNumeric: 'tabular-nums' }}>
+          <span className="ms-select-hint" style={{ fontSize: 12, letterSpacing: '.16em', textTransform: 'uppercase', color: '#7C8593' }}>Ընտրեք մոդուլը</span>
+          <span style={{ display: 'flex', alignItems: 'baseline', gap: 3, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap', flexShrink: 0 }}>
             <span style={{ fontSize: 22, fontWeight: 600, letterSpacing: '-.5px', color: '#F6F4EF' }}>
               {String(active + 1).padStart(2, '0')}
             </span>
@@ -65,7 +96,7 @@ export default function SelectPage() {
       </header>
 
       {/* Left dot rail */}
-      <div style={{ position: 'fixed', left: 34, top: '50%', transform: 'translateY(-50%)', zIndex: 40, display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <div className="ms-deck-rail" style={{ position: 'fixed', left: 34, top: '50%', transform: 'translateY(-50%)', zIndex: 40, display: 'flex', flexDirection: 'column', gap: 14 }}>
         {MODULES.map((m, i) => (
           <div
             key={i}
@@ -102,7 +133,11 @@ export default function SelectPage() {
           return (
             <div
               key={i}
-              onClick={() => { if (!focused) jump(i); }}
+              // Side card: bring it into focus. Focused card: open the module,
+              // same as the CTA below — the card itself is the biggest tap target.
+              onClick={() => { if (!focused) jump(i); else if (m.ready) start(); }}
+              role={focused && m.ready ? 'button' : undefined}
+              aria-label={focused && m.ready ? `Սկսել՝ ${m.title}` : undefined}
               style={{
                 position: 'absolute', left: 0, top: 0,
                 width: 'var(--cw)', height: 'var(--ch)',
@@ -112,7 +147,7 @@ export default function SelectPage() {
                 opacity: focused ? 1 : dist === 1 ? 0.5 : dist === 2 ? 0.18 : 0,
                 filter: `blur(${focused ? '0px' : dist === 1 ? '5px' : '11px'}) grayscale(${focused ? 0 : 0.85})`,
                 zIndex: 20 - dist,
-                cursor: focused ? 'default' : 'pointer',
+                cursor: focused && !m.ready ? 'default' : 'pointer',
                 pointerEvents: dist > 2 ? 'none' : 'auto',
                 transition: 'transform 460ms cubic-bezier(.62,0,.26,1), opacity 280ms ease-out, filter 300ms ease-out',
                 willChange: 'transform, opacity',
@@ -159,12 +194,12 @@ export default function SelectPage() {
       <div className="ms-select-cta" style={{ position: 'fixed', left: '50%', bottom: '3.4vh', transform: 'translateX(-50%)', zIndex: 30, width: 'min(620px, 80vw)', textAlign: 'center' }}>
         <div style={{ animation: 'msRise .5s cubic-bezier(.2,.85,.2,1) both' }}>
           <div style={{ fontSize: 11.5, letterSpacing: '.18em', textTransform: 'uppercase', color: a.accent, transition: 'color .5s' }}>{a.kicker}</div>
-          <h1 style={{ margin: '14px 0 0', fontSize: 'clamp(28px, 3.4vw, 44px)', lineHeight: 1.08, letterSpacing: '-1.6px', fontWeight: 600 }}>{a.title}</h1>
+          <h1 className="ms-select-title" style={{ margin: '14px 0 0', fontSize: 'clamp(28px, 3.4vw, 44px)', lineHeight: 1.08, letterSpacing: '-1.6px', fontWeight: 600 }}>{a.title}</h1>
           {a.subtitle && (
-            <p style={{ margin: '10px auto 0', maxWidth: 520, fontSize: 15.5, lineHeight: 1.4, color: '#C7CEDA', fontWeight: 400 }}>{a.subtitle}</p>
+            <p className="ms-select-sub" style={{ margin: '10px auto 0', maxWidth: 520, fontSize: 15.5, lineHeight: 1.4, color: '#C7CEDA', fontWeight: 400 }}>{a.subtitle}</p>
           )}
-          <p style={{ margin: '14px auto 0', maxWidth: 500, fontSize: 14.5, lineHeight: 1.65, color: '#9BA4B2', fontWeight: 300 }}>{a.blurb}</p>
-          <div style={{ marginTop: 26, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <p className="ms-select-blurb" style={{ margin: '14px auto 0', maxWidth: 500, fontSize: 14.5, lineHeight: 1.65, color: '#9BA4B2', fontWeight: 300 }}>{a.blurb}</p>
+          <div className="ms-select-actions" style={{ marginTop: 26, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
             {/* Модули 2–5 ещё не написаны: кнопка не ведёт на заглушку, а честно
                 говорит, что открывать нечего. */}
             <button
@@ -182,9 +217,11 @@ export default function SelectPage() {
             >
               {!a.ready ? 'Դեռ հասանելի չէ' : done[active] ? 'Վերանայել մոդուլը' : 'Սկսել մոդուլը'}
             </button>
-            <span style={{ fontSize: 12.5, color: '#6E7787' }}>
-              {!a.ready ? 'Պատրաստվում է' : done[active] ? 'Ավարտված է' : '9 բաժին, ապա՝ վիկտորինա'}
-            </span>
+            {(!a.ready || done[active]) && (
+              <span style={{ fontSize: 12.5, color: '#6E7787' }}>
+                {!a.ready ? 'Պատրաստվում է' : 'Ավարտված է'}
+              </span>
+            )}
             {/* D11 — explicit progress reset, so a reviewer can retest the
                 gating from a clean state. */}
             <button

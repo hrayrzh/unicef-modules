@@ -3,9 +3,10 @@ import { M1, QUIZ, FINAL } from './data/module01';
 export const FINAL_STEP = M1.steps.length;
 export const isFinalStep = (step) => step === FINAL_STEP;
 
-// D9 — a section is only finishable once every guide is expanded AND marked,
-// and every table/pair panel has been opened. The mark is unreachable until
-// the panel is open, so "tick everything at once" is not a valid path.
+// D9 — a section is finishable once at least ONE guide on it has been
+// expanded (OQ5 resolved 2026-09-15: not every family has every platform,
+// so demanding all of them was busywork) and every table/pair/cards panel
+// has been opened. Guides carry no "done" mark any more — opening is the act.
 export function panelKeys(step) {
   if (isFinalStep(step)) return [];
   return M1.steps[step].blocks
@@ -20,11 +21,13 @@ export function openKeys(step) {
     .filter(Boolean);
 }
 
+export function guidesSatisfied(s, step) {
+  const keys = panelKeys(step);
+  return keys.length === 0 || keys.some((k) => !!s.opened[k]);
+}
+
 export function canFinishReading(s, step) {
-  return (
-    panelKeys(step).every((k) => !!s.marks[k]) &&
-    openKeys(step).every((k) => !!s.opened[k])
-  );
+  return guidesSatisfied(s, step) && openKeys(step).every((k) => !!s.opened[k]);
 }
 
 // The intro is a framing page, not taught material — there is nothing to test
@@ -60,13 +63,15 @@ export function hasSelection(q, sel) {
 // The blocked "Next" button always states what is still missing, never just
 // greys out. (D9)
 export function nextHint(s, step) {
-  const keys = panelKeys(step);
-  const unopened =
-    keys.filter((k) => !s.opened[k] && !s.marks[k]).length +
-    openKeys(step).filter((k) => !s.opened[k]).length;
-  const unmarked = keys.filter((k) => !s.marks[k]).length;
-  if (unopened > 0) return `Բացեք ևս ${unopened} ուղեցույց`;
-  if (unmarked > 0) return `Նշեք ևս ${unmarked} կետ՝ «Կատարված է»`;
+  if (!guidesSatisfied(s, step)) return 'Բացեք առնվազն մեկ ուղեցույց';
+  const missing = openKeys(step).filter((k) => !s.opened[k]);
+  if (missing.length > 0) {
+    // A flashcard deck is credited by flipping one card, so say that
+    // rather than the generic "open N blocks".
+    const kinds = missing.map((k) => M1.steps[step].blocks[Number(k.split(':')[1])].k);
+    if (kinds.every((x) => x === 'cards')) return 'Բացեք առնվազն մեկ քարտ';
+    return `Բացեք ևս ${missing.length} բլոկ`;
+  }
   if (!hasQuiz(step)) return M1.steps[step + 1]?.label ?? '';
   if (s.phase !== 'quiz') return '1 հարց այս բաժնից';
   if (!quizPassed(s, step)) return 'Պատասխանեք վիկտորինայի հարցին';

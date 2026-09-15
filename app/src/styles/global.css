@@ -35,12 +35,15 @@ button { font-family: inherit; }
 .ms-card-btn:hover { background: rgba(246,244,239,.26); border-color: #1CABE2; }
 .ms-close:hover { background: rgba(21,26,33,.13); transform: scale(1.06); }
 
-/* Flashcard flip. Both faces are stacked in the same grid cell so the card is
-   sized by its tallest face and never jumps height mid-flip. */
-.ms-card-inner { display: grid; transform-style: preserve-3d; transition: transform .5s cubic-bezier(.2,.85,.2,1); }
+/* Flashcard flip. Both faces are stacked in the same grid cell. While the card
+   shows its front, the back is taken out of flow: the front carries only the
+   flip prompt, and letting the tall back set the height left the prompt alone
+   in a 500px empty box. The card therefore grows on flip, at the click. */
+.ms-card-inner { position: relative; display: grid; transform-style: preserve-3d; transition: transform .5s cubic-bezier(.2,.85,.2,1); }
 .ms-card-inner.is-flipped { transform: rotateY(180deg); }
 .ms-card-face { grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .ms-card-back { transform: rotateY(180deg); }
+.ms-card-inner:not(.is-flipped) .ms-card-back { position: absolute; inset: 0; overflow: hidden; }
 .ms-card:hover .ms-card-inner:not(.is-flipped) { transform: translateY(-2px); }
 .ms-card:focus-visible { outline: 2px solid #1CABE2; outline-offset: 3px; }
 
@@ -68,24 +71,85 @@ button { font-family: inherit; }
   .ms-card-inner, .ms-card-inner.is-flipped, .ms-card:hover .ms-card-inner:not(.is-flipped) { transform: none; }
   .ms-card-face { backface-visibility: visible; -webkit-backface-visibility: visible; }
   .ms-card-back { transform: none; }
-  .ms-card-inner:not(.is-flipped) .ms-card-back { display: none; }
-  .ms-card-inner.is-flipped .ms-card-face:not(.ms-card-back) { display: none; }
+  /* !important: у обеих сторон display задан inline. */
+  .ms-card-inner:not(.is-flipped) .ms-card-back { display: none !important; }
+  .ms-card-inner.is-flipped .ms-card-face:not(.ms-card-back) { display: none !important; }
 }
 
 :focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
 
+/* Симулятор: корпус по центру, стрелки «назад» / «вперёд» по бокам на
+   высоте его середины. Корпус может слегка ужаться, чтобы стрелки влезли.
+   На телефоне места на троих нет — корпус занимает всю ширину, стрелки
+   переносятся под него. */
+.ms-sim-row { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.ms-sim-phone { flex: 0 1 320px; min-width: 0; }
+@media (max-width: 560px) {
+  .ms-sim-row { flex-wrap: wrap; row-gap: 14px; }
+  .ms-sim-phone { flex: 1 1 100%; order: -1; }
+}
+
 /* D4 — mobile. The reader collapses to a single column and the sidebar
    becomes a horizontal scroller above the content. */
 @media (max-width: 860px) {
+  /* Шапка: на телефоне нет места под левый отступ 40px — он был выровнен
+     по боковой колонке, которой здесь нет. */
+  .ms-reader-head { padding: 10px 14px 10px 16px !important; gap: 10px !important; }
+
   .ms-reader-body { flex-direction: column !important; }
+
+  /* Боковая колонка становится горизонтальной лентой чипов. Вертикальный
+     список, зажатый до 33vh, съедал треть экрана и всё равно обрезался.
+     Группы «сплющиваются» через display: contents: заголовок группы
+     прячется — его дети и так стоят подряд, а первый из них ведёт туда же. */
   .ms-reader-nav {
     flex: 0 0 auto !important;
     border-right: none !important;
     border-bottom: 1px solid rgba(21,26,33,.1);
-    max-height: 33vh;
-    padding: 14px 18px !important;
+    max-height: none;
+    overflow: hidden;
+    padding: 0 !important;
   }
-  .ms-reader-scroll { padding: 24px 18px 18px !important; }
+  .ms-nav {
+    flex-direction: row !important;
+    align-items: center;
+    gap: 6px !important;
+    margin: 0 !important;
+    padding: 10px 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Внутренний отступ ленты нужен и в конце прокрутки. */
+    scroll-padding-inline: 16px;
+  }
+  .ms-nav::-webkit-scrollbar { display: none; }
+  /* !important: у контейнера детей display задан inline. */
+  .ms-nav-group, .ms-nav-children { display: contents !important; }
+  .ms-nav-group-head { display: none !important; }
+  .ms-nav-row {
+    flex: 0 0 auto;
+    margin: 0 !important;
+    padding: 8px 13px !important;
+    border-radius: 100px !important;
+    border: 1px solid rgba(21,26,33,.14);
+    background: #fff;
+    white-space: nowrap;
+  }
+  .ms-nav-row[aria-current] { border-color: #1CABE2; background: rgba(28,171,226,.12) !important; }
+  .ms-nav-bar { display: none !important; }
+  .ms-nav-label { transform: none !important; font-size: 13px !important; }
+
+  .ms-reader-scroll { padding: 22px 18px 18px !important; border-top: none !important; }
+  .ms-reader-title { font-size: 26px !important; letter-spacing: -.3px !important; }
+
+  /* Подвал: три элемента в строку не помещаются. Номер шага уже стоит над
+     заголовком раздела, поэтому здесь он лишний; «Далее» растягивается, чтобы
+     подпись под ней не переносилась по слову. */
+  .ms-reader-footer { gap: 10px !important; }
+  .ms-footer-label { display: none; }
+  .ms-prev-btn { flex-shrink: 0; padding: 12px 14px !important; }
+  .ms-next-btn { flex: 1 1 auto; min-width: 0; justify-content: center; }
+  .ms-next-btn > span { min-width: 0; }
   /* The whole composition is sized from one width, so a narrow screen only
      needs to scale that stage down — the bubble and its offsets follow.
      A transform is used rather than `zoom`: zoom re-lays-out the container,
@@ -101,12 +165,26 @@ button { font-family: inherit; }
        sets --ms-w-mobile inline from its `width` prop, and an inline custom
        property beats a rule. Without it the variable stays at the desktop
        width, the bubble renders ~1.95x that and gets clipped by the screen. */
-    --ms-w-mobile: 130px !important;
+    /* Ширина берётся от экрана, а не фиксированная: облако занимает 200%
+       ширины фигуры (5% отступ + 195%), и при 130px его текст выходил
+       меньше 10px. Половина колонки контента (100vw минус боковые отступы
+       по 18px) даёт облако во всю ширину и текст ~13px. */
+    --ms-w-mobile: min(200px, calc((100vw - 36px) / 2)) !important;
     width: var(--ms-w-mobile) !important;
     margin-top: calc(var(--ms-w-mobile) * var(--ms-headroom-ratio)) !important;
   }
   .ms-table { display: block !important; overflow-x: auto; }
   .ms-pair { grid-template-columns: 1fr !important; }
+  /* Флеш-карточки: обе стороны лежат в одной ячейке, и карточка получает
+     высоту самой высокой из них. На телефоне оборот с тремя полями растёт
+     до ~950px, и лицевая сторона висит посреди пустой коробки. Поэтому здесь
+     оборот — обычная подмена, как при reduced-motion: высота следует за
+     видимой стороной. */
+  .ms-card-inner, .ms-card-inner.is-flipped, .ms-card:hover .ms-card-inner:not(.is-flipped) { transform: none; }
+  .ms-card-face { backface-visibility: visible; -webkit-backface-visibility: visible; }
+  .ms-card-back { transform: none; padding: 18px !important; }
+  .ms-card-inner:not(.is-flipped) .ms-card-back { display: none !important; }
+  .ms-card-inner.is-flipped .ms-card-face:not(.ms-card-back) { display: none !important; }
   /* Экран выбора модуля: CTA и нижняя навигация оба были fixed с одинаковым
      bottom. На широком экране они расходятся по горизонтали, на телефоне —
      накладываются друг на друга. Разводим по вертикали и ужимаем колоду,
@@ -114,8 +192,29 @@ button { font-family: inherit; }
   /* Колода зажата между шапкой сверху и блоком CTA снизу. Карточка ставится
      от центра дуги: её верх = top − R − ch/2, поэтому и высоту, и смещение
      подбираем так, чтобы она не заходила ни под шапку, ни под кнопку. */
-  .ms-deck-stage { --ch: clamp(150px, 24vh, 190px) !important; top: calc(30vh + var(--R)) !important; }
-  .ms-select-cta { bottom: 104px !important; width: min(620px, 92vw) !important; }
+  /* Шапка: подпись «Ընտրեք մոդուլը» переносилась на две строки и толкала
+     счётчик — на телефоне она лишняя, счётчик говорит то же самое. */
+  .ms-select-head { padding: 14px 18px !important; gap: 12px !important; }
+  .ms-select-hint { display: none; }
+  /* Левая шкала точек накладывалась на текстовый блок. Её роль на телефоне
+     выполняют счётчик в шапке и кнопки «Նախորդ / Հաջորդ». */
+  .ms-deck-rail { display: none !important; }
+  /* Карточка занимает пространство между шапкой и текстовым блоком: центр
+     дуги ставится от верха, а не от 30vh, чтобы карточка не уезжала под
+     шапку на низких экранах и не была крошечной на высоких. */
+  .ms-deck-stage {
+    /* Высота карточки = то, что остаётся от экрана после шапки (~66px),
+       текстового блока (~250px) и кнопок внизу (~96px) с зазорами. */
+    --ch: clamp(150px, calc(100vh - 440px), 330px) !important;
+    top: calc(66px + 3vh + var(--ch) / 2 + var(--R)) !important;
+  }
+  /* Текстовый блок ужат: аннотация спрятана (подзаголовок остаётся),
+     заголовок меньше. Иначе блок в 350px упирался в карточку. */
+  .ms-select-cta { bottom: 96px !important; width: min(620px, 92vw) !important; }
+  .ms-select-title { font-size: 26px !important; letter-spacing: -.8px !important; margin-top: 10px !important; }
+  .ms-select-sub { font-size: 14.5px !important; }
+  .ms-select-blurb { display: none; }
+  .ms-select-actions { margin-top: 18px !important; }
   .ms-footer-nav { bottom: 16px !important; gap: 8px; }
   .ms-footer-nav button { font-size: 11.5px !important; padding: 9px 12px !important; }
 }
@@ -150,7 +249,11 @@ button { font-family: inherit; }
    в гейте D9 — на факультативном блоке модуль не должен стопориться.
    <details> взят намеренно: раскрытие работает без JS и доступно с
    клавиатуры само по себе. */
-.ms-aside { border-radius: 14px; border: 1px solid; overflow: hidden; }
+/* Без overflow: hidden — иначе тултип термина (.ms-tip) внутри блока
+   обрезался по рамке («2FA» в лампочке на шаге 3). Скругление рамки при
+   наведении на шапку держит сама шапка: при закрытом блоке она и есть весь
+   блок, при открытом скруглены только верхние углы. */
+.ms-aside { border-radius: 14px; border: 1px solid; }
 .ms-aside.is-did { background: rgba(28,171,226,.06); border-color: rgba(28,171,226,.3); }
 .ms-aside.is-tip { background: rgba(245,182,42,.09); border-color: rgba(245,182,42,.42); }
 .ms-aside-head {
@@ -159,6 +262,8 @@ button { font-family: inherit; }
   font-size: 14px; font-weight: 600;
 }
 .ms-aside-head::-webkit-details-marker { display: none; }
+.ms-aside-head { border-radius: 13px; }
+.ms-aside[open] .ms-aside-head { border-radius: 13px 13px 0 0; }
 .ms-aside-head:hover { background: rgba(21,26,33,.03); }
 .ms-aside-icon { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0; }
 .is-did .ms-aside-icon { background: rgba(28,171,226,.16); color: #0F7FA8; }
@@ -271,7 +376,7 @@ button { font-family: inherit; }
 }
 .ms-help-call:hover { background: #C22F2F; }
 .ms-help-link {
-  display: inline-flex; align-items: center;
+  display: inline-flex; align-items: center; gap: 6px;
   padding: 9px 14px; border-radius: 100px;
   border: 1px solid rgba(21,26,33,.18); color: #0F7FA8 !important;
   font-size: 12.5px; font-weight: 600; text-decoration: none !important;

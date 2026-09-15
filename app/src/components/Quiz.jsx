@@ -29,17 +29,17 @@ export default function Quiz({ step, state, update, onScrollTop }) {
     }));
   };
 
-  // A wrong answer sends the reader back to the material and clears that
-  // section's marks — you re-read before you re-answer.
+  // A wrong answer sends the reader back to the material and collapses that
+  // section's guides — you re-open and re-read before you re-answer.
   const retry = () => {
     update((prev) => {
-      const marks = { ...prev.marks };
-      panelKeys(step).forEach((k) => { marks[k] = null; });
+      const opened = { ...prev.opened };
+      panelKeys(step).forEach((k) => { opened[k] = false; });
       return {
         qStatus: { ...prev.qStatus, [step]: null },
         qSel: { ...prev.qSel, [step]: null },
         qOrder: { ...prev.qOrder, [step]: [] },
-        marks,
+        opened,
         phase: 'read',
       };
     });
@@ -185,7 +185,7 @@ export default function Quiz({ step, state, update, onScrollTop }) {
             <span style={{ fontSize: 15, fontWeight: 600 }}>Դեռ ոչ</span>
           </div>
           <div style={{ marginTop: 10, fontSize: 14, lineHeight: 1.7, color: '#C9D0DA' }}>
-            Վերադարձեք բաժնի նյութին, կրկին ստուգեք ուղեցույցները և նշեք «Կատարված է», ապա փորձեք նորից։
+            Վերադարձեք բաժնի նյութին, կրկին բացեք ուղեցույցները, ապա փորձեք նորից։
           </div>
           <button className="ms-lift" onClick={retry} style={{ marginTop: 14, padding: '11px 20px', borderRadius: 11, background: '#FF6B5A', border: 'none', color: '#fff', fontSize: 13.5, fontWeight: 600, cursor: 'pointer' }}>
             Վերադառնալ նյութին →

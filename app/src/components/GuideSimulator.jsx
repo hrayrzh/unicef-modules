@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { buildScenario, menuRows } from '../guideSim';
 
 /**
@@ -10,12 +10,14 @@ import { buildScenario, menuRows } from '../guideSim';
  * Симулятор не заменяет текстовый пошаговик, а идёт рядом с ним: текущий шаг
  * показан целиком над устройством, а полный список — на соседней вкладке.
  */
-export default function GuideSimulator({ guide }) {
+export default function GuideSimulator({ guide, onComplete }) {
   const screens = useMemo(() => buildScenario(guide), [guide]);
   const [at, setAt] = useState(0);
   const [toggled, setToggled] = useState(false);
 
   const finished = at >= screens.length;
+  // Reaching the last screen is what credits the guide (Block.jsx › credit).
+  useEffect(() => { if (finished) onComplete?.(); }, [finished, onComplete]);
   const sc = finished ? null : screens[at];
   const step = finished ? null : guide.steps[sc.stepIndex];
 
@@ -29,6 +31,10 @@ export default function GuideSimulator({ guide }) {
   );
 
   const advance = () => { setToggled(false); setAt((i) => i + 1); };
+  // Стрелки по бокам корпуса: не всем очевидно, что двигаться надо тапом по
+  // подсвеченному пункту. Ими можно листать экраны в обе стороны, минуя
+  // действие, — симулятор учит «где лежит», а не проверяет.
+  const back = () => { setToggled(false); setAt((i) => Math.max(0, i - 1)); };
   // Переключателю нужно успеть доехать, но не настолько, чтобы это
   // читалось отдельным движением перед сменой экрана.
   const flip = () => { setToggled(true); setTimeout(advance, 240); };
@@ -66,9 +72,12 @@ export default function GuideSimulator({ guide }) {
         ))}
       </div>
 
-      {/* Корпус устройства */}
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <div style={{ width: '100%', maxWidth: 320, background: '#151A21', borderRadius: 30, padding: 10, boxShadow: '0 24px 50px -24px rgba(21,26,33,.5)' }}>
+      {/* Корпус устройства, по бокам — стрелки «назад» / «вперёд», по центру
+          его высоты. На узком экране стрелки уходят под корпус (.ms-sim-row
+          в global.css): рядом с ними устройство ужималось вдвое. */}
+      <div className="ms-sim-row">
+        <Arrow dir="prev" onClick={back} disabled={at === 0} label="Նախորդ էկրան" />
+        <div className="ms-sim-phone" style={{ background: '#151A21', borderRadius: 30, padding: 10, boxShadow: '0 24px 50px -24px rgba(21,26,33,.5)' }}>
           <div style={{ background: '#F2F4F8', borderRadius: 22, overflow: 'hidden', height: 320, display: 'flex', flexDirection: 'column' }}>
             <div style={{ height: 20, display: 'grid', placeItems: 'center' }}>
               <span style={{ width: 62, height: 4, borderRadius: 3, background: 'rgba(255,255,255,.4)' }} />
@@ -150,6 +159,7 @@ export default function GuideSimulator({ guide }) {
             )}
           </div>
         </div>
+        <Arrow dir="next" onClick={advance} disabled={finished} label="Հաջորդ էկրան" />
       </div>
 
       {/* Русский эквивалент текущей настройки — как в исходном документе. */}
@@ -159,6 +169,35 @@ export default function GuideSimulator({ guide }) {
         </p>
       )}
     </div>
+  );
+}
+
+/** Круглая стрелка сбоку от корпуса. Без анимаций — см. правило симулятора. */
+function Arrow({ dir, onClick, disabled, label }) {
+  return (
+    <button
+      type="button"
+      className="ms-sim-arrow"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={label}
+      title={label}
+      style={{
+        flexShrink: 0, width: 40, height: 40, borderRadius: '50%',
+        display: 'grid', placeItems: 'center',
+        border: '1px solid rgba(21,26,33,.16)', background: '#FFFFFF',
+        color: disabled ? '#B8C0D6' : '#0F7FA8',
+        cursor: disabled ? 'default' : 'pointer',
+        boxShadow: disabled ? 'none' : '0 4px 12px rgba(21,26,33,.08)',
+      }}
+    >
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+        <path
+          d={dir === 'prev' ? 'M14.5 6l-6 6 6 6' : 'M9.5 6l6 6-6 6'}
+          stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"
+        />
+      </svg>
+    </button>
   );
 }
 
