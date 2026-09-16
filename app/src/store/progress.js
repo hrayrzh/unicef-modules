@@ -8,21 +8,12 @@ const KEY = 'unicef-m01-f';
 const EMPTY = {
   done: {},      // module index -> completed
   maxStep: 0,    // furthest section unlocked (per module 1)
-  phase: 'read', // 'read' | 'quiz'
+  dir: 1,        // last navigation direction, drives the slide animation
+  tick: 0,       // bumps to re-mount the section and replay its animation
   opened: {},    // "step:block" -> guide/table panel expanded
-  marks: {},     // "step:block" -> 'done' | 'na'
   checks: {},    // "step:block:i" -> checklist ticked
   cardTab: {},   // "step:block" -> selected flashcard index
   cardFlip: {},  // "step:block:i" -> that card has been flipped
-  qSel: {},
-  qStatus: {},
-  qOrder: {},
-  qShake: 0,
-  fIdx: 0,
-  fSel: null,
-  fStatus: null,
-  fWrong: {},
-  fDone: false,
 };
 
 // §5 — storage can be blocked inside an iframe with a strict policy. Falling
@@ -67,10 +58,15 @@ export const useProgressStore = create(
     }),
     {
       name: KEY,
-      version: 2,
-      // v1 saves predate the flashcard keys; merging over EMPTY keeps the
-      // reader from reading `undefined` maps.
-      migrate: (s) => ({ ...EMPTY, ...(s || {}) }),
+      // v3 (2026-09-16): quiz state dropped along with the quizzes themselves.
+      version: 3,
+      // Older saves are merged over EMPTY so the reader never reads an
+      // `undefined` map; keys the shape no longer has are simply dropped.
+      migrate: (s) => {
+        const out = { ...EMPTY };
+        for (const k of Object.keys(EMPTY)) if (s && s[k] !== undefined) out[k] = s[k];
+        return out;
+      },
       storage: createJSONStorage(() => safeStorage),
       // Actions stay out of storage.
       partialize: (s) => {

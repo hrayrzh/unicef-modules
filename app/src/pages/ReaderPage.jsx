@@ -2,20 +2,19 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MODULES } from '../data/module01';
 import {
-  M1, NAV_GROUPS, FINAL_STEP, isFinalStep,
-  canAdvance, canFinishReading, quizPassed, nextHint, nextLabel, stepLabel, hasQuiz,
+  M1, NAV_GROUPS, LAST_STEP, isLastStep, NEXT_STEP_BLOCKER,
+  canAdvance, nextHint, nextLabel, stepLabel,
 } from '../moduleLogic';
 import { useProgressStore } from '../store/progress';
 import Block from '../components/Block';
-import Quiz from '../components/Quiz';
-import FinalQuiz from '../components/FinalQuiz';
 import HelpButton from '../components/HelpButton';
 
 /**
  * Reads the module/section straight out of the URL, so a section is linkable
  * and the browser's back button walks the module. Gating (D9) is enforced on
  * navigation, not just in the UI: a URL for a locked section is redirected
- * back to the furthest section actually earned.
+ * back to the furthest section actually earned. With NEXT_STEP_BLOCKER off
+ * (app/.env) every section is reachable straight away.
  */
 export default function ReaderPage() {
   const { moduleId, step: stepParam } = useParams();
@@ -28,20 +27,18 @@ export default function ReaderPage() {
   const state = useProgressStore();
   const update = useProgressStore((s) => s.update);
 
-  const requested = stepParam === 'final' ? FINAL_STEP : Math.max(0, (Number(stepParam) || 1) - 1);
+  // Old bookmarks may still point at `/final`, the closing quiz that is gone;
+  // they land on the last section instead.
+  const requested = stepParam === 'final' ? LAST_STEP : Math.max(0, (Number(stepParam) || 1) - 1);
   // Never trust the URL past what has been unlocked.
-  const step = Math.min(requested, state.maxStep, FINAL_STEP);
-  const phase = state.phase;
+  const step = Math.min(requested, LAST_STEP, NEXT_STEP_BLOCKER ? state.maxStep : LAST_STEP);
 
   const scrollTop = useCallback(() => {
     const el = scrollRef.current;
     if (el) el.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const stepPath = useCallback(
-    (i) => `/module/${moduleIndex + 1}/${isFinalStep(i) ? 'final' : i + 1}`,
-    [moduleIndex],
-  );
+  const stepPath = useCallback((i) => `/module/${moduleIndex + 1}/${i + 1}`, [moduleIndex]);
 
   // Bounce an out-of-range or locked URL to the section the learner has earned.
   useEffect(() => {
@@ -53,15 +50,17 @@ export default function ReaderPage() {
   // names where you are.
   useEffect(() => {
     if (!hasContent || stepParam) return;
-    navigate(stepPath(state.maxStep), { replace: true });
+    navigate(stepPath(Math.min(state.maxStep, LAST_STEP)), { replace: true });
   }, [hasContent, stepParam, state.maxStep, stepPath, navigate]);
 
   const gotoStep = useCallback(
     (i) => {
-      const target = Math.min(FINAL_STEP, Math.max(0, i));
-      if (target > state.maxStep + 1) return;
-      if (target > step && !canAdvance(state, step)) return;
-      update((prev) => ({ maxStep: Math.max(prev.maxStep, target), phase: 'read', dir: target >= step ? 1 : -1, tick: (prev.tick || 0) + 1 }));
+      const target = Math.min(LAST_STEP, Math.max(0, i));
+      if (NEXT_STEP_BLOCKER) {
+        if (target > state.maxStep + 1) return;
+        if (target > step && !canAdvance(state, step)) return;
+      }
+      update((prev) => ({ maxStep: Math.max(prev.maxStep, target), dir: target >= step ? 1 : -1, tick: (prev.tick || 0) + 1 }));
       navigate(stepPath(target));
       scrollTop();
     },
@@ -76,61 +75,45 @@ export default function ReaderPage() {
     return () => window.removeEventListener('keydown', onKey);
   }, [closeReader]);
 
+  // A section advances once it is read (D9); the last one closes the module.
   const onNext = useCallback(() => {
-    // Reading a section only unlocks its quiz; the quiz unlocks the next section.
-    if (!isFinalStep(step) && hasQuiz(step) && phase !== 'quiz') {
-      if (!canFinishReading(state, step)) return;
-      update((prev) => ({ phase: 'quiz', dir: 1, tick: (prev.tick || 0) + 1 }));
-      scrollTop();
-      return;
-    }
-    // Quiz-less sections (the intro) advance straight on, once read.
-    if (!isFinalStep(step) && !hasQuiz(step) && !canFinishReading(state, step)) return;
-    if (step + 1 <= M1.steps.length) { gotoStep(step + 1); return; }
     if (!canAdvance(state, step)) return;
+    if (!isLastStep(step)) { gotoStep(step + 1); return; }
     update((prev) => ({ done: { ...prev.done, [moduleIndex]: true } }));
     closeReader();
-  }, [step, phase, state, update, scrollTop, gotoStep, moduleIndex, closeReader]);
+  }, [step, state, update, gotoStep, moduleIndex, closeReader]);
 
-  const finishModule = useCallback(() => {
-    update((prev) => ({ done: { ...prev.done, [moduleIndex]: true } }));
-    closeReader();
-  }, [update, moduleIndex, closeReader]);
-
-  const readingDone = hasContent && canFinishReading(state, step);
-  const advanceOk = hasContent && (phase === 'quiz' ? canAdvance(state, step) : readingDone);
+  const advanceOk = hasContent && canAdvance(state, step);
   const anim = `${state.dir === -1 ? 'msInBack' : 'msInFwd'} .5s cubic-bezier(.2,.85,.2,1) both`;
 
-  const progressPct = `${Math.round(((step + 1) / (M1.steps.length + 1)) * 100)}%`;
-  const learnedPct = `${Math.round(((state.maxStep + 1) / (M1.steps.length + 1)) * 100)}%`;
+  const progressPct = `${Math.round(((step + 1) / M1.steps.length) * 100)}%`;
+  const learnedPct = `${Math.round(((Math.min(state.maxStep, LAST_STEP) + 1) / M1.steps.length) * 100)}%`;
 
   const navItems = useMemo(() => {
     const gated = !canAdvance(state, step);
+    const isLocked = (i) => NEXT_STEP_BLOCKER && (i > state.maxStep + 1 || (i > step && gated));
     const item = (i, label) => {
       const cur = i === step;
       const seen = i <= state.maxStep;
-      const locked = i > state.maxStep + 1 || (i > step && gated);
-      return { i, title: label, cur, seen, locked };
+      return { i, title: label, cur, seen, locked: isLocked(i) };
     };
     return NAV_GROUPS.map((g) => {
       const solo = g.idx.length === 1;
       const inGroup = g.idx.includes(step);
       const gLead = g.idx[0];
-      const gLocked = gLead > state.maxStep + 1 || (gLead > step && gated);
       return {
         title: g.title,
         solo,
         inGroup,
         gLead,
-        gLocked,
+        gLocked: isLocked(gLead),
         first: solo ? item(g.idx[0], g.title) : null,
-        children: solo ? [] : g.idx.map((i) => item(i, (M1.steps[i] || { label: 'Ամփոփիչ վիկտորինա' }).label)),
+        children: solo ? [] : g.idx.map((i) => item(i, M1.steps[i].label)),
       };
     });
   }, [state, step]);
 
-  const blocks = (M1.steps[step] || { blocks: [] }).blocks;
-  const title = (M1.steps[step] || { title: 'Ամփոփիչ վիկտորինա' }).title;
+  const { blocks, title } = M1.steps[step];
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 80, display: 'flex', flexDirection: 'column', background: '#F7F5F0', fontFamily: "'Noto Sans Armenian', 'Sora', Mshtakan, Sylfaen, system-ui, sans-serif", color: '#151A21' }}>
@@ -205,8 +188,8 @@ export default function ReaderPage() {
             </div>
           )}
 
-          {hasContent && !isFinalStep(step) && (phase !== 'quiz' || !hasQuiz(step)) && (
-            <div key={`${state.tick || 0}:${step}:read`} style={{ maxWidth: 780, margin: '0 auto', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+          {hasContent && (
+            <div key={`${state.tick || 0}:${step}`} style={{ maxWidth: 780, margin: '0 auto', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: '#1CABE2', animation: 'msKickerIn .45s cubic-bezier(.2,.85,.2,1) both' }}>
                 {stepLabel(step)}
               </div>
@@ -233,52 +216,10 @@ export default function ReaderPage() {
               </div>
               <Footer
                 step={step}
-                phase={phase}
                 state={state}
                 advanceOk={advanceOk}
                 onPrev={() => gotoStep(step - 1)}
                 onNext={onNext}
-              />
-            </div>
-          )}
-
-          {hasContent && !isFinalStep(step) && phase === 'quiz' && hasQuiz(step) && (
-            <div key={`${state.tick || 0}:${step}:quiz`} style={{ maxWidth: 780, margin: '0 auto', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: '#1CABE2', animation: 'msKickerIn .45s cubic-bezier(.2,.85,.2,1) both' }}>
-                {stepLabel(step)} · Վիկտորինա
-              </div>
-              <h1 className="ms-reader-title" style={{ margin: '12px 0 0', fontFamily: "'Noto Serif Armenian', 'Spectral', serif", fontSize: 30, lineHeight: 1.24, letterSpacing: '-.5px', fontWeight: 600, animation: 'msTitleIn .55s cubic-bezier(.2,.85,.2,1) both', animationDelay: '.06s' }}>
-                {title}
-              </h1>
-              <div style={{ marginTop: 10, fontSize: 14.5, lineHeight: 1.7, color: '#5A6270' }}>
-                Պատասխանեք հարցին՝ հաջորդ բաժինը բացելու համար։
-              </div>
-              <Quiz step={step} state={state} update={update} onScrollTop={scrollTop} />
-              <div className="ms-reader-footer" style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(21,26,33,.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18 }}>
-                <button
-                  className="ms-lift ms-prev-btn"
-                  onClick={() => { update((prev) => ({ phase: 'read', dir: -1, tick: (prev.tick || 0) + 1 })); scrollTop(); }}
-                  style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 18px 12px 14px', borderRadius: 11, background: 'transparent', border: '1px solid rgba(21,26,33,.16)', color: '#151A21', fontSize: 13.5, fontWeight: 500, cursor: 'pointer' }}
-                >
-                  <span style={{ fontSize: 15 }}>←</span> Վերադառնալ նյութին
-                </button>
-                <NextButton advanceOk={advanceOk} onNext={onNext} step={step} phase={phase} state={state} />
-              </div>
-            </div>
-          )}
-
-          {hasContent && isFinalStep(step) && (
-            <div style={{ maxWidth: 780, margin: '0 auto' }}>
-              <div style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: '#1CABE2' }}>Ամփոփիչ վիկտորինա</div>
-              <h1 className="ms-reader-title" style={{ margin: '12px 0 0', fontFamily: "'Noto Serif Armenian', 'Spectral', serif", fontSize: 34, lineHeight: 1.22, letterSpacing: '-.6px', fontWeight: 600 }}>
-                Ամբողջ մոդուլի ստուգում
-              </h1>
-              <FinalQuiz
-                state={state}
-                update={update}
-                onScrollTop={scrollTop}
-                onGotoStep={gotoStep}
-                onFinish={finishModule}
               />
             </div>
           )}
@@ -318,7 +259,7 @@ function NavRow({ item, onPick, size }) {
   );
 }
 
-function Footer({ step, phase, state, advanceOk, onPrev, onNext }) {
+function Footer({ step, state, advanceOk, onPrev, onNext }) {
   return (
     <div className="ms-reader-footer" style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(21,26,33,.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18 }}>
       <button
@@ -330,13 +271,13 @@ function Footer({ step, phase, state, advanceOk, onPrev, onNext }) {
         <span style={{ fontSize: 15 }}>←</span> Նախորդ
       </button>
       <span className="ms-footer-label" style={{ fontSize: 12, color: '#6E7787', fontVariantNumeric: 'tabular-nums' }}>{stepLabel(step)}</span>
-      <NextButton advanceOk={advanceOk} onNext={onNext} step={step} phase={phase} state={state} />
+      <NextButton advanceOk={advanceOk} onNext={onNext} step={step} state={state} />
     </div>
   );
 }
 
 /** The blocked state always says what is still missing, never just greys out. */
-function NextButton({ advanceOk, onNext, step, phase, state }) {
+function NextButton({ advanceOk, onNext, step, state }) {
   return (
     <button
       className="ms-lift ms-next-btn"
@@ -346,7 +287,7 @@ function NextButton({ advanceOk, onNext, step, phase, state }) {
       style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', borderRadius: 11, background: advanceOk ? '#1CABE2' : 'rgba(21,26,33,.12)', border: 'none', color: advanceOk ? '#0E1218' : '#8A919D', fontSize: 13.5, fontWeight: 600, cursor: advanceOk ? 'pointer' : 'not-allowed' }}
     >
       <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1.25 }}>
-        <span>{nextLabel({ ...state, phase }, step)}</span>
+        <span>{nextLabel(step)}</span>
         <span style={{ fontSize: 10.5, fontWeight: 400, opacity: .7 }}>{nextHint(state, step)}</span>
       </span>
     </button>

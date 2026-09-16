@@ -1,6 +1,11 @@
 .DS_Store
 node_modules/
 
+# Локальные переопределения переменных Vite (например, VITE_NEXT_STEP_BLOCKER=false
+# для отладки). Общий дефолт лежит в app/.env и он в git.
+app/.env.local
+app/.env.*.local
+
 # Артефакты отладки браузера — попадали в коммиты десятками
 .playwright-mcp/
 

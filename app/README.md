@@ -29,11 +29,22 @@ All three use port 8080 with `strictPort`, so the port never silently shifts.
 | `#/` | Module wheel |
 | `#/module/:moduleId` | Reader, redirects to the furthest section earned |
 | `#/module/:moduleId/:step` | A specific section (`1`-based) |
-| `#/module/:moduleId/final` | Closing quiz |
+| `#/module/:moduleId/final` | Legacy: lands on the last section (the closing quiz is gone) |
 
 A URL pointing at a section the learner has not unlocked is redirected back to
 the furthest one earned — the gate (D9) is enforced on navigation, not just in
 the UI.
+
+## Step blocker switch
+
+`.env` holds `VITE_NEXT_STEP_BLOCKER=true`. Set it to `false` (or put the line
+in a gitignored `.env.local`) and the "Next" button, the sidebar and direct
+URLs are open everywhere — handy for demos and debugging. Any value other than
+`false` keeps the gate on. Vite reads the file at build/dev start, so restart
+`npm run dev` or rebuild after changing it.
+
+Quizzes (per-section and final) are removed from the flow for now. The question
+texts stay in `data/module01.js` (`QUIZ`, `FINAL`) in case they come back.
 
 ## Structure
 
@@ -41,11 +52,11 @@ the UI.
 src/
 ├── main.jsx              router (createHashRouter)
 ├── App.jsx               shell + ambient background
-├── moduleLogic.js        gating rules and quiz grading (D9)
+├── moduleLogic.js        gating rules (D9) and the NEXT_STEP_BLOCKER switch
 ├── store/progress.js     zustand + persist, key `unicef-m01-f` (D11)
 ├── data/module01.js      all module content — single source of truth
 ├── pages/                SelectPage (wheel), ReaderPage (module)
-└── components/           Block, Quiz, FinalQuiz
+└── components/           Block, GuideSimulator, HelpButton, …
 ```
 
 Content lives only in `src/data/module01.js`. Editing a wording there updates
