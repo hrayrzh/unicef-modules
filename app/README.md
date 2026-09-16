@@ -37,10 +37,11 @@ the UI.
 
 ## Step blocker switch
 
-`.env` holds `VITE_NEXT_STEP_BLOCKER=true`. Set it to `false` (or put the line
-in a gitignored `.env.local`) and the "Next" button, the sidebar and direct
-URLs are open everywhere — handy for demos and debugging. Any value other than
-`false` keeps the gate on. Vite reads the file at build/dev start, so restart
+`.env` holds `VITE_NEXT_STEP_BLOCKER`. With `false` (the current committed
+default, so the live site is open) the "Next" button, the sidebar and direct
+URLs are open everywhere. Set it to `true` (or put the line in a gitignored
+`.env.local`) to turn the gate back on. Any value other than `false` keeps
+the gate on. Vite reads the file at build/dev start, so restart
 `npm run dev` or rebuild after changing it.
 
 Quizzes (per-section and final) are removed from the flow for now. The question
