@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MODULES } from '../data/module01';
-import { moduleAt, viewOf, scopeOf, hasRoles, ROLES } from '../data/modules';
+import { moduleAt, viewOf, scopeOf, hasRoles, helpFor, ROLES } from '../data/modules';
 import {
   navGroups, lastStep, isLastStep, NEXT_STEP_BLOCKER,
   canAdvance, nextHint, nextLabel, stepLabel,
@@ -173,7 +173,7 @@ export default function ReaderPage() {
         )}
         {/* №36 — помощь доступна с любого экрана модуля. Шапка не скроллится,
             поэтому кнопка видна и в начале раздела, и в конце квиза. */}
-        <HelpButton />
+        <HelpButton help={helpFor(moduleIndex)} />
         <button className="ms-close" onClick={closeReader} aria-label="Փակել" style={{ flexShrink: 0, display: 'grid', placeItems: 'center', width: 34, height: 34, borderRadius: 10, background: 'rgba(21,26,33,.06)', border: '1px solid rgba(21,26,33,.14)', color: '#151A21', fontSize: 18, lineHeight: 1, cursor: 'pointer', transition: 'background .22s ease, transform .22s cubic-bezier(.2,.85,.2,1)' }}>
           ✕
         </button>

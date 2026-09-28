@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { HELP } from '../data/module01';
+
 
 /**
  * Кнопка «Օգնություն» — требования рецензента №36 и №37.
@@ -16,7 +16,7 @@ import { HELP } from '../data/module01';
  * Цвет намеренно выпадает из палитры модуля: весь интерфейс держится на
  * UNICEF cyan, помощь — единственный тёплый красный. Так её видно, не читая.
  */
-export default function HelpButton() {
+export default function HelpButton({ help: HELP }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
   const panelRef = useRef(null);
@@ -109,6 +109,7 @@ export default function HelpButton() {
                   </div>
                 ))}
               </div>
+              {HELP.note && <p className="ms-help-note">{HELP.note}</p>}
             </div>
           </div>
         </div>

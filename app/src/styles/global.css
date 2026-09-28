@@ -472,3 +472,4 @@ button { font-family: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .ms-role-card:hover { transform: none; }
 }
+.ms-help-note { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid rgba(21,26,33,.1); font-size: 12.5px; line-height: 1.65; color: #6E7787; }

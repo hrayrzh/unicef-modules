@@ -1,5 +1,5 @@
-import { M1 } from './module01';
-import { M2 } from './module02';
+import { M1, HELP } from './module01';
+import { M2, HELP2 } from './module02';
 
 /**
  * Реестр модулей. Приложение писалось под один модуль — `M1` был вшит в
@@ -13,6 +13,18 @@ export const BY_INDEX = { 0: M1, 1: M2 };
 
 export function moduleAt(index) {
   return BY_INDEX[index] || null;
+}
+
+/**
+ * Контакты для кнопки помощи. У каждого модуля свои: в модуле 2 первым идёт
+ * киберотдел полиции, а не общий 102. Раньше кнопка всегда показывала
+ * контакты модуля 1 — читая про травлю, человек получал телефоны из модуля
+ * про родительский контроль.
+ */
+const HELP_BY_INDEX = { 0: HELP, 1: HELP2 };
+
+export function helpFor(index) {
+  return HELP_BY_INDEX[index] || HELP;
 }
 
 /**
