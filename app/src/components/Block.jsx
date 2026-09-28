@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { M1 } from '../data/module01';
+
 import FigureWithBubble from './FigureWithBubble';
 import GuideSimulator from './GuideSimulator';
 import { LinkIcon, PhoneIcon } from './HelpButton';
@@ -112,8 +112,8 @@ function Aside({ kind, title, text, items }) {
  * Renders one content block. The gating rules (D9) live in the parent —
  * this component only reports opens/marks upward.
  */
-export default function Block({ block: b, step, index, state, update, anim, delay }) {
-  const key = `${step}:${index}`;
+export default function Block({ block: b, mod, scope, step, index, state, update, anim, delay }) {
+  const key = `${scope}:${step}:${index}`;
   // Two different things: `seen` is progress — the panel has been opened at
   // least once and stays credited after it is closed again (D16); `isOpen` is
   // only whether it is expanded right now. Expansion is local UI state so a
@@ -148,10 +148,10 @@ export default function Block({ block: b, step, index, state, update, anim, dela
   // НЕ перевёрнуты. Так одна фраза получает варианты под сочетания карточек.
   const flipOk = (rule) => {
     if (!rule) return true;
-    const blocks = (M1.steps[step] || { blocks: [] }).blocks;
+    const blocks = (mod.steps[step] || { blocks: [] }).blocks;
     const ci = blocks.findIndex((x) => x.k === 'cards' && x.id === rule.cards);
     if (ci < 0) return false;
-    const on = (c) => !!state.cardFlip?.[`${step}:${ci}:${c}`];
+    const on = (c) => !!state.cardFlip?.[`${scope}:${step}:${ci}:${c}`];
     const wanted = [].concat(rule.card);
     const ok = rule.all ? wanted.every(on) : wanted.some(on);
     return ok && ![].concat(rule.not ?? []).some(on);
@@ -491,6 +491,56 @@ export default function Block({ block: b, step, index, state, update, anim, dela
             </div>
           </div>
         </div>
+      </div>,
+    );
+  }
+
+  // Сравнительная таблица (модуль 2: «шутка / конфликт / буллинг»). Первая
+  // колонка — признак, остальные — сравниваемые явления.
+  //
+  // На узком экране таблица не скроллится вбок, а разбирается на карточки:
+  // по карточке на признак, внутри — строка на каждое явление. Горизонтальный
+  // скролл прячет половину сравнения за краем экрана, а смысл таблицы именно
+  // в том, чтобы видеть колонки рядом.
+  if (b.k === 'table') {
+    return wrap(
+      <div style={{ border: `1px solid ${panelBorder}`, borderRadius: 16, overflow: 'hidden', background: '#FFFFFF', transition: 'border-color .25s ease' }}>
+        {head(b.title, null, panelLabel('Կարդացված'), panelFg)}
+        {isOpen && (
+          <div style={{ padding: '0 16px 18px', animation: 'msFadeUp .32s cubic-bezier(.2,.85,.2,1) both' }}>
+            <table className="ms-cmp">
+              <thead>
+                <tr>{(b.head || []).map((h) => <th key={h} scope="col">{renderInline(h)}</th>)}</tr>
+              </thead>
+              <tbody>
+                {(b.rows || []).map((row, ri) => (
+                  <tr key={ri}>
+                    {row.map((cell, ci) => (
+                      ci === 0
+                        ? <th key={ci} scope="row">{renderInline(cell)}</th>
+                        : <td key={ci}>{renderInline(cell)}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Тот же материал карточками — показывается вместо таблицы на узком экране. */}
+            <div className="ms-cmp-cards">
+              {(b.rows || []).map((row, ri) => (
+                <div key={ri} className="ms-cmp-card">
+                  <div className="ms-cmp-card-h">{renderInline(row[0])}</div>
+                  {row.slice(1).map((cell, ci) => (
+                    <div key={ci} className="ms-cmp-card-row">
+                      <span className="ms-cmp-card-k">{renderInline((b.head || [])[ci + 1])}</span>
+                      <span>{renderInline(cell)}</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>,
     );
   }

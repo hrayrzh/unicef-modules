@@ -5,15 +5,20 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 // variants. Bump the version when the shape changes.
 const KEY = 'unicef-m01-f';
 
+// Ключи панелей и отметок начинаются с «области» — модуль плюс роль
+// (m0, m1p, m1t; см. data/modules.js › scopeOf). Без неё отметки двух модулей
+// столкнулись бы на одинаковых «шаг:блок», а при смене роли повисли бы на
+// чужих блоках: состав шагов у родителя и педагога разный.
 const EMPTY = {
   done: {},      // module index -> completed
-  maxStep: 0,    // furthest section unlocked (per module 1)
+  maxStep: {},   // module index -> furthest section unlocked
+  role: {},      // module index -> chosen audience ("parent" | "teacher")
   dir: 1,        // last navigation direction, drives the slide animation
   tick: 0,       // bumps to re-mount the section and replay its animation
-  opened: {},    // "step:block" -> guide/table panel expanded
-  checks: {},    // "step:block:i" -> checklist ticked
-  cardTab: {},   // "step:block" -> selected flashcard index
-  cardFlip: {},  // "step:block:i" -> that card has been flipped
+  opened: {},    // "scope:step:block" -> guide/table panel expanded
+  checks: {},    // "scope:step:block:i" -> checklist ticked
+  cardTab: {},   // "scope:step:block" -> selected flashcard index
+  cardFlip: {},  // "scope:step:block:i" -> that card has been flipped
 };
 
 // §5 — storage can be blocked inside an iframe with a strict policy. Falling
@@ -59,12 +64,27 @@ export const useProgressStore = create(
     {
       name: KEY,
       // v3 (2026-09-16): quiz state dropped along with the quizzes themselves.
-      version: 3,
+      // v4 (2026-09-28): module 2 added. `maxStep` became per-module and panel
+      // keys gained a scope prefix, so old flat keys no longer mean anything.
+      version: 4,
       // Older saves are merged over EMPTY so the reader never reads an
       // `undefined` map; keys the shape no longer has are simply dropped.
-      migrate: (s) => {
+      migrate: (s, from) => {
         const out = { ...EMPTY };
         for (const k of Object.keys(EMPTY)) if (s && s[k] !== undefined) out[k] = s[k];
+        // До v4 прогресс был плоским и принадлежал модулю 1. Переносим его
+        // под новые ключи, чтобы читатель не потерял место в модуле 1.
+        if (from < 4) {
+          out.maxStep = typeof s?.maxStep === 'number' ? { 0: s.maxStep } : {};
+          out.role = {};
+          const rescope = (src) => Object.fromEntries(
+            Object.entries(src || {}).map(([k, v]) => [`m0:${k}`, v]),
+          );
+          out.opened = rescope(s?.opened);
+          out.checks = rescope(s?.checks);
+          out.cardTab = rescope(s?.cardTab);
+          out.cardFlip = rescope(s?.cardFlip);
+        }
         return out;
       },
       storage: createJSONStorage(() => safeStorage),

@@ -395,3 +395,80 @@ button { font-family: inherit; }
   .ms-help-overlay, .ms-help-panel { animation: none; }
   .ms-help-btn:hover { transform: none; }
 }
+
+/* Сравнительная таблица (модуль 2). Первая колонка — признак сравнения,
+   остальные — сравниваемые явления. */
+.ms-cmp { width: 100%; border-collapse: collapse; font-size: 13.5px; line-height: 1.6; }
+.ms-cmp th, .ms-cmp td { padding: 11px 13px; text-align: start; vertical-align: top; border-bottom: 1px solid rgba(21,26,33,.09); }
+.ms-cmp thead th {
+  font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  font-weight: 700; color: #0F7FA8; background: rgba(28,171,226,.07);
+  border-bottom: 1px solid rgba(28,171,226,.28);
+}
+.ms-cmp thead th:first-child { color: #6E7787; background: transparent; }
+.ms-cmp tbody th { font-weight: 600; color: #151A21; width: 22%; background: rgba(21,26,33,.02); }
+.ms-cmp tbody td { color: #2B313A; }
+.ms-cmp tbody tr:last-child th, .ms-cmp tbody tr:last-child td { border-bottom: none; }
+
+/* Карточки — замена таблице на узком экране, см. комментарий в Block.jsx. */
+.ms-cmp-cards { display: none; flex-direction: column; gap: 12px; }
+.ms-cmp-card { border: 1px solid rgba(21,26,33,.12); border-radius: 13px; overflow: hidden; }
+.ms-cmp-card-h {
+  padding: 11px 14px; background: rgba(28,171,226,.09);
+  font-size: 13px; font-weight: 700; color: #0F7FA8;
+}
+.ms-cmp-card-row { display: flex; flex-direction: column; gap: 3px; padding: 11px 14px; border-top: 1px solid rgba(21,26,33,.08); }
+.ms-cmp-card-k { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: #8A919D; }
+.ms-cmp-card-row span:last-child { font-size: 13.5px; line-height: 1.6; color: #2B313A; }
+
+@media (max-width: 720px) {
+  .ms-cmp { display: none; }
+  .ms-cmp-cards { display: flex; }
+}
+
+/* Выбор аудитории (модуль 2). Документ адресован и родителям, и педагогам;
+   половина материала читателю не предназначена, поэтому роль спрашивается
+   на входе и определяет, какие шаги он увидит. */
+.ms-role-pick { max-width: 680px; margin: 0 auto; padding: 8px 0 40px; }
+.ms-role-kicker { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: #1CABE2; }
+.ms-role-title {
+  margin: 12px 0 0; font-family: 'Noto Serif Armenian', 'Spectral', serif;
+  font-size: 34px; line-height: 1.22; letter-spacing: -.6px; font-weight: 600;
+}
+.ms-role-sub { margin: 12px 0 0; font-size: 16px; line-height: 1.75; color: #5A6270; }
+.ms-role-q { margin: 34px 0 14px; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: #6E7787; }
+.ms-role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.ms-role-card {
+  display: flex; flex-direction: column; gap: 7px; text-align: start;
+  padding: 22px 22px 18px; border-radius: 16px; cursor: pointer;
+  background: #fff; border: 1px solid rgba(21,26,33,.14); color: inherit;
+  transition: border-color .2s ease, transform .2s cubic-bezier(.2,.85,.2,1), box-shadow .2s ease;
+}
+.ms-role-card:hover { border-color: #1CABE2; transform: translateY(-2px); box-shadow: 0 14px 30px -18px rgba(28,171,226,.6); }
+.ms-role-card-t { font-size: 17px; font-weight: 700; line-height: 1.3; }
+.ms-role-card-h { font-size: 13.5px; line-height: 1.6; color: #5A6270; }
+.ms-role-card-n {
+  margin-top: 5px; align-self: flex-start; padding: 4px 11px; border-radius: 100px;
+  background: rgba(28,171,226,.12); color: #0F7FA8; font-size: 11.5px; font-weight: 600;
+}
+.ms-role-note { margin: 26px 0 0; font-size: 13px; line-height: 1.7; color: #8A919D; }
+
+/* Текущая роль в шапке — и кнопка, чтобы её сменить. */
+.ms-role-swap {
+  flex-shrink: 0; display: flex; align-items: center; gap: 8px;
+  padding: 8px 13px; border-radius: 10px; cursor: pointer;
+  background: rgba(28,171,226,.1); border: 1px solid rgba(28,171,226,.32);
+  color: #0F7FA8; font-size: 12.5px; font-weight: 600; line-height: 1;
+  transition: background .2s ease, border-color .2s ease;
+}
+.ms-role-swap:hover { background: rgba(28,171,226,.18); border-color: #1CABE2; }
+
+@media (max-width: 720px) {
+  .ms-role-grid { grid-template-columns: 1fr; }
+  .ms-role-title { font-size: 26px; }
+  .ms-role-swap-now { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-role-card:hover { transform: none; }
+}

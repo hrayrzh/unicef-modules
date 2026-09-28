@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MODULES } from '../data/module01';
+import { moduleAt, viewOf, scopeOf, hasRoles, ROLES } from '../data/modules';
 import {
-  M1, NAV_GROUPS, LAST_STEP, isLastStep, NEXT_STEP_BLOCKER,
+  navGroups, lastStep, isLastStep, NEXT_STEP_BLOCKER,
   canAdvance, nextHint, nextLabel, stepLabel,
 } from '../moduleLogic';
 import { useProgressStore } from '../store/progress';
@@ -22,16 +23,34 @@ export default function ReaderPage() {
   const scrollRef = useRef(null);
 
   const moduleIndex = Math.min(MODULES.length - 1, Math.max(0, (Number(moduleId) || 1) - 1));
-  const hasContent = moduleIndex === 0; // only module 1 is written so far
+  const source = moduleAt(moduleIndex);
+  const hasContent = !!source;
 
   const state = useProgressStore();
   const update = useProgressStore((s) => s.update);
 
+  // Модуль 2 адресован двум аудиториям и делится на части для родителей и
+  // для педагогов; пока роль не выбрана, показываем экран выбора. Модуль без
+  // ролевых шагов (модуль 1) через это не проходит.
+  const needsRole = hasRoles(source);
+  const role = state.role?.[moduleIndex] || null;
+  const pickRole = useCallback(
+    (id) => update((prev) => ({ role: { ...prev.role, [moduleIndex]: id } })),
+    [update, moduleIndex],
+  );
+
+  // Модуль в том виде, в каком его видит читатель: шаги уже отфильтрованы
+  // по роли, поэтому индекс шага и то, что на экране, — одно и то же.
+  const mod = useMemo(() => viewOf(source, role), [source, role]);
+  const scope = scopeOf(moduleIndex, role);
+  const LAST = mod ? lastStep(mod) : 0;
+  const maxStep = state.maxStep?.[scope] ?? 0;
+
   // Old bookmarks may still point at `/final`, the closing quiz that is gone;
   // they land on the last section instead.
-  const requested = stepParam === 'final' ? LAST_STEP : Math.max(0, (Number(stepParam) || 1) - 1);
+  const requested = stepParam === 'final' ? LAST : Math.max(0, (Number(stepParam) || 1) - 1);
   // Never trust the URL past what has been unlocked.
-  const step = Math.min(requested, LAST_STEP, NEXT_STEP_BLOCKER ? state.maxStep : LAST_STEP);
+  const step = Math.min(requested, LAST, NEXT_STEP_BLOCKER ? maxStep : LAST);
 
   const scrollTop = useCallback(() => {
     const el = scrollRef.current;
@@ -42,29 +61,33 @@ export default function ReaderPage() {
 
   // Bounce an out-of-range or locked URL to the section the learner has earned.
   useEffect(() => {
-    if (!hasContent) return;
+    if (!hasContent || (needsRole && !role)) return;
     if (requested !== step) navigate(stepPath(step), { replace: true });
-  }, [hasContent, requested, step, stepPath, navigate]);
+  }, [hasContent, needsRole, role, requested, step, stepPath, navigate]);
 
   // A bare /module/1 gets the section number written in, so the URL always
   // names where you are.
   useEffect(() => {
-    if (!hasContent || stepParam) return;
-    navigate(stepPath(Math.min(state.maxStep, LAST_STEP)), { replace: true });
-  }, [hasContent, stepParam, state.maxStep, stepPath, navigate]);
+    if (!hasContent || stepParam || (needsRole && !role)) return;
+    navigate(stepPath(Math.min(maxStep, LAST)), { replace: true });
+  }, [hasContent, needsRole, role, stepParam, maxStep, LAST, stepPath, navigate]);
 
   const gotoStep = useCallback(
     (i) => {
-      const target = Math.min(LAST_STEP, Math.max(0, i));
+      const target = Math.min(LAST, Math.max(0, i));
       if (NEXT_STEP_BLOCKER) {
-        if (target > state.maxStep + 1) return;
-        if (target > step && !canAdvance(state, step)) return;
+        if (target > maxStep + 1) return;
+        if (target > step && !canAdvance(state, mod, scope, step)) return;
       }
-      update((prev) => ({ maxStep: Math.max(prev.maxStep, target), dir: target >= step ? 1 : -1, tick: (prev.tick || 0) + 1 }));
+      update((prev) => ({
+        maxStep: { ...prev.maxStep, [scope]: Math.max(prev.maxStep?.[scope] ?? 0, target) },
+        dir: target >= step ? 1 : -1,
+        tick: (prev.tick || 0) + 1,
+      }));
       navigate(stepPath(target));
       scrollTop();
     },
-    [state, step, update, navigate, stepPath, scrollTop],
+    [state, mod, scope, maxStep, LAST, step, update, navigate, stepPath, scrollTop],
   );
 
   const closeReader = useCallback(() => navigate('/'), [navigate]);
@@ -77,27 +100,29 @@ export default function ReaderPage() {
 
   // A section advances once it is read (D9); the last one closes the module.
   const onNext = useCallback(() => {
-    if (!canAdvance(state, step)) return;
-    if (!isLastStep(step)) { gotoStep(step + 1); return; }
+    if (!canAdvance(state, mod, scope, step)) return;
+    if (!isLastStep(mod, step)) { gotoStep(step + 1); return; }
     update((prev) => ({ done: { ...prev.done, [moduleIndex]: true } }));
     closeReader();
-  }, [step, state, update, gotoStep, moduleIndex, closeReader]);
+  }, [step, state, mod, scope, update, gotoStep, moduleIndex, closeReader]);
 
-  const advanceOk = hasContent && canAdvance(state, step);
+  const advanceOk = hasContent && !!mod && canAdvance(state, mod, scope, step);
   const anim = `${state.dir === -1 ? 'msInBack' : 'msInFwd'} .5s cubic-bezier(.2,.85,.2,1) both`;
 
-  const progressPct = `${Math.round(((step + 1) / M1.steps.length) * 100)}%`;
-  const learnedPct = `${Math.round(((Math.min(state.maxStep, LAST_STEP) + 1) / M1.steps.length) * 100)}%`;
+  const total = mod ? mod.steps.length : 1;
+  const progressPct = `${Math.round(((step + 1) / total) * 100)}%`;
+  const learnedPct = `${Math.round(((Math.min(maxStep, LAST) + 1) / total) * 100)}%`;
 
   const navItems = useMemo(() => {
-    const gated = !canAdvance(state, step);
-    const isLocked = (i) => NEXT_STEP_BLOCKER && (i > state.maxStep + 1 || (i > step && gated));
+    if (!mod) return [];
+    const gated = !canAdvance(state, mod, scope, step);
+    const isLocked = (i) => NEXT_STEP_BLOCKER && (i > maxStep + 1 || (i > step && gated));
     const item = (i, label) => {
       const cur = i === step;
-      const seen = i <= state.maxStep;
+      const seen = i <= maxStep;
       return { i, title: label, cur, seen, locked: isLocked(i) };
     };
-    return NAV_GROUPS.map((g) => {
+    return navGroups(mod).map((g) => {
       const solo = g.idx.length === 1;
       const inGroup = g.idx.includes(step);
       const gLead = g.idx[0];
@@ -108,12 +133,12 @@ export default function ReaderPage() {
         gLead,
         gLocked: isLocked(gLead),
         first: solo ? item(g.idx[0], g.title) : null,
-        children: solo ? [] : g.idx.map((i) => item(i, M1.steps[i].label)),
+        children: solo ? [] : g.idx.map((i) => item(i, mod.steps[i].label)),
       };
     });
-  }, [state, step]);
+  }, [state, mod, scope, maxStep, step]);
 
-  const { blocks, title } = M1.steps[step];
+  const { blocks, title } = mod?.steps[step] || { blocks: [], title: '' };
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 80, display: 'flex', flexDirection: 'column', background: '#F7F5F0', fontFamily: "'Noto Sans Armenian', 'Sora', Mshtakan, Sylfaen, system-ui, sans-serif", color: '#151A21' }}>
@@ -121,7 +146,7 @@ export default function ReaderPage() {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16 }}>
             <span style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E7787' }}>
-              {hasContent ? M1.kicker : MODULES[moduleIndex].kicker}
+              {hasContent ? mod.kicker : MODULES[moduleIndex].kicker}
             </span>
             {hasContent && (
               <span style={{ fontSize: 11, color: '#1CABE2', fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{progressPct}</span>
@@ -134,6 +159,18 @@ export default function ReaderPage() {
             </div>
           )}
         </div>
+        {/* Роль видна всё время и меняется в один тап: читатель может быть и
+            родителем, и учителем, а половина модуля адресована не ему. */}
+        {needsRole && role && (
+          <button
+            className="ms-role-swap"
+            onClick={() => pickRole(role === 'parent' ? 'teacher' : 'parent')}
+            title="Փոխել դերը"
+          >
+            <span className="ms-role-swap-now">{ROLES.find((r) => r.id === role)?.label}</span>
+            <span aria-hidden>⇄</span>
+          </button>
+        )}
         {/* №36 — помощь доступна с любого экрана модуля. Шапка не скроллится,
             поэтому кнопка видна и в начале раздела, и в конце квиза. */}
         <HelpButton />
@@ -143,7 +180,7 @@ export default function ReaderPage() {
       </div>
 
       <div className="ms-reader-body" style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'stretch' }}>
-        {hasContent && (
+        {hasContent && !(needsRole && !role) && (
           <aside className="ms-reader-nav" style={{ flex: '0 0 272px', borderRight: '1px solid rgba(21,26,33,.1)', borderTop: '1px solid rgba(21,26,33,.1)', overflowY: 'auto', padding: '22px 22px 30px 40px' }}>
             <nav className="ms-nav" style={{ marginTop: 2, display: 'flex', flexDirection: 'column', gap: 20 }}>
               {navItems.map((g, gi) => (
@@ -188,14 +225,39 @@ export default function ReaderPage() {
             </div>
           )}
 
-          {hasContent && (
+          {hasContent && needsRole && !role && (
+            <div className="ms-role-pick">
+              <div className="ms-role-kicker">{source.kicker}</div>
+              <h1 className="ms-role-title">{source.title}</h1>
+              <p className="ms-role-sub">{source.sub}</p>
+              <p className="ms-role-q">Ո՞ր դերում եք կարդում այս մոդուլը</p>
+              <div className="ms-role-grid">
+                {ROLES.map((r) => {
+                  const n = source.steps.filter((x) => !x.role || x.role === r.id).length;
+                  return (
+                    <button key={r.id} className="ms-role-card" onClick={() => pickRole(r.id)}>
+                      <span className="ms-role-card-t">{r.label}</span>
+                      <span className="ms-role-card-h">{r.hint}</span>
+                      <span className="ms-role-card-n">{n} բաժին</span>
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="ms-role-note">
+                Դերը կարող եք փոխել ցանկացած պահի՝ վերևի կոճակով։ Ընդհանուր
+                բաժինները՝ ներածությունը, օգնության կետերը և աղբյուրները, երևում են երկու դեպքում էլ։
+              </p>
+            </div>
+          )}
+
+          {hasContent && !(needsRole && !role) && (
             <div key={`${state.tick || 0}:${step}`} style={{ maxWidth: 780, margin: '0 auto', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: '#1CABE2', animation: 'msKickerIn .45s cubic-bezier(.2,.85,.2,1) both' }}>
-                {stepLabel(step)}
+                {stepLabel(mod, step)}
               </div>
               {/* The intro's title repeats its kicker, so it is not printed
                   twice — the kicker above already names the section. */}
-              {title !== stepLabel(step) && (
+              {title !== stepLabel(mod, step) && (
                 <h1 className="ms-reader-title" style={{ margin: '12px 0 0', fontFamily: "'Noto Serif Armenian', 'Spectral', serif", fontSize: 34, lineHeight: 1.22, letterSpacing: '-.6px', fontWeight: 600, animation: 'msTitleIn .55s cubic-bezier(.2,.85,.2,1) both', animationDelay: '.06s' }}>
                   {title}
                 </h1>
@@ -205,6 +267,8 @@ export default function ReaderPage() {
                   <Block
                     key={bi}
                     block={b}
+                    mod={mod}
+                    scope={scope}
                     step={step}
                     index={bi}
                     state={state}
@@ -215,6 +279,8 @@ export default function ReaderPage() {
                 ))}
               </div>
               <Footer
+                mod={mod}
+                scope={scope}
                 step={step}
                 state={state}
                 advanceOk={advanceOk}
@@ -259,7 +325,7 @@ function NavRow({ item, onPick, size }) {
   );
 }
 
-function Footer({ step, state, advanceOk, onPrev, onNext }) {
+function Footer({ mod, scope, step, state, advanceOk, onPrev, onNext }) {
   return (
     <div className="ms-reader-footer" style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(21,26,33,.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18 }}>
       <button
@@ -270,25 +336,25 @@ function Footer({ step, state, advanceOk, onPrev, onNext }) {
       >
         <span style={{ fontSize: 15 }}>←</span> Նախորդ
       </button>
-      <span className="ms-footer-label" style={{ fontSize: 12, color: '#6E7787', fontVariantNumeric: 'tabular-nums' }}>{stepLabel(step)}</span>
-      <NextButton advanceOk={advanceOk} onNext={onNext} step={step} state={state} />
+      <span className="ms-footer-label" style={{ fontSize: 12, color: '#6E7787', fontVariantNumeric: 'tabular-nums' }}>{stepLabel(mod, step)}</span>
+      <NextButton advanceOk={advanceOk} onNext={onNext} mod={mod} scope={scope} step={step} state={state} />
     </div>
   );
 }
 
 /** The blocked state always says what is still missing, never just greys out. */
-function NextButton({ advanceOk, onNext, step, state }) {
+function NextButton({ advanceOk, onNext, mod, scope, step, state }) {
   return (
     <button
       className="ms-lift ms-next-btn"
       onClick={onNext}
       aria-disabled={!advanceOk}
-      title={advanceOk ? undefined : nextHint(state, step)}
+      title={advanceOk ? undefined : nextHint(state, mod, scope, step)}
       style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', borderRadius: 11, background: advanceOk ? '#1CABE2' : 'rgba(21,26,33,.12)', border: 'none', color: advanceOk ? '#0E1218' : '#8A919D', fontSize: 13.5, fontWeight: 600, cursor: advanceOk ? 'pointer' : 'not-allowed' }}
     >
       <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1.25 }}>
-        <span>{nextLabel(step)}</span>
-        <span style={{ fontSize: 10.5, fontWeight: 400, opacity: .7 }}>{nextHint(state, step)}</span>
+        <span>{nextLabel(mod, step)}</span>
+        <span style={{ fontSize: 10.5, fontWeight: 400, opacity: .7 }}>{nextHint(state, mod, scope, step)}</span>
       </span>
     </button>
   );
