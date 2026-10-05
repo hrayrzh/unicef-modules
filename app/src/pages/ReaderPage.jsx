@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MODULES } from '../data/module01';
 import { moduleAt, viewOf, scopeOf, hasRoles, helpFor, ROLES } from '../data/modules';
@@ -41,6 +41,11 @@ export default function ReaderPage() {
 
   // Модуль в том виде, в каком его видит читатель: шаги уже отфильтрованы
   // по роли, поэтому индекс шага и то, что на экране, — одно и то же.
+  const pickingRole = needsRole && !role;
+  // Ссылки «Օգնության կետեր» внутри раздела открывают ту же панель, что и
+  // кнопка в шапке: счётчик растёт — панель открывается.
+  const [helpSignal, setHelpSignal] = useState(0);
+  const openHelp = useCallback(() => setHelpSignal((n) => n + 1), []);
   const mod = useMemo(() => viewOf(source, role), [source, role]);
   const scope = scopeOf(moduleIndex, role);
   const LAST = mod ? lastStep(mod) : 0;
@@ -61,16 +66,16 @@ export default function ReaderPage() {
 
   // Bounce an out-of-range or locked URL to the section the learner has earned.
   useEffect(() => {
-    if (!hasContent || (needsRole && !role)) return;
+    if (!hasContent || pickingRole) return;
     if (requested !== step) navigate(stepPath(step), { replace: true });
-  }, [hasContent, needsRole, role, requested, step, stepPath, navigate]);
+  }, [hasContent, pickingRole, requested, step, stepPath, navigate]);
 
   // A bare /module/1 gets the section number written in, so the URL always
   // names where you are.
   useEffect(() => {
-    if (!hasContent || stepParam || (needsRole && !role)) return;
+    if (!hasContent || stepParam || pickingRole) return;
     navigate(stepPath(Math.min(maxStep, LAST)), { replace: true });
-  }, [hasContent, needsRole, role, stepParam, maxStep, LAST, stepPath, navigate]);
+  }, [hasContent, pickingRole, stepParam, maxStep, LAST, stepPath, navigate]);
 
   const gotoStep = useCallback(
     (i) => {
@@ -148,11 +153,11 @@ export default function ReaderPage() {
             <span style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E7787' }}>
               {hasContent ? mod.kicker : MODULES[moduleIndex].kicker}
             </span>
-            {hasContent && (
+            {hasContent && !pickingRole && (
               <span style={{ fontSize: 11, color: '#1CABE2', fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{progressPct}</span>
             )}
           </div>
-          {hasContent && (
+          {hasContent && !pickingRole && (
             <div style={{ marginTop: 8, position: 'relative', height: 3, borderRadius: 2, background: 'rgba(21,26,33,.1)', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', inset: '0 auto 0 0', width: learnedPct, background: 'rgba(28,171,226,.2)', transition: 'width .5s cubic-bezier(.2,.8,.2,1)' }} />
               <div style={{ position: 'absolute', inset: '0 auto 0 0', width: progressPct, background: '#1CABE2', transition: 'width .5s cubic-bezier(.2,.8,.2,1)' }} />
@@ -173,14 +178,14 @@ export default function ReaderPage() {
         )}
         {/* №36 — помощь доступна с любого экрана модуля. Шапка не скроллится,
             поэтому кнопка видна и в начале раздела, и в конце квиза. */}
-        <HelpButton help={helpFor(moduleIndex)} />
+        <HelpButton help={helpFor(moduleIndex)} openSignal={helpSignal} />
         <button className="ms-close" onClick={closeReader} aria-label="Փակել" style={{ flexShrink: 0, display: 'grid', placeItems: 'center', width: 34, height: 34, borderRadius: 10, background: 'rgba(21,26,33,.06)', border: '1px solid rgba(21,26,33,.14)', color: '#151A21', fontSize: 18, lineHeight: 1, cursor: 'pointer', transition: 'background .22s ease, transform .22s cubic-bezier(.2,.85,.2,1)' }}>
           ✕
         </button>
       </div>
 
       <div className="ms-reader-body" style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'stretch' }}>
-        {hasContent && !(needsRole && !role) && (
+        {hasContent && !pickingRole && (
           <aside className="ms-reader-nav" style={{ flex: '0 0 272px', borderRight: '1px solid rgba(21,26,33,.1)', borderTop: '1px solid rgba(21,26,33,.1)', overflowY: 'auto', padding: '22px 22px 30px 40px' }}>
             <nav className="ms-nav" style={{ marginTop: 2, display: 'flex', flexDirection: 'column', gap: 20 }}>
               {navItems.map((g, gi) => (
@@ -225,32 +230,23 @@ export default function ReaderPage() {
             </div>
           )}
 
-          {hasContent && needsRole && !role && (
+          {hasContent && pickingRole && (
             <div className="ms-role-pick">
-              <div className="ms-role-kicker">{source.kicker}</div>
-              <h1 className="ms-role-title">{source.title}</h1>
+              <div className="ms-role-kicker">{source.kicker} · {source.title}</div>
+              <h1 className="ms-role-title">Ընտրեք դերը</h1>
               <p className="ms-role-sub">{source.sub}</p>
-              <p className="ms-role-q">Ո՞ր դերում եք կարդում այս մոդուլը</p>
               <div className="ms-role-grid">
-                {ROLES.map((r) => {
-                  const n = source.steps.filter((x) => !x.role || x.role === r.id).length;
-                  return (
-                    <button key={r.id} className="ms-role-card" onClick={() => pickRole(r.id)}>
-                      <span className="ms-role-card-t">{r.label}</span>
-                      <span className="ms-role-card-h">{r.hint}</span>
-                      <span className="ms-role-card-n">{n} բաժին</span>
-                    </button>
-                  );
-                })}
+                {ROLES.map((r) => (
+                  <button key={r.id} className="ms-role-card" onClick={() => pickRole(r.id)}>
+                    <span className="ms-role-card-t">{r.label}</span>
+                    <span className="ms-role-card-h">{r.hint}</span>
+                  </button>
+                ))}
               </div>
-              <p className="ms-role-note">
-                Դերը կարող եք փոխել ցանկացած պահի՝ վերևի կոճակով։ Ընդհանուր
-                բաժինները՝ ներածությունը, օգնության կետերը և աղբյուրները, երևում են երկու դեպքում էլ։
-              </p>
             </div>
           )}
 
-          {hasContent && !(needsRole && !role) && (
+          {hasContent && !pickingRole && (
             <div key={`${state.tick || 0}:${step}`} style={{ maxWidth: 780, margin: '0 auto', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: '#1CABE2', animation: 'msKickerIn .45s cubic-bezier(.2,.85,.2,1) both' }}>
                 {stepLabel(mod, step)}
@@ -269,6 +265,7 @@ export default function ReaderPage() {
                     block={b}
                     mod={mod}
                     scope={scope}
+                    onOpenHelp={openHelp}
                     step={step}
                     index={bi}
                     state={state}

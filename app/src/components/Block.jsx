@@ -8,16 +8,36 @@ import { LinkIcon, PhoneIcon } from './HelpButton';
 // hover/focus. §5 — the tooltip is CSS-only and inline, so it survives an
 // iframe with a strict CSP and needs no positioning library.
 // [label](url) is an inline link; `tel:` and `mailto:` open in place, web
-// addresses in a new tab. Both markers share one pass so they can mix.
-const TERM = /\(\((.+?)\|\|(.+?)\)\)|\[([^\]]+)\]\(([^)\s]+)\)/g;
+// addresses in a new tab. **bold** carries the lead-in of a list item, so the
+// eye catches what the item is about before reading it. All markers share one
+// pass so they can mix inside one string.
+const TERM = /\(\((.+?)\|\|(.+?)\)\)|\[([^\]]+)\]\(([^)\s]+)\)|\*\*(.+?)\*\*/g;
 
-function renderInline(text) {
-  if (typeof text !== 'string' || !(text.includes('((') || text.includes(']('))) return text;
+function renderInline(text, onOpenHelp) {
+  if (typeof text !== 'string'
+      || !(text.includes('((') || text.includes('](') || text.includes('**'))) return text;
   const out = [];
   let last = 0;
   for (const m of text.matchAll(TERM)) {
     if (m.index > last) out.push(text.slice(last, m.index));
     if (m[3] !== undefined) {
+      // (#help) — не адрес, а та же панель, что открывает кнопка в шапке.
+      // Дублировать контакты в тексте не нужно: ссылка ведёт к ним.
+      if (m[4] === '#help') {
+        out.push(
+          <button
+            key={m.index}
+            type="button"
+            className="ms-help-inline"
+            onClick={(e) => { e.stopPropagation(); onOpenHelp?.(); }}
+          >
+            <PhoneIcon size={13} />
+            <span>{m[3]}</span>
+          </button>,
+        );
+        last = m.index + m[0].length;
+        continue;
+      }
       const external = /^https?:/i.test(m[4]);
       const phone = /^tel:/i.test(m[4]);
       // Same icons as the help panel: a handset before a number, an
@@ -36,6 +56,11 @@ function renderInline(text) {
           {external && <LinkIcon size={13} />}
         </a>,
       );
+      last = m.index + m[0].length;
+      continue;
+    }
+    if (m[5] !== undefined) {
+      out.push(<b key={m.index} style={{ fontWeight: 700, color: '#151A21' }}>{m[5]}</b>);
       last = m.index + m[0].length;
       continue;
     }
@@ -86,7 +111,8 @@ function StarIcon() {
  * в гейте D9. <details> взят намеренно: раскрытие работает без JS и
  * доступно с клавиатуры.
  */
-function Aside({ kind, title, text, items }) {
+function Aside({ kind, title, text, items, onOpenHelp }) {
+  const R = (t) => renderInline(t, onOpenHelp);
   const isTip = kind === 'tip';
   return (
     <details className={isTip ? 'ms-aside is-tip' : 'ms-aside is-did'}>
@@ -112,7 +138,10 @@ function Aside({ kind, title, text, items }) {
  * Renders one content block. The gating rules (D9) live in the parent —
  * this component only reports opens/marks upward.
  */
-export default function Block({ block: b, mod, scope, step, index, state, update, anim, delay }) {
+export default function Block({ block: b, mod, scope, step, index, state, update, anim, delay, onOpenHelp }) {
+  // Обёртка: внутри блока разметка знает, чем открыть панель помощи.
+  const R = (t) => renderInline(t, onOpenHelp);
+
   const key = `${scope}:${step}:${index}`;
   // Two different things: `seen` is progress — the panel has been opened at
   // least once and stays credited after it is closed again (D16); `isOpen` is
@@ -159,7 +188,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
   if (!flipOk(b.afterFlip)) return null;
 
   if (b.k === 'p') {
-    return wrap(<p style={{ margin: 0, fontSize: 16, lineHeight: 1.8, color: '#2B313A' }}>{renderInline(b.text)}</p>);
+    return wrap(<p style={{ margin: 0, fontSize: 16, lineHeight: 1.8, color: '#2B313A' }}>{R(b.text)}</p>);
   }
 
   if (b.k === 'h') {
@@ -187,24 +216,27 @@ export default function Block({ block: b, mod, scope, step, index, state, update
   }
 
   if (b.k === 'note') {
+    // `tone: "danger"` — красная врезка для «чего НЕ делать». Тот же цвет,
+    // что у кнопки помощи: в палитре он означает «осторожно».
+    const danger = b.tone === 'danger';
     // `big` — key callout («Ոսկե կանոնը»): only the title changes, becoming a
     // real bold heading in the serif face; the body stays like other notes.
     const big = !!b.big;
     return wrap(
-      <div style={{ padding: '22px 24px', borderRadius: 16, background: 'rgba(28,171,226,.08)', borderLeft: '3px solid #1CABE2' }}>
+      <div style={{ padding: '22px 24px', borderRadius: 16, background: danger ? 'rgba(217,58,58,.07)' : 'rgba(28,171,226,.08)', borderLeft: `3px solid ${danger ? '#D93A3A' : '#1CABE2'}` }}>
         {big ? (
-          <div style={{ fontFamily: "'Noto Serif Armenian', 'Spectral', serif", fontSize: 18, lineHeight: 1.3, fontWeight: 700, letterSpacing: '-.2px', color: '#0F7FA8' }}>{b.title}</div>
+          <div style={{ fontFamily: "'Noto Serif Armenian', 'Spectral', serif", fontSize: 18, lineHeight: 1.3, fontWeight: 700, letterSpacing: '-.2px', color: danger ? '#B32B2B' : '#0F7FA8' }}>{b.title}</div>
         ) : (
-          <div style={{ fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: '#0F7FA8', fontWeight: 600 }}>{b.title}</div>
+          <div style={{ fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: danger ? '#B32B2B' : '#0F7FA8', fontWeight: 600 }}>{b.title}</div>
         )}
-        <p style={{ margin: '11px 0 0', fontSize: 15.5, lineHeight: 1.75, color: '#2B313A' }}>{renderInline(b.text)}</p>
+        <p style={{ margin: '11px 0 0', fontSize: 15.5, lineHeight: 1.75, color: '#2B313A' }}>{R(b.text)}</p>
         {/* Optional bullet list under the paragraph, same dot as other lists. */}
         {b.items && (
           <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 8 }}>
             {b.items.map((t, i) => (
               <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', fontSize: 15.5, lineHeight: 1.75, color: '#2B313A' }}>
-                <span aria-hidden style={{ flexShrink: 0, marginTop: 10, width: 5, height: 5, borderRadius: '50%', background: '#1CABE2' }} />
-                <span>{renderInline(t)}</span>
+                <span aria-hidden style={{ flexShrink: 0, marginTop: 10, width: 5, height: 5, borderRadius: '50%', background: danger ? '#D93A3A' : '#1CABE2' }} />
+                <span>{R(t)}</span>
               </div>
             ))}
           </div>
@@ -219,7 +251,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
         {(b.items || []).filter((t) => typeof t === 'string' || flipOk(t.afterFlip)).map((t, i) => (
           <div key={i} style={{ display: 'flex', gap: 13, alignItems: 'flex-start' }}>
             <span style={{ flexShrink: 0, marginTop: 9, width: 5, height: 5, borderRadius: '50%', background: '#1CABE2' }} />
-            <span style={{ fontSize: 15, lineHeight: 1.75, color: '#2B313A' }}>{renderInline(typeof t === 'string' ? t : t.text)}</span>
+            <span style={{ fontSize: 15, lineHeight: 1.75, color: '#2B313A' }}>{R(typeof t === 'string' ? t : t.text)}</span>
           </div>
         ))}
       </div>,
@@ -259,7 +291,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
   // разрывать основной текст, и не участвуют в гейте (D9) — модуль нельзя
   // застопорить на факультативном блоке.
   if (b.k === 'did' || b.k === 'tip') {
-    return wrap(<Aside kind={b.k} title={b.title} text={b.text} items={b.items} />);
+    return wrap(<Aside kind={b.k} title={b.title} text={b.text} items={b.items} onOpenHelp={onOpenHelp} />);
   }
 
   // №39 — источники в конце модуля: свёрнуты в компактный список, полное
@@ -301,7 +333,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
               <span style={{ flexShrink: 0, display: 'grid', placeItems: 'center', width: 22, height: 22, borderRadius: 7, background: on ? '#1CABE2' : 'transparent', border: `1.5px solid ${on ? '#1CABE2' : 'rgba(21,26,33,.28)'}`, color: on ? '#0E1218' : 'transparent', fontSize: 12, transition: 'background .2s, border-color .2s' }}>
                 {on ? '✓' : ''}
               </span>
-              <span style={{ fontSize: 15, lineHeight: 1.7, color: on ? '#5A6270' : '#151A21' }}>{renderInline(typeof t === 'string' ? t : t.text)}</span>
+              <span style={{ fontSize: 15, lineHeight: 1.7, color: on ? '#5A6270' : '#151A21' }}>{R(typeof t === 'string' ? t : t.text)}</span>
             </div>
           );
         })}
@@ -382,7 +414,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
             {view === 'text' && (b.steps || []).map((t, i) => (
               <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
                 <span style={{ flexShrink: 0, display: 'grid', placeItems: 'center', width: 24, height: 24, borderRadius: 8, background: 'rgba(28,171,226,.14)', color: '#0F7FA8', fontSize: 12, fontWeight: 600 }}>{i + 1}</span>
-                <span style={{ fontSize: 15, lineHeight: 1.72, color: '#2B313A' }}>{renderInline(t)}</span>
+                <span style={{ fontSize: 15, lineHeight: 1.72, color: '#2B313A' }}>{R(t)}</span>
               </div>
             ))}
           </div>
@@ -477,12 +509,12 @@ export default function Block({ block: b, mod, scope, step, index, state, update
                           {value.map((t, j) => (
                             <div key={j} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                               <span style={{ flexShrink: 0, marginTop: 8, width: 5, height: 5, borderRadius: '50%', background: '#1CABE2' }} />
-                              <span style={{ fontSize: 14.5, lineHeight: 1.6, color: '#2B313A' }}>{renderInline(t)}</span>
+                              <span style={{ fontSize: 14.5, lineHeight: 1.6, color: '#2B313A' }}>{R(t)}</span>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <div style={{ marginTop: 5, fontSize: 14.5, lineHeight: 1.65, color: '#2B313A' }}>{renderInline(value)}</div>
+                        <div style={{ marginTop: 5, fontSize: 14.5, lineHeight: 1.65, color: '#2B313A' }}>{R(value)}</div>
                       )}
                     </div>
                   );
@@ -510,15 +542,15 @@ export default function Block({ block: b, mod, scope, step, index, state, update
           <div style={{ padding: '0 16px 18px', animation: 'msFadeUp .32s cubic-bezier(.2,.85,.2,1) both' }}>
             <table className="ms-cmp">
               <thead>
-                <tr>{(b.head || []).map((h) => <th key={h} scope="col">{renderInline(h)}</th>)}</tr>
+                <tr>{(b.head || []).map((h) => <th key={h} scope="col">{R(h)}</th>)}</tr>
               </thead>
               <tbody>
                 {(b.rows || []).map((row, ri) => (
                   <tr key={ri}>
                     {row.map((cell, ci) => (
                       ci === 0
-                        ? <th key={ci} scope="row">{renderInline(cell)}</th>
-                        : <td key={ci}>{renderInline(cell)}</td>
+                        ? <th key={ci} scope="row">{R(cell)}</th>
+                        : <td key={ci}>{R(cell)}</td>
                     ))}
                   </tr>
                 ))}
@@ -529,11 +561,11 @@ export default function Block({ block: b, mod, scope, step, index, state, update
             <div className="ms-cmp-cards">
               {(b.rows || []).map((row, ri) => (
                 <div key={ri} className="ms-cmp-card">
-                  <div className="ms-cmp-card-h">{renderInline(row[0])}</div>
+                  <div className="ms-cmp-card-h">{R(row[0])}</div>
                   {row.slice(1).map((cell, ci) => (
                     <div key={ci} className="ms-cmp-card-row">
-                      <span className="ms-cmp-card-k">{renderInline((b.head || [])[ci + 1])}</span>
-                      <span>{renderInline(cell)}</span>
+                      <span className="ms-cmp-card-k">{R((b.head || [])[ci + 1])}</span>
+                      <span>{R(cell)}</span>
                     </div>
                   ))}
                 </div>
@@ -557,7 +589,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
                 {(b.doItems || []).map((t, i) => (
                   <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', fontSize: 14.5, lineHeight: 1.7, color: '#2B313A' }}>
                     <span aria-hidden style={{ flexShrink: 0, marginTop: 9, width: 5, height: 5, borderRadius: '50%', background: '#1CABE2' }} />
-                    <span>{renderInline(t)}</span>
+                    <span>{R(t)}</span>
                   </div>
                 ))}
               </div>
@@ -568,7 +600,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
                 {(b.dontItems || []).map((t, i) => (
                   <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', fontSize: 14.5, lineHeight: 1.7, color: '#2B313A' }}>
                     <span aria-hidden style={{ flexShrink: 0, marginTop: 9, width: 5, height: 5, borderRadius: '50%', background: '#FF6B5A' }} />
-                    <span>{renderInline(t)}</span>
+                    <span>{R(t)}</span>
                   </div>
                 ))}
               </div>

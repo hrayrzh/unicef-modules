@@ -473,3 +473,13 @@ button { font-family: inherit; }
   .ms-role-card:hover { transform: none; }
 }
 .ms-help-note { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid rgba(21,26,33,.1); font-size: 12.5px; line-height: 1.65; color: #6E7787; }
+
+/* Ссылка «Օգնության կետեր» внутри текста — открывает ту же панель, что
+   кнопка в шапке. Выглядит как ссылка, не как кнопка: она в потоке абзаца. */
+.ms-help-inline {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 0; border: none; background: none; cursor: pointer;
+  font: inherit; color: #B32B2B; font-weight: 700;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.ms-help-inline:hover { color: #D93A3A; }

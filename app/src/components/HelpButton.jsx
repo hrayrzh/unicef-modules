@@ -16,10 +16,19 @@ import { useCallback, useEffect, useRef, useState } from 'react';
  * Цвет намеренно выпадает из палитры модуля: весь интерфейс держится на
  * UNICEF cyan, помощь — единственный тёплый красный. Так её видно, не читая.
  */
-export default function HelpButton({ help: HELP }) {
+/**
+ * Панель открывается не только своей кнопкой: внутри раздела есть ссылки
+ * «Օգնության կետեր», которые должны вести сюда же, а не дублировать контакты
+ * в тексте. Поэтому состояние можно поднять наружу — `openSignal` растёт на
+ * каждый такой запрос из контента.
+ */
+export default function HelpButton({ help: HELP, openSignal = 0 }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
   const panelRef = useRef(null);
+
+  // Ноль — начальное значение, по нему панель не открывается.
+  useEffect(() => { if (openSignal > 0) setOpen(true); }, [openSignal]);
 
   const close = useCallback(() => {
     setOpen(false);
