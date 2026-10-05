@@ -179,9 +179,6 @@ export default function SelectPage() {
                   <div style={{ marginTop: 'calc(var(--ch) * .04)', fontSize: 'max(13px, calc(var(--ch) * .057))', lineHeight: 1.2, fontWeight: 600, letterSpacing: '-.5px', color: '#151A21' }}>
                     {m.title}
                   </div>
-                  <div style={{ marginTop: 'calc(var(--ch) * .04)', paddingTop: 'calc(var(--ch) * .036)', borderTop: '1px solid rgba(20,24,31,.12)', fontSize: 'max(9.5px, calc(var(--ch) * .032))', color: '#7B8492', whiteSpace: 'nowrap' }}>
-                    <span>{m.meta || 'Շուտով'}</span>
-                  </div>
                 </div>
               </div>
             </div>
