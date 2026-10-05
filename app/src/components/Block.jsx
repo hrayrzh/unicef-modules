@@ -540,7 +540,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
         {head(b.title, null, panelLabel('Կարդացված'), panelFg)}
         {isOpen && (
           <div style={{ padding: '0 16px 18px', animation: 'msFadeUp .32s cubic-bezier(.2,.85,.2,1) both' }}>
-            <table className="ms-cmp">
+            <table className={b.plain ? 'ms-cmp is-plain' : 'ms-cmp'}>
               <thead>
                 <tr>{(b.head || []).map((h) => <th key={h} scope="col">{R(h)}</th>)}</tr>
               </thead>
@@ -548,7 +548,10 @@ export default function Block({ block: b, mod, scope, step, index, state, update
                 {(b.rows || []).map((row, ri) => (
                   <tr key={ri}>
                     {row.map((cell, ci) => (
-                      ci === 0
+                      // `plain` — колонки равноправны (модуль 4: «что сказать»
+                      // против «чего не говорить»). Без него первая колонка —
+                      // признак сравнения и идёт заголовком строки.
+                      ci === 0 && !b.plain
                         ? <th key={ci} scope="row">{R(cell)}</th>
                         : <td key={ci}>{R(cell)}</td>
                     ))}
@@ -561,10 +564,10 @@ export default function Block({ block: b, mod, scope, step, index, state, update
             <div className="ms-cmp-cards">
               {(b.rows || []).map((row, ri) => (
                 <div key={ri} className="ms-cmp-card">
-                  <div className="ms-cmp-card-h">{R(row[0])}</div>
-                  {row.slice(1).map((cell, ci) => (
+                  {!b.plain && <div className="ms-cmp-card-h">{R(row[0])}</div>}
+                  {(b.plain ? row : row.slice(1)).map((cell, ci) => (
                     <div key={ci} className="ms-cmp-card-row">
-                      <span className="ms-cmp-card-k">{R((b.head || [])[ci + 1])}</span>
+                      <span className="ms-cmp-card-k">{R((b.head || [])[b.plain ? ci : ci + 1])}</span>
                       <span>{R(cell)}</span>
                     </div>
                   ))}

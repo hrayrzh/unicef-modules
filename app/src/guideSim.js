@@ -42,6 +42,11 @@ const DECOY = {
   xbox: ['General', 'Account', 'Preferences', 'Devices & connections'],
   nintendo: ['Data Management', 'Screen Brightness', 'Themes', 'Internet', 'Users'],
   discord: ['My Account', 'Profiles', 'Voice & Video', 'Appearance', 'Notifications'],
+  // Модуль 3 — включение 2FA в сервисах аккаунтов.
+  google: ['Personal info', 'Data & privacy', 'People & sharing', 'Payments', 'About'],
+  apple: ['Name, Phone, Email', 'Password & Security', 'Payment & Shipping', 'Subscriptions', 'iCloud'],
+  facebook: ['Accounts Center', 'Privacy', 'Notifications', 'Your activity', 'Ad preferences'],
+  microsoft: ['Your info', 'Privacy', 'Devices', 'Services & subscriptions', 'Payment options'],
 };
 
 /** Платформа выводится из названия гайда — отдельного поля в данных нет. */
@@ -60,6 +65,10 @@ export function platformOf(name = '') {
   if (n.includes('xbox')) return 'xbox';
   if (n.includes('nintendo') || n.includes('switch')) return 'nintendo';
   if (n.includes('discord')) return 'discord';
+  if (n.includes('google') || n.includes('gmail')) return 'google';
+  if (n.includes('apple')) return 'apple';
+  if (n.includes('facebook')) return 'facebook';
+  if (n.includes('microsoft')) return 'microsoft';
   return 'ios';
 }
 

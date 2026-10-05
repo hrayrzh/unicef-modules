@@ -483,3 +483,9 @@ button { font-family: inherit; }
   text-decoration: underline; text-underline-offset: 3px;
 }
 .ms-help-inline:hover { color: #D93A3A; }
+
+/* Таблица без колонки-признака: колонки равноправны («что сказать» против
+   «чего не говорить»). Первый столбец не выделяется как заголовок строки. */
+.ms-cmp.is-plain tbody td { width: 50%; }
+.ms-cmp.is-plain thead th:first-child { color: #B32B2B; background: rgba(217,58,58,.07); border-bottom-color: rgba(217,58,58,.28); }
+.ms-cmp.is-plain thead th:last-child { color: #0F7FA8; }

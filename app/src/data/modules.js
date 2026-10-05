@@ -1,5 +1,8 @@
 import { M1, HELP } from './module01';
 import { M2, HELP2 } from './module02';
+import { M3, HELP3 } from './module03';
+import { M4, HELP4 } from './module04';
+import { M5, HELP5 } from './module05';
 import { CONTACTS } from './help';
 
 /**
@@ -10,7 +13,7 @@ import { CONTACTS } from './help';
  * Ключ — индекс модуля (0-based), как в `MODULES[]` на экране выбора.
  * Отсутствие ключа значит «контента ещё нет» — читалка покажет заглушку.
  */
-export const BY_INDEX = { 0: M1, 1: M2 };
+export const BY_INDEX = { 0: M1, 1: M2, 2: M3, 3: M4, 4: M5 };
 
 export function moduleAt(index) {
   return BY_INDEX[index] || null;
@@ -22,7 +25,7 @@ export function moduleAt(index) {
  * после «Որտեղ դիմել» одинаково везде, иначе переход между модулями менял
  * телефоны, хотя помощь от темы не зависит.
  */
-const HELP_BY_INDEX = { 0: HELP, 1: HELP2 };
+const HELP_BY_INDEX = { 0: HELP, 1: HELP2, 2: HELP3, 3: HELP4, 4: HELP5 };
 
 export function helpFor(index) {
   const own = HELP_BY_INDEX[index] || HELP;
