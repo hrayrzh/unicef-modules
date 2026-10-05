@@ -20,3 +20,7 @@ app/.env.*.local
 source/
 *.docx
 *.pdf
+
+# Настройки IDE (WebStorm / IntelliJ) — личные, не относятся к проекту
+app/.idea/
+.idea/
