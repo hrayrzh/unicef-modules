@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { buildScenario, menuRows } from '../guideSim';
+import { buildScenario, menuRows, hasRussian, subRu } from '../guideSim';
+import { useProgressStore } from '../store/progress';
 
 /**
  * Модель экрана устройства: нужный пункт подсвечен, нажатие уводит на
@@ -14,6 +15,18 @@ export default function GuideSimulator({ guide, onComplete }) {
   const screens = useMemo(() => buildScenario(guide), [guide]);
   const [at, setAt] = useState(0);
   const [toggled, setToggled] = useState(false);
+
+  // Язык подписей на экране устройства. Один на все гайды и переживает
+  // перезагрузку: родитель с русским телефоном выбирает RU один раз, а не
+  // на каждой из 13 платформ. Переключатель показывается, только если в
+  // шагах гайда вообще есть русские эквиваленты.
+  const storedLang = useProgressStore((s) => s.simLang);
+  const update = useProgressStore((s) => s.update);
+  const bilingual = useMemo(() => hasRussian(screens), [screens]);
+  const lang = bilingual && storedLang === 'ru' ? 'ru' : 'en';
+  const setLang = (l) => update({ simLang: l });
+  // Подпись пункта в выбранном языке; без русского варианта остаётся английский.
+  const L = (en, ru) => (lang === 'ru' && ru) || en;
 
   const finished = at >= screens.length;
   // Reaching the last screen is what credits the guide (Block.jsx › credit).
@@ -103,13 +116,24 @@ export default function GuideSimulator({ guide, onComplete }) {
               <>
                 {/* Стрелка «назад» есть не на каждом экране, но место под неё
                     держится всегда — иначе заголовок скачет вбок на первом же
-                    переходе. Симметричная распорка справа держит центровку. */}
-                <div style={{ background: '#fff', padding: '10px 15px', display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid #E4E8F2' }}>
+                    переходе. Симметричная распорка справа держит центровку.
+                    Переключатель языка EN/RU стоит в этой же строке у правого
+                    края, как кнопка в шапке настоящего экрана настроек;
+                    он позиционирован абсолютно, чтобы не сдвигать заголовок,
+                    а симметричные отступы заголовка не дают им наложиться. */}
+                <div style={{ position: 'relative', background: '#fff', padding: '10px 15px', display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid #E4E8F2' }}>
                   <span style={{ width: 8, flexShrink: 0, fontSize: 13, color: '#1CABE2', fontWeight: 700, visibility: at > 0 ? 'visible' : 'hidden' }}>‹</span>
-                  <span style={{ flex: 1, textAlign: 'center', fontSize: 13, fontWeight: 700, color: '#151A21', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {sc.title || guide.sub?.split('(')[0]?.trim() || guide.name}
+                  <span style={{ flex: 1, textAlign: 'center', padding: bilingual ? '0 46px' : 0, fontSize: 13, fontWeight: 700, color: '#151A21', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {sc.title
+                      ? L(sc.title, sc.ruTitle)
+                      : L(guide.sub?.split('(')[0]?.trim(), subRu(guide.sub)) || guide.name}
                   </span>
                   <span style={{ width: 8, flexShrink: 0 }} aria-hidden />
+                  {bilingual && (
+                    <span style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', display: 'flex' }}>
+                      <LangToggle lang={lang} onChange={setLang} />
+                    </span>
+                  )}
                 </div>
 
                 <div key={sc.key} style={{ flex: 1, background: '#fff' }}>
@@ -132,11 +156,11 @@ export default function GuideSimulator({ guide, onComplete }) {
 
                   {sc.kind === 'toggle' && (
                     <>
-                      <Row label={sc.target} highlight>
+                      <Row label={L(sc.target, sc.ruTarget)} highlight>
                         <Switch on={toggled} onClick={flip} />
                       </Row>
                       {menuRows(sc).filter((r) => !r.target).slice(0, 3).map((r) => (
-                        <Row key={r.label} label={r.label} dim>
+                        <Row key={r.en} label={L(r.en, r.ru)} dim>
                           <Switch on={false} />
                         </Row>
                       ))}
@@ -145,8 +169,8 @@ export default function GuideSimulator({ guide, onComplete }) {
 
                   {sc.kind === 'nav' && menuRows(sc).map((r) => (
                     <Row
-                      key={r.label}
-                      label={r.label}
+                      key={r.en}
+                      label={L(r.en, r.ru)}
                       highlight={r.target}
                       dim={!r.target}
                       onClick={r.target ? advance : undefined}
@@ -162,12 +186,48 @@ export default function GuideSimulator({ guide, onComplete }) {
         <Arrow dir="next" onClick={advance} disabled={finished} label="Հաջորդ էկրան" />
       </div>
 
-      {/* Русский эквивалент текущей настройки — как в исходном документе. */}
+      {/* Второй язык текущей настройки — как в исходном документе. В режиме
+          EN под экраном русский эквивалент, в режиме RU — английский оригинал,
+          чтобы оба названия были перед глазами при любом выборе. */}
       {!finished && sc.ru && (
         <p style={{ margin: '14px 0 0', textAlign: 'center', fontSize: 12.5, color: '#6E7787' }}>
-          {sc.target} — «{sc.ru}»
+          {lang === 'ru' && sc.ruTarget
+            ? <>{sc.ruTarget} — «{sc.target}»</>
+            : <>{sc.target} — «{sc.ru}»</>}
         </p>
       )}
+    </div>
+  );
+}
+
+/** EN / RU — язык подписей на экране устройства. Компактный, под шапку экрана. */
+function LangToggle({ lang, onChange }) {
+  return (
+    <div
+      role="group"
+      aria-label="Էկրանի լեզուն"
+      style={{ display: 'inline-flex', flexShrink: 0, padding: 2, borderRadius: 100, border: '1px solid rgba(21,26,33,.14)', background: '#F2F4F8' }}
+    >
+      {[['en', 'EN'], ['ru', 'RU']].map(([id, label]) => {
+        const on = lang === id;
+        return (
+          <button
+            key={id}
+            type="button"
+            aria-pressed={on}
+            onClick={() => onChange(id)}
+            style={{
+              padding: '2px 7px', borderRadius: 100, border: 'none',
+              fontSize: 10, fontWeight: 700, letterSpacing: '.06em', lineHeight: 1.5,
+              background: on ? '#1CABE2' : 'transparent',
+              color: on ? '#0E1218' : '#6E7787',
+              cursor: on ? 'default' : 'pointer',
+            }}
+          >
+            {label}
+          </button>
+        );
+      })}
     </div>
   );
 }

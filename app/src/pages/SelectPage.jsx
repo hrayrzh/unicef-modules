@@ -9,9 +9,11 @@ export default function SelectPage() {
   const navigate = useNavigate();
   const done = useProgressStore((s) => s.done);
   const reset = useProgressStore((s) => s.reset);
-  // Which card the wheel is focused on — transient UI state, not progress.
-  const [active, setActive] = useState(0);
+  const lastModule = useProgressStore((s) => s.lastModule);
   const n = MODULES.length;
+  // Which card the wheel is focused on. Starts on the module the reader was
+  // closed from, so ✕ brings you back to the card you left, not to module 1.
+  const [active, setActive] = useState(() => Math.min(n - 1, Math.max(0, lastModule || 0)));
   const a = MODULES[active];
 
   const jump = useCallback(

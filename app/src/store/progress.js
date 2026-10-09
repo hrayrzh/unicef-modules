@@ -12,9 +12,15 @@ const KEY = 'unicef-m01-f';
 const EMPTY = {
   done: {},      // module index -> completed
   maxStep: {},   // module index -> furthest section unlocked
+  // Where the reader was when the module was closed (✕ or Escape), so the
+  // module list reopens on that card and the module resumes on that section
+  // instead of the furthest one. Request of Arman, 2026-10-09.
+  lastModule: 0, // module index the deck should focus on return
+  lastStep: {},  // scope -> section the reader was on when closed
   role: {},      // module index -> chosen audience ("parent" | "teacher")
   dir: 1,        // last navigation direction, drives the slide animation
   tick: 0,       // bumps to re-mount the section and replay its animation
+  simLang: 'en', // simulator screen language: 'en' | 'ru' — one choice for all guides
   opened: {},    // "scope:step:block" -> guide/table panel expanded
   checks: {},    // "scope:step:block:i" -> checklist ticked
   cardTab: {},   // "scope:step:block" -> selected flashcard index

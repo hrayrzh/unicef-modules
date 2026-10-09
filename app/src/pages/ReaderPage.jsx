@@ -71,11 +71,17 @@ export default function ReaderPage() {
   }, [hasContent, pickingRole, requested, step, stepPath, navigate]);
 
   // A bare /module/1 gets the section number written in, so the URL always
-  // names where you are.
+  // names where you are. It resumes on the section the reader closed the
+  // module from, never past what has been earned; without a saved position
+  // it falls back to the furthest section.
+  const savedStep = state.lastStep?.[scope];
   useEffect(() => {
     if (!hasContent || stepParam || pickingRole) return;
-    navigate(stepPath(Math.min(maxStep, LAST)), { replace: true });
-  }, [hasContent, pickingRole, stepParam, maxStep, LAST, stepPath, navigate]);
+    const resume = typeof savedStep === 'number' ? savedStep : maxStep;
+    // Same rule as `step` above: the earned ceiling applies only while the
+    // blocker is on — with it off, maxStep is not maintained by URL visits.
+    navigate(stepPath(Math.min(resume, LAST, NEXT_STEP_BLOCKER ? maxStep : LAST)), { replace: true });
+  }, [hasContent, pickingRole, stepParam, savedStep, maxStep, LAST, stepPath, navigate]);
 
   const gotoStep = useCallback(
     (i) => {
@@ -95,7 +101,12 @@ export default function ReaderPage() {
     [state, mod, scope, maxStep, LAST, step, update, navigate, stepPath, scrollTop],
   );
 
-  const closeReader = useCallback(() => navigate('/'), [navigate]);
+  // Closing (✕ or Escape) remembers the module and the section it was on, so
+  // the deck comes back focused on this card and the module resumes here.
+  const closeReader = useCallback(() => {
+    update((prev) => ({ lastModule: moduleIndex, lastStep: { ...prev.lastStep, [scope]: step } }));
+    navigate('/');
+  }, [update, moduleIndex, scope, step, navigate]);
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') closeReader(); };

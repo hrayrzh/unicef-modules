@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import FigureWithBubble from './FigureWithBubble';
 import GuideSimulator from './GuideSimulator';
+import PlatformLogo from './PlatformLogo';
 import { LinkIcon, PhoneIcon } from './HelpButton';
 
 // ((term||explanation)) marks a term that is emphasised and explained on
@@ -349,7 +350,9 @@ export default function Block({ block: b, mod, scope, step, index, state, update
   // grey of «Բացել», so cyan always means "done".
   const panelFg = seen ? '#0F7FA8' : '#8A919D';
 
-  const head = (title, sub, rightLabel, rightFg) => (
+  // `icon` — optional tile between the +/− box and the title (guides show
+  // their platform's logo there).
+  const head = (title, sub, rightLabel, rightFg, icon = null) => (
     <div
       className="ms-panel-head"
       role="button"
@@ -362,6 +365,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
       <span style={{ flexShrink: 0, display: 'grid', placeItems: 'center', width: 26, height: 26, borderRadius: 8, background: 'rgba(28,171,226,.12)', color: '#0F7FA8', fontSize: 15, lineHeight: 1 }}>
         {isOpen ? '−' : '+'}
       </span>
+      {icon}
       <span style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'baseline', gap: 11, flexWrap: 'wrap' }}>
         <span style={{ fontSize: 16.5, fontWeight: 600, letterSpacing: '-.3px' }}>{title}</span>
         {sub ? <span style={{ fontSize: 12, color: '#6E7787' }}>{sub}</span> : null}
@@ -385,7 +389,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
   if (b.k === 'guide') {
     return wrap(
       <div style={{ borderRadius: 16, background: '#FFFFFF', border: `1px solid ${panelBorder}`, overflow: 'hidden', transition: 'border-color .25s ease' }}>
-        {head(b.name, b.sub, panelLabel('Դիտված է'), panelFg)}
+        {head(b.name, b.sub, panelLabel('Դիտված է'), panelFg, <PlatformLogo name={b.name} />)}
         {isOpen && (
           <div style={{ padding: '4px 24px 24px 62px', display: 'flex', flexDirection: 'column', gap: 13, animation: 'msFadeUp .32s cubic-bezier(.2,.85,.2,1) both' }}>
             {/* Требование заказчика: инструкция показывается наглядно И остаётся
