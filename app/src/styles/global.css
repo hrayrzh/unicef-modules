@@ -49,7 +49,9 @@ button { font-family: inherit; }
   filter: blur(min(57px, 12vw));
 }
 /* Шапка выше тела: панель помощи открывается изнутри шапки (без портала). */
-.ms-reader-head { position: relative; z-index: 2; background: #F7F5F0; }
+/* Шапка и меню разделов слева — белые: рамка вокруг тёплого листа читалки. */
+.ms-reader-head { position: relative; z-index: 2; background: #FFFFFF; }
+.ms-reader-nav { background: #FFFFFF; }
 .ms-reader-body { position: relative; z-index: 1; }
 /* Содержимое над пятном. */
 .ms-role-pick { position: relative; z-index: 1; }
