@@ -259,7 +259,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
     return wrap(
       // Оттенок поверх сплошного фона страницы: полупрозрачная заливка
       // пропускала цветное пятно верха страницы (.ms-reader-glow).
-      <div style={{ padding: '22px 24px', borderRadius: 16, background: `linear-gradient(${danger ? 'rgba(217,58,58,.07)' : 'rgba(28,171,226,.08)'} 0 0), #F7F5F0`, borderLeft: `3px solid ${danger ? '#D93A3A' : '#1CABE2'}` }}>
+      <div style={{ padding: '22px 24px', borderRadius: 16, background: `linear-gradient(${danger ? 'rgba(217,58,58,.07)' : 'rgba(28,171,226,.08)'} 0 0), var(--ms-page)`, borderLeft: `3px solid ${danger ? '#D93A3A' : '#1CABE2'}` }}>
         {big ? (
           <div style={{ fontFamily: "'Noto Serif Armenian', 'Spectral', serif", fontSize: 18, lineHeight: 1.3, fontWeight: 700, letterSpacing: '-.2px', color: danger ? '#B32B2B' : '#0F7FA8' }}>{b.title}</div>
         ) : (

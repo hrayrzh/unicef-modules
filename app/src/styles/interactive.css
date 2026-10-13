@@ -121,7 +121,7 @@
   /* Без overflow: hidden — иначе тултип термина ((…||…)) обрезается по
      краю карточки. Блик ниже и так не выходит за её границы. */
   padding: 14px 16px; border-radius: 14px; cursor: pointer;
-  background: #FAF8F4; border: 1px solid rgba(21,26,33,.1);
+  background: #F7F8FA; border: 1px solid rgba(21,26,33,.1);
   transition: border-color .35s, background .35s, transform .25s cubic-bezier(.2,.85,.2,1), box-shadow .3s;
   animation: ixRise .5s cubic-bezier(.2,.85,.2,1) both; animation-delay: calc(var(--i) * 60ms + .12s);
 }
@@ -249,7 +249,7 @@
 .ix-sort-card.is-p2 { z-index: 1; transform: translateY(24px) scale(.91); background: #F1F7FA; animation: ixFadeIn .4s ease both; }
 .ix-sort-card:not(.is-p0) .ix-sort-text { opacity: 0; }
 .ix-sort-text { width: 100%; font-size: 15.5px; line-height: 1.7; color: #151A21; transition: opacity .3s; }
-.ix-sort-card.is-quote { border-radius: 22px 22px 22px 6px; background: #FFFDF8; }
+.ix-sort-card.is-quote { border-radius: 22px 22px 22px 6px; background: #FFFFFF; }
 .ix-sort-card.is-quote.is-p1, .ix-sort-card.is-quote.is-p2 { background: #F7FBFD; }
 .ix-sort-card.is-quote .ix-sort-text { font-family: 'Noto Serif Armenian', 'Spectral', serif; font-size: 19px; line-height: 1.55; text-align: center; }
 .ix-stamp {
@@ -382,7 +382,7 @@
 .ix-story-bar i { display: block; height: 100%; background: #1CABE2; transform-origin: 0 50%; transform: scaleX(0); }
 .ix-story-stage {
   position: relative; border-radius: 16px; overflow: hidden; aspect-ratio: 600 / 250;
-  background-color: #FCFBF8;
+  background-color: #FAFBFC;
   background-image: radial-gradient(rgba(21,26,33,.07) 1px, transparent 1.2px);
   background-size: 18px 18px; border: 1px solid rgba(21,26,33,.08);
 }

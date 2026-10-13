@@ -186,7 +186,7 @@ export default function ReaderPage() {
   const { blocks, title } = mod?.steps[step] || { blocks: [], title: '' };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 80, display: 'flex', flexDirection: 'column', background: '#F7F5F0', fontFamily: "'Noto Sans Armenian', 'Sora', Mshtakan, Sylfaen, system-ui, sans-serif", color: '#151A21' }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 80, display: 'flex', flexDirection: 'column', background: 'var(--ms-page)', fontFamily: "'Noto Sans Armenian', 'Sora', Mshtakan, Sylfaen, system-ui, sans-serif", color: '#151A21' }}>
       <div className="ms-reader-head" style={{ flexShrink: 0, padding: '12px 20px 12px 40px', display: 'flex', alignItems: 'center', gap: 20 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16 }}>

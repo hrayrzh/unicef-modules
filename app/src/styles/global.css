@@ -1,3 +1,8 @@
+/* Фон листа читалки — светло-серый, почти белый; шапка и меню разделов
+   рядом белые. Один цвет на читалку, лист перехода «карточка → экран» и
+   непрозрачную подложку врезок — меняется здесь. */
+:root { --ms-page: #F3F4F6; }
+
 html { scroll-behavior: smooth; }
 html, body { margin: 0; padding: 0; background: #0E1218; }
 body {
@@ -31,7 +36,7 @@ button { font-family: inherit; }
    надписи гаснут по пути, чтобы в конце остался ровно фон читалки. */
 @keyframes msFadeOut { to { opacity: 0; } }
 @keyframes msLaunchOut { to { opacity: 0; transform: scale(1.05); } }
-.ms-launch { position: fixed; inset: 0; z-index: 100; background: #F7F5F0; will-change: clip-path; }
+.ms-launch { position: fixed; inset: 0; z-index: 100; background: var(--ms-page); will-change: clip-path; }
 .ms-launch-wash { position: absolute; inset: 0; }
 /* Пятно карточки едет вместе с её правым верхним углом (SelectPage) и
    остаётся фоном в правом верхнем углу читалки. Размер и размытие
@@ -49,7 +54,7 @@ button { font-family: inherit; }
   filter: blur(min(57px, 12vw));
 }
 /* Шапка выше тела: панель помощи открывается изнутри шапки (без портала). */
-/* Шапка и меню разделов слева — белые: рамка вокруг тёплого листа читалки. */
+/* Шапка и меню разделов слева — белые, лист читалки — светло-серый (--ms-page). */
 .ms-reader-head { position: relative; z-index: 2; background: #FFFFFF; }
 .ms-reader-nav { background: #FFFFFF; }
 .ms-reader-body { position: relative; z-index: 1; }
@@ -305,8 +310,8 @@ button { font-family: inherit; }
 .ms-aside { border-radius: 14px; border: 1px solid; }
 /* Оттенок поверх сплошного фона страницы — иначе сквозь блок просвечивало
    цветное пятно верха страницы (.ms-reader-glow). */
-.ms-aside.is-did { background: linear-gradient(rgba(28,171,226,.06) 0 0), #F7F5F0; border-color: rgba(28,171,226,.3); }
-.ms-aside.is-tip { background: linear-gradient(rgba(245,182,42,.09) 0 0), #F7F5F0; border-color: rgba(245,182,42,.42); }
+.ms-aside.is-did { background: linear-gradient(rgba(28,171,226,.06) 0 0), var(--ms-page); border-color: rgba(28,171,226,.3); }
+.ms-aside.is-tip { background: linear-gradient(rgba(245,182,42,.09) 0 0), var(--ms-page); border-color: rgba(245,182,42,.42); }
 .ms-aside-head {
   display: flex; align-items: center; gap: 11px;
   padding: 15px 18px; cursor: pointer; list-style: none;
