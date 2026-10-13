@@ -22,8 +22,8 @@ const FULL = 'inset(0px 0px 0px 0px round 0px)';
 // min(528px, 110vw): см. .ms-reader-glow в global.css.
 const readerGlowScale = () => Math.min(528, window.innerWidth * 1.1) / 240;
 // В читалке пятно сидит выше и правее угла экрана, чем на карточке: у
-// .ms-reader-glow top −160 / right −150 против −100 / −90 на карточке.
-const READER_GLOW_SHIFT = 60;
+// .ms-reader-glow top −220 / right −210 против −100 / −90 на карточке.
+const READER_GLOW_SHIFT = 120;
 
 export default function SelectPage() {
   const navigate = useNavigate();

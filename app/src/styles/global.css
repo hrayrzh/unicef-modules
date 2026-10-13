@@ -38,15 +38,19 @@ button { font-family: inherit; }
    читалки = карточка × readerGlowScale (SelectPage.jsx), иначе на стыке
    пятно скакнуло бы. */
 .ms-launch-glow { position: absolute; width: 240px; height: 240px; border-radius: 50%; filter: blur(26px); transform-origin: 100% 0; }
+/* Слои читалки: тело (1) < пятно (2) < шапка (3).
+   Пятно над прокручиваемым текстом: под ним оно пряталось за белые
+   карточки, и при прокрутке казалось, что уезжает. multiply — светлое
+   окрашивается, тёмный текст остаётся тёмным и читается. Под шапкой
+   пятна нет: шапка непрозрачная и выше. Панель помощи открывается
+   изнутри шапки (без портала) — поэтому шапка выше всех. */
 .ms-reader-glow {
   /* Смещение = угол карточки (−100/−90) + READER_GLOW_SHIFT (SelectPage). */
-  position: absolute; top: -160px; right: -150px; z-index: 0; pointer-events: none;
+  position: absolute; top: -220px; right: -210px; z-index: 2; pointer-events: none;
   width: min(528px, 110vw); height: min(528px, 110vw); border-radius: 50%;
-  filter: blur(min(57px, 12vw));
+  filter: blur(min(57px, 12vw)); mix-blend-mode: multiply;
 }
-/* Шапка выше тела: панель помощи открывается изнутри шапки (без портала),
-   и с равным z-index тело читалки закрывало бы её. */
-.ms-reader-head { position: relative; z-index: 2; background: #F7F5F0; }
+.ms-reader-head { position: relative; z-index: 3; background: #F7F5F0; }
 .ms-reader-body { position: relative; z-index: 1; }
 .ms-launch-card { position: absolute; display: flex; flex-direction: column; padding: calc(var(--ch) * .072); color: #151A21; transform-origin: 50% 50%; }
 .ms-launch.is-open .ms-launch-wash { animation: msFadeOut .45s ease .2s both; }
