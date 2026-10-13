@@ -139,9 +139,20 @@ button { font-family: inherit; }
    переносятся под него. */
 .ms-sim-row { display: flex; align-items: center; justify-content: center; gap: 12px; }
 .ms-sim-phone { flex: 0 1 320px; min-width: 0; }
+/* Окно компьютера и телевизор консоли шире телефона (simSkins.jsx). */
+.ms-sim-phone.is-wide { flex-basis: 500px; }
+/* Экран телевизора — 16:10. На телефоне пропорция с минимальной высотой
+   делала его шире экрана, и правый край с EN/RU уезжал за границу. */
+.ms-sim-tv { aspect-ratio: 16 / 10; min-height: 250px; }
+@media (max-width: 560px) { .ms-sim-tv { aspect-ratio: auto; min-height: 0; height: 300px; } }
+/* Экран прокручивается, если длинные подписи не влезли, — без полосы. */
+.ms-sim-body { scrollbar-width: none; }
+.ms-sim-body::-webkit-scrollbar { display: none; }
 @media (max-width: 560px) {
   .ms-sim-row { flex-wrap: wrap; row-gap: 14px; }
   .ms-sim-phone { flex: 1 1 100%; order: -1; }
+  /* Боковое меню окна на телефоне съедало половину и без того узкого экрана. */
+  .ms-sim-side { display: none; }
 }
 
 /* D4 — mobile. The reader collapses to a single column and the sidebar
