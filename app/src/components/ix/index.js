@@ -7,6 +7,7 @@ import { Devices, PhoneSteps, ScrollShot } from './Devices';
 import { Lock, Network, Orb, Timeline } from './Map';
 import { Scene } from './Scene';
 import { Scratch } from './Scratch';
+import { Unfold } from './Unfold';
 
 // Интерактивные блоки (модуль 2, по предложениям из «Մոդուլ 2 _որոշ
 // առաջարկություններ.html»). Тексты в них — те же абзацы документа, блок
@@ -28,6 +29,7 @@ const KINDS = {
   lock: Lock,
   scene: Scene,
   scratch: Scratch,
+  unfold: Unfold,
 };
 
 /** The component for an interactive block, or null for an ordinary one. */

@@ -364,6 +364,22 @@
   animation: ixPopIn .45s cubic-bezier(.3,1.4,.5,1) both;
 }
 
+/* ---------- Unfold: абзац по частям (Unfold.jsx) ---------- */
+.ix-uf { padding: 16px 18px 14px; }
+.ix-uf-list { display: flex; flex-direction: column; gap: 10px; }
+.ix-uf-item {
+  display: flex; gap: 12px; align-items: flex-start; padding: 13px 15px; border-radius: 12px;
+  background: linear-gradient(rgba(28,171,226,.07) 0 0), #fff; border-left: 3px solid #1CABE2;
+  animation: ixRise .5s cubic-bezier(.2,.85,.2,1) both;
+}
+.ix-uf-mark {
+  flex-shrink: 0; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px;
+  background: #fff; font-size: 17px; line-height: 1; box-shadow: 0 4px 10px -8px rgba(15,127,168,.7);
+  animation: ixPopIn .45s cubic-bezier(.3,1.4,.5,1) .1s both;
+}
+.ix-uf-text { flex: 1; min-width: 0; padding-top: 4px; font-size: 15px; line-height: 1.72; color: #2B313A; }
+.ix-uf-foot { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 12px; min-height: 38px; }
+
 /* ---------- Match ---------- */
 .ix-match { position: relative; }
 .ix-match-done { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
