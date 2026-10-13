@@ -301,8 +301,10 @@ button { font-family: inherit; }
    наведении на шапку держит сама шапка: при закрытом блоке она и есть весь
    блок, при открытом скруглены только верхние углы. */
 .ms-aside { border-radius: 14px; border: 1px solid; }
-.ms-aside.is-did { background: rgba(28,171,226,.06); border-color: rgba(28,171,226,.3); }
-.ms-aside.is-tip { background: rgba(245,182,42,.09); border-color: rgba(245,182,42,.42); }
+/* Оттенок поверх сплошного фона страницы — иначе сквозь блок просвечивало
+   цветное пятно верха страницы (.ms-reader-glow). */
+.ms-aside.is-did { background: linear-gradient(rgba(28,171,226,.06) 0 0), #F7F5F0; border-color: rgba(28,171,226,.3); }
+.ms-aside.is-tip { background: linear-gradient(rgba(245,182,42,.09) 0 0), #F7F5F0; border-color: rgba(245,182,42,.42); }
 .ms-aside-head {
   display: flex; align-items: center; gap: 11px;
   padding: 15px 18px; cursor: pointer; list-style: none;
