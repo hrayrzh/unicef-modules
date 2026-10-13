@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { MODULES } from '../data/module01';
 import { useProgressStore } from '../store/progress';
 import { reducedMotion } from '../components/ix/shared';
+import { CARD_GLOW, READER_GLOW, readerGlowScale } from '../readerGlow';
 
 const ANGLE_STEP = 20; // was an editor-tunable prop in the source design
 
@@ -18,13 +19,6 @@ const clipOf = (r) => {
   return `inset(${r.top}px ${W - r.right}px ${H - r.bottom}px ${r.left}px round 18px)`;
 };
 const FULL = 'inset(0px 0px 0px 0px round 0px)';
-// Пятно в читалке — то же пятно карточки (240px), увеличенное до
-// min(528px, 110vw): см. .ms-reader-glow в global.css.
-const readerGlowScale = () => Math.min(528, window.innerWidth * 1.1) / 240;
-// В читалке пятно сидит выше и правее угла экрана, чем на карточке: у
-// .ms-reader-glow top −220 / right −290 против −100 / −90 на карточке.
-const READER_GLOW_SHIFT_X = 200;
-const READER_GLOW_SHIFT_Y = 120;
 
 export default function SelectPage() {
   const navigate = useNavigate();
@@ -80,14 +74,16 @@ export default function SelectPage() {
     const anim = sheet.animate([{ clipPath: open ? card : FULL }, { clipPath: open ? FULL : card }], timing);
     // The card's glow rides along: its anchor is the card's top-right corner,
     // which travels to the screen's top-right corner as the sheet grows, and
-    // it lands exactly where the reader keeps it (ReaderPage › .ms-reader-glow),
-    // so the hand-over is invisible.
+    // it lands exactly where the reader shows it at scroll 0 (readerGlow.js,
+    // ReaderPage › .ms-reader-glow), so the hand-over is invisible.
     const glow = glowRef.current;
     if (glow) {
       const r = launch.rect;
       const atCard = { transform: 'translate(0px, 0px) scale(1)' };
-      const dx = window.innerWidth - r.right + READER_GLOW_SHIFT_X;
-      const dy = -r.top - READER_GLOW_SHIFT_Y;
+      // Corner of the glow box: on the card (r.right + 90, r.top − 100), in
+      // the reader (screen right + 290, −220).
+      const dx = window.innerWidth + READER_GLOW.outRight - (r.right - CARD_GLOW.right);
+      const dy = READER_GLOW.top - (r.top + CARD_GLOW.top);
       const atScreen = { transform: `translate(${dx}px, ${dy}px) scale(${readerGlowScale()})` };
       glow.animate(open ? [atCard, atScreen] : [atScreen, atCard], timing);
     }
@@ -242,7 +238,7 @@ export default function SelectPage() {
                 }}
               >
                 <div style={{ position: 'absolute', inset: 0, background: m.wash }} />
-                <div style={{ position: 'absolute', width: 240, height: 240, borderRadius: '50%', right: -90, top: -100, background: m.glow, filter: 'blur(26px)' }} />
+                <div style={{ position: 'absolute', width: CARD_GLOW.size, height: CARD_GLOW.size, borderRadius: '50%', right: CARD_GLOW.right, top: CARD_GLOW.top, background: m.glow, filter: 'blur(26px)' }} />
                 <div style={{ position: 'relative', height: '100%', padding: 'calc(var(--ch) * .072)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
                     <span style={{ fontSize: 'max(9px, calc(var(--ch) * .034))', letterSpacing: '.16em', textTransform: 'uppercase', color: '#7B8492', whiteSpace: 'nowrap' }}>
@@ -350,7 +346,11 @@ export default function SelectPage() {
             <div className="ms-launch-wash" style={{ background: m.wash }} />
             {/* Пятно из правого верхнего угла карточки: то же место и размер,
                 что на самой карточке (240px, сдвиг −90/−100). */}
-            <span ref={glowRef} className="ms-launch-glow" style={{ left: r.right - 150, top: r.top - 100, background: m.glow }} />
+            <span
+              ref={glowRef}
+              className="ms-launch-glow"
+              style={{ left: r.right - CARD_GLOW.right - CARD_GLOW.size, top: r.top + CARD_GLOW.top, background: m.glow }}
+            />
             <div className="ms-launch-card" style={{ left: r.left, top: r.top, width: r.width, height: r.height, '--ch': `${r.height}px` }}>
               <span style={{ position: 'relative', fontSize: 'max(9px, calc(var(--ch) * .034))', letterSpacing: '.16em', textTransform: 'uppercase', color: '#7B8492' }}>{m.kicker}</span>
               <span style={{ position: 'relative', fontFamily: "'Spectral', serif", fontSize: 'calc(var(--ch) * .25)', lineHeight: .8, fontWeight: 600, letterSpacing: '-.04em', marginTop: 'auto' }}>

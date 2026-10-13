@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MODULES } from '../data/module01';
+import { READER_GLOW } from '../readerGlow';
 import { moduleAt, viewOf, scopeOf, hasRoles, helpFor, ROLES } from '../data/modules';
 import {
   navGroups, lastStep, isLastStep, NEXT_STEP_BLOCKER,
@@ -21,6 +22,33 @@ export default function ReaderPage() {
   const { moduleId, step: stepParam } = useParams();
   const navigate = useNavigate();
   const scrollRef = useRef(null);
+  const glowRef = useRef(null);
+
+  // The glow lives inside the scrolling block, so it is positioned in that
+  // block's coordinates. Translate the screen spot from readerGlow.js (the
+  // end of the card → screen transition) into them: at scroll 0 the glow is
+  // exactly where the transition left it, on phone and desktop alike — the
+  // block starts lower on a phone, under the section strip.
+  useLayoutEffect(() => {
+    const placeGlow = () => {
+      const sc = scrollRef.current;
+      const g = glowRef.current;
+      if (!sc || !g) return;
+      const r = sc.getBoundingClientRect();
+      const padTop = r.top + sc.clientTop;
+      const padRight = r.left + sc.clientLeft + sc.clientWidth;
+      g.style.top = `${READER_GLOW.top - padTop}px`;
+      g.style.right = `${padRight - (window.innerWidth + READER_GLOW.outRight)}px`;
+    };
+    placeGlow();
+    // The block moves when the header reflows (fonts load, the role is
+    // picked and the section strip appears on a phone) — it then changes
+    // size too, which the observer catches.
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(placeGlow) : null;
+    if (ro && scrollRef.current) ro.observe(scrollRef.current);
+    window.addEventListener('resize', placeGlow);
+    return () => { ro?.disconnect(); window.removeEventListener('resize', placeGlow); };
+  }, []);
 
   const moduleIndex = Math.min(MODULES.length - 1, Math.max(0, (Number(moduleId) || 1) - 1));
   const source = moduleAt(moduleIndex);
@@ -159,9 +187,6 @@ export default function ReaderPage() {
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 80, display: 'flex', flexDirection: 'column', background: '#F7F5F0', fontFamily: "'Noto Sans Armenian', 'Sora', Mshtakan, Sylfaen, system-ui, sans-serif", color: '#151A21' }}>
-      {/* Пятно карточки модуля: при открытии оно приезжает сюда из угла
-          карточки (SelectPage › launch) и остаётся фоном. */}
-      <div className="ms-reader-glow" aria-hidden style={{ background: MODULES[moduleIndex].glow }} />
       <div className="ms-reader-head" style={{ flexShrink: 0, padding: '12px 20px 12px 40px', display: 'flex', alignItems: 'center', gap: 20 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16 }}>
@@ -239,6 +264,11 @@ export default function ReaderPage() {
           className="ms-reader-scroll"
           style={{ position: 'relative', flex: 1, minWidth: 0, minHeight: 0, overflowY: 'auto', borderTop: '1px solid rgba(21,26,33,.1)', padding: '40px 48px 18px' }}
         >
+          {/* Пятно карточки модуля — фон верха страницы: лежит в прокручиваемом
+              блоке и уезжает вместе с текстом; выше края блока (под шапкой) его
+              не видно. При прокрутке 0 оно там, куда его привёз переход с
+              карточки (SelectPage › launch) — место считает placeGlow. */}
+          <div ref={glowRef} className="ms-reader-glow" aria-hidden style={{ background: MODULES[moduleIndex].glow }} />
           {!hasContent && (
             <div style={{ maxWidth: 780, margin: '0 auto', fontSize: 16, lineHeight: 1.8, color: '#5A6270' }}>
               Այս մոդուլի բովանդակությունը դեռ լրացված չէ։
@@ -262,7 +292,7 @@ export default function ReaderPage() {
           )}
 
           {hasContent && !pickingRole && (
-            <div key={`${state.tick || 0}:${step}`} style={{ maxWidth: 780, margin: '0 auto', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+            <div key={`${state.tick || 0}:${step}`} style={{ position: 'relative', zIndex: 1, maxWidth: 780, margin: '0 auto', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: '#1CABE2', animation: 'msKickerIn .45s cubic-bezier(.2,.85,.2,1) both' }}>
                 {stepLabel(mod, step)}
               </div>

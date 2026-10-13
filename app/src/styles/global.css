@@ -38,27 +38,30 @@ button { font-family: inherit; }
    читалки = карточка × readerGlowScale (SelectPage.jsx), иначе на стыке
    пятно скакнуло бы. */
 .ms-launch-glow { position: absolute; width: 240px; height: 240px; border-radius: 50%; filter: blur(26px); transform-origin: 100% 0; }
-/* Слои читалки: тело (1) < пятно (2) < шапка (3).
-   Пятно над прокручиваемым текстом: под ним оно пряталось за белые
-   карточки, и при прокрутке казалось, что уезжает. multiply — светлое
-   окрашивается, тёмный текст остаётся тёмным и читается. Под шапкой
-   пятна нет: шапка непрозрачная и выше. Панель помощи открывается
-   изнутри шапки (без портала) — поэтому шапка выше всех. */
+/* Пятно — фон верха страницы: лежит в прокручиваемом блоке (.ms-reader-scroll)
+   под содержимым и уезжает вместе с текстом. Выше края блока его не видно —
+   блок обрезает, поэтому на шапку оно не залезает. top/right ставит
+   ReaderPage › placeGlow по readerGlow.js; здесь — размер и размытие
+   (= пятно карточки × readerGlowScale). */
 .ms-reader-glow {
-  /* Смещение = угол карточки (−100/−90) + READER_GLOW_SHIFT_Y/_X (SelectPage). */
-  position: absolute; top: -220px; right: -290px; z-index: 2; pointer-events: none;
+  position: absolute; top: 0; right: 0; z-index: 0; pointer-events: none;
   width: min(528px, 110vw); height: min(528px, 110vw); border-radius: 50%;
-  filter: blur(min(57px, 12vw)); mix-blend-mode: multiply;
+  filter: blur(min(57px, 12vw));
 }
-.ms-reader-head { position: relative; z-index: 3; background: #F7F5F0; }
+/* Шапка выше тела: панель помощи открывается изнутри шапки (без портала). */
+.ms-reader-head { position: relative; z-index: 2; background: #F7F5F0; }
 .ms-reader-body { position: relative; z-index: 1; }
+/* Содержимое над пятном. */
+.ms-role-pick { position: relative; z-index: 1; }
 .ms-launch-card { position: absolute; display: flex; flex-direction: column; padding: calc(var(--ch) * .072); color: #151A21; transform-origin: 50% 50%; }
 .ms-launch.is-open .ms-launch-wash { animation: msFadeOut .45s ease .2s both; }
 .ms-launch.is-open .ms-launch-card { animation: msLaunchOut .34s ease both; }
 .ms-launch.is-close .ms-launch-wash { animation: msFadeIn .4s ease .12s both; }
 .ms-launch.is-close .ms-launch-card { animation: msFadeIn .28s ease .3s both; }
-/* Читалка проявляется поверх того же фона, на который лёг лист. */
-.ms-reader-head, .ms-reader-body { animation: msFadeIn .4s ease both; }
+/* Читалка проявляется поверх того же фона, на который лёг лист. Тело целиком
+   не гасится: в нём пятно, которое переход уже привёз на место, — оно бы
+   мигнуло. У текста раздела своя анимация появления. */
+.ms-reader-head, .ms-reader-nav { animation: msFadeIn .4s ease both; }
 
 /* Hover styles that the original expressed as style-hover attributes. */
 .ms-lift { transition: transform .22s cubic-bezier(.2,.85,.2,1), background .22s ease, box-shadow .22s ease, border-color .22s ease; }
@@ -436,7 +439,7 @@ button { font-family: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ms-reader-head, .ms-reader-body { animation: none; }
+  .ms-reader-head, .ms-reader-nav { animation: none; }
   .ms-help-overlay, .ms-help-panel { animation: none; }
   .ms-help-btn:hover { transform: none; }
 }
