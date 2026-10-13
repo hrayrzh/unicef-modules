@@ -213,6 +213,16 @@ export default function Block({ block: b, mod, scope, step, index, state, update
   };
   if (!flipOk(b.afterFlip)) return null;
 
+  // `showAfter: "<id>"` — блок появляется, только когда пройден блок того
+  // же шага с этим `id` (например, список «Այդ դեպքում…» — после того как
+  // стёрта фольга над абзацем, к которому он относится). Появляется с той
+  // же анимацией входа, что и весь раздел.
+  if (b.showAfter) {
+    const blocks = (mod.steps[step] || { blocks: [] }).blocks;
+    const gate = blocks.findIndex((x) => x.id === b.showAfter);
+    if (gate >= 0 && !state.opened[`${scope}:${step}:${gate}`]) return null;
+  }
+
   // Интерактивные блоки (components/ix): тот же текст документа, другая
   // подача. Пройденный блок засчитывается так же, как раскрытая панель, и
   // после перезагрузки показывается уже собранным.
