@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from './icons';
 import { Frame, plain, useDone, useInView } from './shared';
+import { F, Person, S } from './art';
 
 /**
  * `story` — «доска»: по сцене на пункт, сцена рисуется линией, под ней
@@ -9,26 +10,6 @@ import { Frame, plain, useDone, useInView } from './shared';
  * только когда доска в поле зрения, иначе он закончится до того, как на
  * него посмотрят.
  */
-
-// One stroke that draws itself. `at` is the delay in seconds.
-function S({ t: T = 'path', at = 0, className = '', ...p }) {
-  return <T pathLength="1" className={`ix-d${className ? ` ${className}` : ''}`} style={{ '--d': `${at}s` }} {...p} />;
-}
-// A fill that fades in after its outline is drawn.
-function F({ t: T = 'path', at = 0, className = '', ...p }) {
-  return <T className={`ix-f${className ? ` ${className}` : ''}`} style={{ '--d': `${at}s` }} {...p} />;
-}
-
-function Person({ x, s = 1, at = 0, tone }) {
-  return (
-    <g transform={`translate(${x} 226) scale(${s})`}>
-      {tone && <F t="circle" cx="0" cy="-118" r="18" at={at + 0.9} className={`tone-${tone}`} />}
-      {tone && <F d="M-30 0V-56a30 30 0 0160 0V0z" at={at + 1} className={`tone-${tone}`} />}
-      <S t="circle" cx="0" cy="-118" r="18" at={at} />
-      <S d="M-30 0V-56a30 30 0 0160 0V0" at={at + 0.3} />
-    </g>
-  );
-}
 
 // Сцены — к пунктам «Առօրյա անվտանգության կանոններ» и «Շարունակական
 // հաղորդակցություն և վստահություն». Только линии и пятна цвета, без

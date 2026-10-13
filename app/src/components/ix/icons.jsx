@@ -29,6 +29,7 @@ const PATHS = {
   scroll: <><rect x="6.5" y="2.5" width="11" height="19" rx="2.6" /><path d="M12 7v8M9.5 12.5L12 15l2.5-2.5" /></>,
   route: <><circle cx="6" cy="6" r="2.4" /><circle cx="18" cy="18" r="2.4" /><path d="M8.4 6H15a3.5 3.5 0 010 7H9a3.5 3.5 0 000 7h6.6" /></>,
   law: <><path d="M12 4v16M8 20h8M5 7.5h14" /><path d="M5 7.5l-2.5 6h5zM19 7.5l-2.5 6h5z" /></>,
+  scratch: <><rect x="3" y="6" width="18" height="12" rx="2.5" /><path d="M6.5 13.5c1.4-2.4 2.8-2.4 4.2 0s2.8 2.4 4.2 0 2.1-1.6 2.6-1.4" /></>,
   quote: <><path d="M4.5 5.5h15V15h-8L7 18.5V15H4.5z" /><path d="M9 9.2h6M9 11.8h4" /></>,
 
   // People and places.

@@ -1,159 +1,165 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { Icon } from './icons';
-import { Frame, Restart, flyTo, onKey, plain, reducedMotion, shake, shuffled, useDone, useFlip } from './shared';
+import { Frame, Restart, flyTo, plain, reducedMotion, shake, shuffled, useDone, useFlip } from './shared';
 
 /**
- * Сравнительная таблица как задание (`table` с `game: true`): ячейки пусты,
- * их значения лежат фишками под текущей строкой. Фишку тащат в ячейку или
- * выбирают тапом и тапают по ячейке. Строки заполняются по одной — так
- * сравнение идёт признак за признаком, как и задумано в документе.
+ * Сравнительная таблица как задание (`table` с `game: true`) — в духе
+ * «Դասակարգեք»: в центре одна карточка «признак: значение», под ней
+ * колонки таблицы. Карточку отправляют в её колонку тапом (или клавишей
+ * 1…N). Признаки идут по порядку, значения одного признака — подряд, так
+ * что сравнение идёт строка за строкой, как в документе. Ошибка не
+ * наказывается: карточка качает головой, верная колонка подсвечивается.
+ * В конце — обычная сравнительная таблица.
  *
- * «Ցույց տալ պատասխանները» дозаполняет таблицу сама: блок учит различать,
- * а не проверяет, и застрять в нём нельзя.
+ * Первая версия — сетка с пустыми клетками и фишками — была неудобной
+ * (Арман, 2026-10-13); эта повторяет понравившийся `sort`.
  */
+const TG_TONES = ['cyan', 'amber', 'dont', 'violet'];
+
 export function TableGame({ block: b, done, onDone, R }) {
   const head = b.head || [];
   const rows = b.rows || [];
-  const all = useMemo(() => rows.flatMap((row, r) => row.slice(1).map((_, k) => `${r}:${k + 1}`)), [rows]);
-  const [filled, setFilled] = useState(() => new Set(done ? all : []));
-  const [order] = useState(() => rows.map((row) => shuffled(row.slice(1).map((_, k) => k + 1))));
-  const [sel, setSel] = useState(null);
-  const [bad, setBad] = useState(null);
-  const [drag, setDrag] = useState(null);
-  const dragRef = useRef(null);
-  const slotRefs = useRef({});
-  const chipRefs = useRef({});
-  const rootRef = useRef(null);
-  const timers = useRef([]);
-  useFlip(rootRef);
-  useEffect(() => () => timers.current.forEach(clearTimeout), []);
-
-  const active = rows.findIndex((row, r) => row.slice(1).some((_, k) => !filled.has(`${r}:${k + 1}`)));
-  const complete = active === -1;
+  const cols = head.length - 1;
+  // Карточки: строка за строкой, внутри строки — вперемешку.
+  const [cards] = useState(() => rows.flatMap((row, r) => shuffled(row.slice(1).map((text, k) => ({ r, c: k + 1, text })))));
+  const fresh = () => cards.map((_, i) => i);
+  const [queue, setQueue] = useState(() => (done ? [] : fresh()));
+  const [wrong, setWrong] = useState(null);
+  const [hint, setHint] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const cardRef = useRef(null);
+  const binRefs = useRef([]);
+  const complete = queue.length === 0;
   useDone(complete, onDone);
-  useEffect(() => { setSel(null); }, [active]);
 
-  const land = (key) => setFilled((f) => new Set(f).add(key));
+  const top = queue[0];
+  const placed = (c) => cards.filter((x, i) => x.c === c && !queue.includes(i));
 
-  const place = async (c, slotC, from) => {
-    const key = `${active}:${slotC}`;
-    if (filled.has(key)) return;
-    const chip = chipRefs.current[c];
-    if (c !== slotC) {
-      shake(chip);
-      shake(slotRefs.current[key]);
-      setBad(key);
-      setTimeout(() => setBad(null), 600);
+  // Стопка по высоте верхней карточки, как у `sort`.
+  const stageRef = useRef(null);
+  const lastH = useRef(null);
+  useLayoutEffect(() => {
+    const el = stageRef.current;
+    if (!el) { lastH.current = null; return; }
+    const h = el.offsetHeight;
+    if (lastH.current != null && lastH.current !== h && !reducedMotion()) {
+      el.animate([{ height: `${lastH.current}px` }, { height: `${h}px` }], { duration: 360, easing: 'cubic-bezier(.2,.85,.2,1)' });
+    }
+    lastH.current = h;
+  }, [top]);
+
+  const choose = async (c) => {
+    if (busy || top === undefined) return;
+    if (cards[top].c !== c) {
+      shake(cardRef.current);
+      setWrong(c);
+      setHint(cards[top].c);
+      setTimeout(() => setWrong(null), 650);
       return;
     }
-    setSel(null);
-    await flyTo(chip, slotRefs.current[key], { dx: from?.x || 0, dy: from?.y || 0, scale: 0.7, duration: 360 });
-    land(key);
+    setBusy(true);
+    setHint(null);
+    await flyTo(cardRef.current, binRefs.current[c], { scale: 0.3 });
+    setQueue((q) => q.slice(1));
+    setBusy(false);
   };
-
-  const revealAll = () => {
-    const rest = all.filter((k) => !filled.has(k));
-    const gap = reducedMotion() ? 0 : 80;
-    rest.forEach((k, i) => timers.current.push(setTimeout(() => land(k), i * gap)));
+  const keys = (e) => {
+    const k = Number(e.key);
+    if (k >= 1 && k <= cols) { e.preventDefault(); choose(k); }
   };
-
-  // A drag starts after a few pixels; a press without movement is a tap
-  // that selects the chip, so both ways work with mouse and finger.
-  const down = (c) => (e) => {
-    if (e.button > 0) return;
-    dragRef.current = { c, x0: e.clientX, y0: e.clientY, moved: false };
-    e.currentTarget.setPointerCapture?.(e.pointerId);
-  };
-  const move = (e) => {
-    const d = dragRef.current;
-    if (!d) return;
-    const x = e.clientX - d.x0;
-    const y = e.clientY - d.y0;
-    if (!d.moved && Math.hypot(x, y) < 6) return;
-    d.moved = true;
-    setDrag({ c: d.c, x, y });
-  };
-  const up = (e) => {
-    const d = dragRef.current;
-    dragRef.current = null;
-    if (!d) return;
-    if (!d.moved) { setSel((s) => (s === d.c ? null : d.c)); return; }
-    const at = { x: e.clientX - d.x0, y: e.clientY - d.y0 };
-    const hit = document.elementsFromPoint(e.clientX, e.clientY).find((el) => el.dataset?.slot);
-    setDrag(null);
-    if (!hit) return;
-    const [r, c] = hit.dataset.slot.split(':').map(Number);
-    if (r === active) place(d.c, c, at);
-  };
-  const cancel = () => { dragRef.current = null; setDrag(null); };
 
   return (
     <Frame
       icon={<Icon name="grid" />}
       title={b.title}
-      hint={complete ? null : 'Քարտը քաշեք (կամ ընտրեք, ապա սեղմեք) դատարկ վանդակի վրա։'}
-      progress={`${filled.size} / ${all.length}`}
+      hint={complete ? null : 'Քարտը սահում է դեպի ձեզ. կարդացեք այն և նետեք այն խմբի մեջ, որին պատկանում է՝ սեղմելով գույնով տուփը։'}
+      progress={`${cards.length - queue.length} / ${cards.length}`}
       done={complete}
-      tools={complete
-        ? <Restart onClick={() => setFilled(new Set())} />
-        : <button type="button" className="ix-btn is-ghost" onClick={revealAll}>Ցույց տալ պատասխանները</button>}
+      tools={complete ? <Restart onClick={() => setQueue(fresh())} /> : null}
     >
-      <div className="ix-tg" ref={rootRef} style={{ '--cols': head.length - 1 }}>
-        <div className="ix-tg-row is-head" aria-hidden>
-          {head.map((h, i) => <div key={i} className="ix-tg-h">{R(h)}</div>)}
-        </div>
-        {rows.map((row, r) => (
-          <Fragment key={r}>
-            <div className={`ix-tg-row${r === active ? ' is-active' : ''}${!complete && r > active ? ' is-later' : ''}`}>
-              <div className="ix-tg-rh">{R(row[0])}</div>
-              {row.slice(1).map((cell, k) => {
-                const c = k + 1;
-                const key = `${r}:${c}`;
-                const on = filled.has(key);
-                const open = r === active && !on;
-                const armed = open && sel != null;
-                return (
-                  <div
-                    key={c}
-                    data-slot={key}
-                    ref={(el) => { slotRefs.current[key] = el; }}
-                    className={`ix-tg-slot${on ? ' is-filled' : ''}${open ? ' is-open' : ''}${armed ? ' is-armed' : ''}${bad === key ? ' is-wrong' : ''}`}
-                    role={armed ? 'button' : undefined}
-                    tabIndex={armed ? 0 : undefined}
-                    onClick={armed ? () => place(sel, c) : undefined}
-                    onKeyDown={armed ? onKey(() => place(sel, c)) : undefined}
-                  >
-                    <span className="ix-tg-k">{R(head[c])}</span>
-                    <span className="ix-tg-v">{on ? R(cell) : open ? '?' : ''}</span>
-                  </div>
-                );
-              })}
-            </div>
-            {r === active && (
-              <div className="ix-tg-tray">
-                {order[r].filter((c) => !filled.has(`${r}:${c}`)).map((c) => (
+      {!complete && (
+        <div className="ix-tgx" style={{ '--cols': cols }}>
+          <div className="ix-sort-stage ix-tgx-stage" ref={stageRef}>
+            {queue.slice(0, 3).map((idx, pos) => (
+              <div
+                key={idx}
+                ref={pos === 0 ? cardRef : null}
+                className={`ix-sort-card ix-tgx-card is-p${pos}`}
+                tabIndex={pos === 0 ? 0 : -1}
+                aria-hidden={pos !== 0}
+                onKeyDown={pos === 0 ? keys : undefined}
+              >
+                <div className="ix-sort-text">
+                  <span className="ix-tgx-kicker">{plain(rows[cards[idx].r][0])}</span>
+                  <span className="ix-tgx-value">{R(cards[idx].text)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="ix-tgx-bins">
+            {head.slice(1).map((h, k) => {
+              const c = k + 1;
+              const tone = TG_TONES[k % TG_TONES.length];
+              const got = placed(c);
+              return (
+                <div key={c} className="ix-tgx-col">
                   <button
-                    key={`${r}:${c}`}
                     type="button"
-                    data-flip={`${r}:${c}`}
-                    ref={(el) => { chipRefs.current[c] = el; }}
-                    className={`ix-chip is-drag${sel === c ? ' is-sel' : ''}${drag?.c === c ? ' is-dragging' : ''}`}
-                    style={drag?.c === c ? { transform: `translate(${drag.x}px, ${drag.y}px) rotate(-2deg)`, transition: 'none' } : undefined}
-                    aria-pressed={sel === c}
-                    onPointerDown={down(c)}
-                    onPointerMove={move}
-                    onPointerUp={up}
-                    onPointerCancel={cancel}
-                    onKeyDown={onKey(() => setSel((s) => (s === c ? null : c)))}
+                    ref={(el) => { binRefs.current[c] = el; }}
+                    className={`ix-bin tone-${tone}${wrong === c ? ' is-wrong' : ''}${hint === c ? ' is-hint' : ''}`}
+                    onClick={() => choose(c)}
                   >
-                    {R(row[c])}
+                    <span className="ix-bin-ico ix-tgx-n" aria-hidden>{c}</span>
+                    <span className="ix-bin-label">{plain(h)}</span>
+                    <span className="ix-bin-count">{got.length} / {rows.length}</span>
                   </button>
+                  {got.length > 0 && (
+                    <div className={`ix-tgx-list tone-${tone}`}>
+                      {got.map((x) => (
+                        <div key={`${x.r}:${x.c}`} className="ix-tgx-got">
+                          <span className="ix-tgx-kicker">{plain(rows[x.r][0])}</span>
+                          <span>{R(x.text)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {complete && (
+        <div className="ix-tgx-result">
+          <table className="ms-cmp">
+            <thead>
+              <tr>{head.map((h, i) => <th key={i} scope="col">{R(h)}</th>)}</tr>
+            </thead>
+            <tbody>
+              {rows.map((row, ri) => (
+                <tr key={ri} style={{ '--i': ri }}>
+                  {row.map((cell, ci) => (ci === 0 ? <th key={ci} scope="row">{R(cell)}</th> : <td key={ci}>{R(cell)}</td>))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="ms-cmp-cards">
+            {rows.map((row, ri) => (
+              <div key={ri} className="ms-cmp-card">
+                <div className="ms-cmp-card-h">{R(row[0])}</div>
+                {row.slice(1).map((cell, ci) => (
+                  <div key={ci} className="ms-cmp-card-row">
+                    <span className="ms-cmp-card-k">{R(head[ci + 1])}</span>
+                    <span>{R(cell)}</span>
+                  </div>
                 ))}
               </div>
-            )}
-          </Fragment>
-        ))}
-      </div>
+            ))}
+          </div>
+        </div>
+      )}
     </Frame>
   );
 }

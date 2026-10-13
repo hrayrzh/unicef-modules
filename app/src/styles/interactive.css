@@ -306,39 +306,63 @@
 .ix-sort-item.is-quote { font-family: 'Noto Serif Armenian', 'Spectral', serif; font-size: 15px; }
 .ix-sort-dot { flex-shrink: 0; margin-top: 10px; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .5; }
 
-/* ---------- Table game ---------- */
-/* Колонка признака шире остальных: в ней длинные слова вроде
-   «հավասարակշռություն», и при 110px они уходили под соседнюю ячейку. */
-.ix-tg { position: relative; display: flex; flex-direction: column; gap: 8px; --tpl: minmax(0, 1.15fr) repeat(var(--cols), minmax(0, 1fr)); }
-.ix-tg-rh, .ix-tg-h, .ix-tg-v { min-width: 0; overflow-wrap: anywhere; hyphens: auto; }
-.ix-tg-row { display: grid; grid-template-columns: var(--tpl); gap: 8px; border-radius: 14px; transition: background .4s, opacity .4s; }
-.ix-tg-row.is-head { gap: 8px; }
-.ix-tg-h {
-  padding: 8px 12px; border-radius: 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
-  font-weight: 700; color: #0F7FA8; background: rgba(28,171,226,.08); line-height: 1.4;
+/* ---------- Table game: карточка «признак: значение» → колонка (Grid.jsx) ---------- */
+.ix-tgx-stage { padding-bottom: 22px; }
+.ix-tgx-card { min-height: 116px; justify-content: center; text-align: center; }
+.ix-tgx-card .ix-sort-text { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+.ix-tgx-kicker { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: #0F7FA8; }
+.ix-tgx-value { font-size: 18px; line-height: 1.45; font-weight: 600; color: #151A21; }
+.ix-tgx-bins { display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: 10px; align-items: start; }
+.ix-tgx-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.ix-tgx-col .ix-bin { width: 100%; }
+.ix-tgx-n { font-size: 12px; font-weight: 700; color: #fff; }
+.ix-bin.tone-violet { border-color: rgba(124,92,255,.55); color: #5B3FD6; }
+.ix-bin.tone-violet .ix-bin-ico { background: #7C5CFF; }
+.ix-tgx-list { display: flex; flex-direction: column; gap: 6px; }
+.ix-tgx-got {
+  display: flex; flex-direction: column; gap: 2px; padding: 9px 11px; border-radius: 11px;
+  font-size: 13px; line-height: 1.45; color: #2B313A; border: 1px solid;
+  animation: ixLand .45s cubic-bezier(.3,1.4,.5,1) both;
 }
-.ix-tg-h:first-child { background: transparent; color: #6E7787; }
-.ix-tg-rh { padding: 12px 10px 12px 12px; font-size: 13.5px; font-weight: 700; line-height: 1.45; color: #151A21; }
-.ix-tg-row.is-active { background: rgba(28,171,226,.06); padding: 6px; margin: 0 -6px; }
-.ix-tg-row.is-later { opacity: .45; }
-.ix-tg-slot {
-  display: flex; flex-direction: column; justify-content: center; gap: 2px; min-height: 52px;
-  padding: 10px 12px; border-radius: 11px; font-size: 13.5px; line-height: 1.5; color: #2B313A;
-  border: 1.5px dashed rgba(21,26,33,.16);
-  transition: border-color .3s, background .3s, box-shadow .3s;
+.ix-tgx-got .ix-tgx-kicker { font-size: 9.5px; color: #8A919D; }
+.ix-tgx-list.tone-cyan .ix-tgx-got { background: rgba(28,171,226,.06); border-color: rgba(28,171,226,.28); }
+.ix-tgx-list.tone-amber .ix-tgx-got { background: rgba(245,182,42,.08); border-color: rgba(227,162,20,.32); }
+.ix-tgx-list.tone-dont .ix-tgx-got { background: rgba(255,107,90,.06); border-color: rgba(255,107,90,.3); }
+.ix-tgx-list.tone-violet .ix-tgx-got { background: rgba(124,92,255,.06); border-color: rgba(124,92,255,.28); }
+.ix-tgx-result { animation: ixRise .5s cubic-bezier(.2,.85,.2,1) both; }
+.ix-tgx-result tbody tr { animation: ixRise .45s cubic-bezier(.2,.85,.2,1) both; animation-delay: calc(var(--i) * 70ms + .1s); }
+
+/* ---------- Scratch: стереть фольгу (Scratch.jsx) ---------- */
+.ix-scratch-list { display: flex; flex-direction: column; gap: 10px; }
+/* Предупреждение под фольгой: красная плитка в шапке, как у врезки tone: danger. */
+.ix.is-danger .ix-head-icon { background: rgba(217,58,58,.12); color: #B32B2B; }
+.ix.is-danger.is-done .ix-head-icon { background: #D93A3A; color: #fff; }
+.ix-scratch {
+  position: relative; border-radius: 14px; overflow: hidden; background: #fff;
+  border: 1px solid rgba(21,26,33,.1); transition: border-color .4s ease;
+  animation: ixRise .5s cubic-bezier(.2,.85,.2,1) both; animation-delay: calc(var(--i) * 70ms + .1s);
 }
-.ix-tg-k { display: none; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: #8A919D; }
-.ix-tg-slot.is-open { border-color: rgba(28,171,226,.55); background: #fff; align-items: center; color: #8FC9DF; font-weight: 700; font-size: 18px; }
-.ix-tg-slot.is-armed { cursor: pointer; animation: ixBreathe 1.6s ease-in-out infinite; }
-.ix-tg-slot.is-armed:hover { background: rgba(28,171,226,.08); }
-.ix-tg-slot.is-filled { border-style: solid; border-color: rgba(28,171,226,.32); background: #fff; }
-.ix-tg-slot.is-filled .ix-tg-v { animation: ixLand .5s cubic-bezier(.3,1.4,.5,1) both; }
-.ix-tg-slot.is-wrong { border-color: #D93A3A; background: rgba(217,58,58,.07); }
-.ix-tg-tray {
-  display: flex; flex-wrap: wrap; gap: 8px; padding: 6px 0 10px;
-  animation: ixRise .45s cubic-bezier(.2,.85,.2,1) both;
+.ix-scratch:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
+.ix-scratch.is-open { border-color: rgba(28,171,226,.38); }
+.ix-scratch-label {
+  display: flex; align-items: center; gap: 9px; padding: 12px 16px;
+  border-bottom: 1px solid rgba(21,26,33,.08);
+  font-size: 13.5px; line-height: 1.4; font-weight: 700; color: #0F7FA8;
 }
-.ix-tg-tray .ix-chip { max-width: 100%; }
+.ix-scratch-coin { font-size: 17px; line-height: 1; }
+.ix-scratch-label .ix-scratch-ok { position: static; margin-left: auto; flex-shrink: 0; }
+.ix-scratch-area { position: relative; }
+.ix-scratch-text { padding: 16px 18px; font-size: 14.5px; line-height: 1.72; color: #2B313A; }
+.ix-scratch-foil {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  cursor: crosshair; touch-action: pan-y; transition: opacity .5s ease;
+}
+.ix-scratch.is-open .ix-scratch-foil { opacity: 0; pointer-events: none; }
+.ix-scratch-ok {
+  position: absolute; top: 14px; right: 14px; display: grid; place-items: center;
+  width: 20px; height: 20px; border-radius: 50%; background: #1CABE2; color: #fff;
+  animation: ixPopIn .45s cubic-bezier(.3,1.4,.5,1) both;
+}
 
 /* ---------- Match ---------- */
 .ix-match { position: relative; }
@@ -754,68 +778,44 @@
 }
 .ix-orb-cap.is-on { color: #151A21; background: rgba(28,171,226,.08); }
 
-/* ---------- Scene ---------- */
-@keyframes ixDotty { 0%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
-@keyframes ixOut { to { opacity: 0; } }
-@keyframes ixSettle { 0% { transform: rotate(-14deg); } 40% { transform: rotate(9deg); } 70% { transform: rotate(-4deg); } 100% { transform: rotate(0); } }
-.ix-scene-stage {
-  position: sticky; top: 0; z-index: 3; margin: 0 -22px 14px; padding: 0 22px 12px;
-  background: linear-gradient(#fff 88%, rgba(255,255,255,0));
+/* ---------- Scene: шаги с иллюстрацией (Scene.jsx, рисунки — art.jsx) ---------- */
+@keyframes ixSettle { 0% { transform: rotate(-12deg); } 40% { transform: rotate(8deg); } 70% { transform: rotate(-3deg); } 100% { transform: rotate(0); } }
+.ix-st { display: grid; grid-template-columns: minmax(170px, 220px) minmax(0, 1fr); gap: 18px; align-items: start; }
+.ix-st-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.ix-st-item {
+  width: 100%; display: flex; gap: 10px; align-items: flex-start; text-align: start; cursor: pointer;
+  padding: 10px 11px; border-radius: 12px; border: 1px solid rgba(21,26,33,.1); background: #fff;
+  font: inherit; font-size: 13.5px; line-height: 1.4; color: #2B313A;
+  transition: border-color .2s, background .2s, transform .2s cubic-bezier(.2,.85,.2,1);
 }
-.ix-scene-svg { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid rgba(21,26,33,.08); }
-.ix-sc-wall { fill: #F7F5F0; }
-.ix-sc-win { fill: rgba(28,171,226,.08); stroke: rgba(28,171,226,.25); stroke-width: 2; }
-.ix-sc-floor { stroke: rgba(21,26,33,.25); stroke-width: 3; }
-.ix-sc-measure { fill: none; stroke: #8A919D; stroke-width: 2; }
-.ix-sc-label { fill: #5A6270; font-size: 13px; font-weight: 700; font-family: inherit; paint-order: stroke; stroke: #F7F5F0; stroke-width: 6px; }
-.ix-sc-fade { opacity: 0; transition: opacity .5s ease; }
-.ix-sc-fade.is-on { opacity: 1; }
-.ix-sc-zone { fill: rgba(28,171,226,.06); stroke: #1CABE2; stroke-width: 2; stroke-dasharray: 6 6; }
-.ix-sc-move { transition: transform 1s cubic-bezier(.45,0,.2,1), opacity .6s ease; }
-.ix-fig.tone-teacher { fill: #1CABE2; }
-.ix-fig.tone-target { fill: #F5B62A; }
-.ix-fig.tone-bully { fill: #6E7787; }
-.ix-fig.tone-crowd { fill: #C9CED6; }
-.ix-fig circle { transition: transform .6s cubic-bezier(.2,.85,.2,1); }
-.ix-fig.is-down circle { transform: translateY(5px); }
-.ix-sc-pop { opacity: 0; transform: scale(.6); transform-box: fill-box; transform-origin: 40% 100%; transition: opacity .35s ease, transform .5s cubic-bezier(.3,1.4,.5,1); }
-.ix-sc-pop.is-on { opacity: 1; transform: none; transition-delay: .55s; }
-.ix-sc-bubble { fill: #fff; stroke: #2B313A; stroke-width: 2.5; stroke-linejoin: round; }
-.ix-sc-bubble.is-alert { stroke: #D93A3A; fill: rgba(217,58,58,.06); }
-.ix-sc-bubble.is-teacher { stroke: #1CABE2; fill: rgba(28,171,226,.08); }
-.ix-sc-ink { fill: none; stroke: #2B313A; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-.ix-sc-ink.is-alert { stroke: #D93A3A; }
-.ix-sc-ink.is-accent { stroke: #1CABE2; }
-.ix-sc-ink.is-thick { stroke-width: 4.5; }
-.ix-sc-dotty { fill: #F5B62A; transform-box: fill-box; animation: ixDotty 1s ease-in-out infinite; animation-delay: calc(var(--i) * .16s); }
-/* Ровный тон: волна гаснет, остаётся прямая. Крест-фейдом, а не морфом
-   `d` — его Safari не анимирует. */
-.ix-sc-flat { opacity: 0; }
-.ix-sc-pop.is-on .ix-sc-calm { animation: ixOut .5s ease 1.3s forwards; }
-.ix-sc-pop.is-on .ix-sc-flat { animation: ixFill .5s ease 1.45s forwards; }
-.ix-sc-pop.is-on .ix-sc-scale { transform-box: fill-box; transform-origin: 50% 0; animation: ixSettle 1.4s cubic-bezier(.2,.85,.2,1) .6s both; }
-.ix-scene-badge {
-  position: absolute; top: 12px; left: 34px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
-  background: #1CABE2; color: #0E1218; font-size: 15px; font-weight: 700; box-shadow: 0 8px 18px -10px rgba(15,127,168,.9);
-  animation: ixPopIn .45s cubic-bezier(.3,1.4,.5,1) both;
+.ix-st-item:hover { border-color: rgba(28,171,226,.6); transform: translateX(3px); }
+.ix-st-item[aria-current] { border-color: #1CABE2; background: rgba(28,171,226,.08); color: #0F7FA8; font-weight: 600; transform: none; }
+.ix-st-n {
+  flex-shrink: 0; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 8px;
+  background: rgba(21,26,33,.06); color: #6E7787; font-size: 12px; font-weight: 700;
 }
-.ix-scene-steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
-.ix-scene-step {
-  display: flex; gap: 13px; align-items: flex-start; padding: 13px 15px; border-radius: 14px; cursor: pointer;
-  background: #fff; border: 1px solid rgba(21,26,33,.12);
-  transition: border-color .25s, background .25s, transform .22s cubic-bezier(.2,.85,.2,1), box-shadow .25s;
-  animation: ixRise .5s cubic-bezier(.2,.85,.2,1) both; animation-delay: calc(var(--i) * 55ms + .1s);
+.ix-st-item.is-seen .ix-st-n { background: rgba(28,171,226,.16); color: #0F7FA8; }
+.ix-st-item[aria-current] .ix-st-n { background: #1CABE2; color: #0E1218; }
+.ix-st-label { padding-top: 2px; min-width: 0; }
+.ix-st-main { min-width: 0; }
+.ix-st-art {
+  aspect-ratio: 2 / 1; border-radius: 14px; overflow: hidden;
+  background-color: #FAFBFC; background-image: radial-gradient(rgba(21,26,33,.07) 1px, transparent 1.2px);
+  background-size: 18px 18px; border: 1px solid rgba(21,26,33,.08);
 }
-.ix-scene-step:hover:not(.is-on) { border-color: rgba(28,171,226,.6); transform: translateX(4px); }
-.ix-scene-step:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
-.ix-scene-step.is-on { border-color: #1CABE2; background: rgba(28,171,226,.07); box-shadow: 0 12px 26px -20px rgba(15,127,168,.8); }
-.ix-scene-n {
-  flex-shrink: 0; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px;
-  background: rgba(21,26,33,.06); color: #6E7787; font-size: 13px; font-weight: 700; transition: background .3s, color .3s;
-}
-.ix-scene-step.is-seen .ix-scene-n { background: rgba(28,171,226,.16); color: #0F7FA8; }
-.ix-scene-step.is-on .ix-scene-n { background: #1CABE2; color: #0E1218; }
-.ix-scene-t { font-size: 14.5px; line-height: 1.68; color: #2B313A; padding-top: 3px; }
+.ix-st-cap { margin-top: 14px; animation: ixRise .45s cubic-bezier(.2,.85,.2,1) both; }
+.ix-st-kicker { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: #0F7FA8; }
+.ix-st-cap p { margin: 6px 0 0; min-height: 6.9em; font-size: 15px; line-height: 1.72; color: #2B313A; }
+.ix-st-ctrl { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+
+/* Классы рисунков art.jsx (вдобавок к .ix-d / .ix-f доски). */
+.ix-d.is-soft { stroke: #9AA3B2; stroke-width: 2.5; }
+.ix-f.tone-crowd { fill: rgba(201,206,214,.55); }
+.ix-f.tone-slate { fill: rgba(110,119,135,.42); }
+.ix-f.tone-cyan-soft { fill: rgba(28,171,226,.08); }
+.is-faded { opacity: .45; }
+.ix-art-label { fill: #5A6270; font-size: 17px; font-weight: 700; font-family: inherit; }
+.ix-swing { transform-box: view-box; transform-origin: 300px 96px; animation: ixSettle 1.6s cubic-bezier(.2,.85,.2,1) 1.4s both; }
 
 /* ---------- Narrow screens (D4) ---------- */
 @media (max-width: 720px) {
@@ -825,15 +825,11 @@
   .ix-head.is-toggle { padding: 16px; }
   .ms-guide-body { padding: 4px 16px 18px; }
   .ix-title { font-size: 15.5px; }
-  /* Таблица разбирается на карточки: по карточке на признак, подпись
-     колонки внутри ячейки — как у обычной таблицы на телефоне. */
-  .ix-tg-row { grid-template-columns: 1fr; gap: 6px; }
-  .ix-tg-row.is-head { display: none; }
-  .ix-tg-row:not(.is-head) { padding: 10px; border: 1px solid rgba(21,26,33,.1); }
-  .ix-tg-row.is-active { margin: 0; padding: 10px; }
-  .ix-tg-rh { padding: 2px 4px 4px; }
-  .ix-tg-k { display: block; }
-  .ix-tg-slot.is-open { align-items: flex-start; }
+  /* Колонки таблицы-задания: на телефоне без списков — только кнопки,
+     собранная таблица покажется в конце. */
+  .ix-tgx-bins { gap: 6px; }
+  .ix-tgx-list { display: none; }
+  .ix-tgx-value { font-size: 16px; }
   .ix-match-row { grid-template-columns: 1fr; gap: 8px; }
   .ix-match-join { display: none; }
   .ix-mcard { padding: 10px 12px; font-size: 13px; }
@@ -841,8 +837,13 @@
   .ix-orb-wrap { grid-template-columns: 1fr; }
   .ix-orb-stage { height: 230px; }
   .ix-orb-words { justify-content: center; }
-  .ix-scene-stage { margin: 0 -16px 12px; padding: 0 16px 10px; }
-  .ix-scene-badge { left: 26px; width: 30px; height: 30px; font-size: 13px; }
+  /* Шаги: на телефоне вместо списка — ряд номеров над рисунком. */
+  .ix-st { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .ix-st-list { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  .ix-st-item { width: auto; padding: 6px; }
+  .ix-st-item:hover { transform: none; }
+  .ix-st-label { display: none; }
+  .ix-st-cap p { min-height: 0; }
 }
 @media (max-width: 560px) {
   /* Две колонки по ~160px резали длинные армянские слова — колонки
@@ -854,7 +855,7 @@
   .ix-phone-screen { height: 290px; }
   .ix-bins { grid-template-columns: 1fr 1fr; gap: 8px; }
   .ix-bin { flex-direction: column; align-items: flex-start; gap: 6px; padding: 11px 12px; }
-  .ix-bin-label { font-size: 12.5px; }
+  .ix-bin-label { font-size: 12px; overflow-wrap: anywhere; hyphens: auto; }
   .ix-sort-card { padding: 20px; }
   .ix-sort-card.is-quote .ix-sort-text { font-size: 17px; }
   .ix-deck-inner { padding: 22px; }
