@@ -14,6 +14,10 @@ import { STEP_ART } from './art';
  * (Арман, 2026-10-13: «very bad made»). Теперь у каждого шага свой рисунок
  * про смысл именно этого шага.
  *
+ * Шаги идут строго по порядку (просьба Армана, 2026-10-13): открыты только
+ * уже пройденные — к ним можно вернуться, — а следующий открывается только
+ * стрелкой «вперёд» с текущего шага. Ещё закрытые шаги в списке под замком.
+ *
  * Поля пункта: `label` — короткое название (дословное начало текста),
  * `text` — полный текст, `art` — ключ рисунка в STEP_ART (art.jsx).
  */
@@ -21,40 +25,49 @@ export function Scene({ block: b, done, onDone, R }) {
   const items = (b.items || []).map((it) => (typeof it === 'string' ? { text: it } : it));
   const n = items.length;
   const [at, setAt] = useState(0);
-  const [seen, setSeen] = useState(() => new Set(done ? items.map((_, i) => i) : [0]));
+  // Самый дальний открытый шаг: всё до него можно пересматривать.
+  const [reach, setReach] = useState(done ? n - 1 : 0);
   const artRef = useRef(null);
   const inView = useInView(artRef);
-  const complete = seen.size === n;
+  const complete = reach >= n - 1;
   useDone(complete, onDone);
 
+  // К любому открытому шагу — свободно; вперёд — только на один, с текущего.
   const go = (i) => {
     const k = Math.max(0, Math.min(n - 1, i));
+    if (k > reach && k !== at + 1) return;
     setAt(k);
-    setSeen((s) => (s.has(k) ? s : new Set(s).add(k)));
+    setReach((r) => Math.max(r, k));
   };
   const it = items[at];
   const label = (x) => x.label || plain(x.text).split(/[.:։]/)[0];
 
   return (
-    <Frame icon={<Icon name="scene" />} title={b.title} progress={`${seen.size} / ${n}`} done={complete}>
+    <Frame icon={<Icon name="scene" />} title={b.title} progress={`${reach + 1} / ${n}`} done={complete}>
       <div className="ix-st">
         <ol className="ix-st-list">
-          {items.map((x, i) => (
-            <li key={i}>
-              <button
-                type="button"
-                className={`ix-st-item${seen.has(i) ? ' is-seen' : ''}`}
-                aria-current={i === at ? 'step' : undefined}
-                aria-label={label(x)}
-                onClick={() => go(i)}
-              >
-                <span className="ix-st-n">
-                  {seen.has(i) && i !== at ? <Icon name="check" size={12} strokeWidth={3} /> : i + 1}
-                </span>
-                <span className="ix-st-label">{label(x)}</span>
-              </button>
-            </li>
-          ))}
+          {items.map((x, i) => {
+            const locked = i > reach;
+            return (
+              <li key={i}>
+                <button
+                  type="button"
+                  className={`ix-st-item${i <= reach ? ' is-seen' : ''}${locked ? ' is-locked' : ''}`}
+                  aria-current={i === at ? 'step' : undefined}
+                  aria-label={label(x)}
+                  disabled={locked}
+                  onClick={() => go(i)}
+                >
+                  <span className="ix-st-n">
+                    {locked
+                      ? <Icon name="lock" size={12} strokeWidth={2.2} />
+                      : i !== at ? <Icon name="check" size={12} strokeWidth={3} /> : i + 1}
+                  </span>
+                  <span className="ix-st-label">{label(x)}</span>
+                </button>
+              </li>
+            );
+          })}
         </ol>
 
         <div className="ix-st-main">

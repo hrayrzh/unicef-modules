@@ -812,6 +812,10 @@
 }
 .ix-st-item.is-seen .ix-st-n { background: rgba(28,171,226,.16); color: #0F7FA8; }
 .ix-st-item[aria-current] .ix-st-n { background: #1CABE2; color: #0E1218; }
+/* Ещё не открытый шаг: по порядку, только стрелкой «вперёд». */
+.ix-st-item.is-locked { cursor: not-allowed; color: #A3AAB5; background: #FAFBFC; }
+.ix-st-item.is-locked:hover { border-color: rgba(21,26,33,.1); transform: none; }
+.ix-st-item.is-locked .ix-st-n { background: rgba(21,26,33,.05); color: #A3AAB5; }
 .ix-st-label { padding-top: 2px; min-width: 0; }
 .ix-st-main { min-width: 0; }
 .ix-st-art {
