@@ -32,9 +32,13 @@ export function panelKeys(mod, scope, step) {
     .filter(Boolean);
 }
 
+// `sort` и `match` заменили в модуле 2 пары и таблицу — при включённом
+// гейте они, как и те, должны быть пройдены.
+const OPEN_KINDS = new Set(['table', 'pair', 'cards', 'sort', 'match']);
+
 export function openKeys(mod, scope, step) {
   return mod.steps[step].blocks
-    .map((b, i) => (b.k === 'table' || b.k === 'pair' || b.k === 'cards' ? blockKey(scope, step, i) : null))
+    .map((b, i) => (OPEN_KINDS.has(b.k) ? blockKey(scope, step, i) : null))
     .filter(Boolean);
 }
 

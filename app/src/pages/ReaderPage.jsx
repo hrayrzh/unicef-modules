@@ -105,7 +105,8 @@ export default function ReaderPage() {
   // the deck comes back focused on this card and the module resumes here.
   const closeReader = useCallback(() => {
     update((prev) => ({ lastModule: moduleIndex, lastStep: { ...prev.lastStep, [scope]: step } }));
-    navigate('/');
+    // `from` — экран выбора сожмёт лист обратно в карточку (SelectPage › launch).
+    navigate('/', { state: { from: 'reader' } });
   }, [update, moduleIndex, scope, step, navigate]);
 
   useEffect(() => {
@@ -158,6 +159,9 @@ export default function ReaderPage() {
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 80, display: 'flex', flexDirection: 'column', background: '#F7F5F0', fontFamily: "'Noto Sans Armenian', 'Sora', Mshtakan, Sylfaen, system-ui, sans-serif", color: '#151A21' }}>
+      {/* Пятно карточки модуля: при открытии оно приезжает сюда из угла
+          карточки (SelectPage › launch) и остаётся фоном. */}
+      <div className="ms-reader-glow" aria-hidden style={{ background: MODULES[moduleIndex].glow }} />
       <div className="ms-reader-head" style={{ flexShrink: 0, padding: '12px 20px 12px 40px', display: 'flex', alignItems: 'center', gap: 20 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16 }}>

@@ -26,6 +26,36 @@ button { font-family: inherit; }
 @keyframes msBar { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 @keyframes msRowIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
 
+/* Переход «карточка → весь экран» (SelectPage › launch). Лист цвета
+   читалки растёт из карточки клип-маской; цветная заливка карточки и её
+   надписи гаснут по пути, чтобы в конце остался ровно фон читалки. */
+@keyframes msFadeOut { to { opacity: 0; } }
+@keyframes msLaunchOut { to { opacity: 0; transform: scale(1.05); } }
+.ms-launch { position: fixed; inset: 0; z-index: 100; background: #F7F5F0; will-change: clip-path; }
+.ms-launch-wash { position: absolute; inset: 0; }
+/* Пятно карточки едет вместе с её правым верхним углом (SelectPage) и
+   остаётся фоном в правом верхнем углу читалки. Размер и размытие
+   читалки = карточка × readerGlowScale (SelectPage.jsx), иначе на стыке
+   пятно скакнуло бы. */
+.ms-launch-glow { position: absolute; width: 240px; height: 240px; border-radius: 50%; filter: blur(26px); transform-origin: 100% 0; }
+.ms-reader-glow {
+  /* Смещение = угол карточки (−100/−90) + READER_GLOW_SHIFT (SelectPage). */
+  position: absolute; top: -160px; right: -150px; z-index: 0; pointer-events: none;
+  width: min(528px, 110vw); height: min(528px, 110vw); border-radius: 50%;
+  filter: blur(min(57px, 12vw));
+}
+/* Шапка выше тела: панель помощи открывается изнутри шапки (без портала),
+   и с равным z-index тело читалки закрывало бы её. */
+.ms-reader-head { position: relative; z-index: 2; background: #F7F5F0; }
+.ms-reader-body { position: relative; z-index: 1; }
+.ms-launch-card { position: absolute; display: flex; flex-direction: column; padding: calc(var(--ch) * .072); color: #151A21; transform-origin: 50% 50%; }
+.ms-launch.is-open .ms-launch-wash { animation: msFadeOut .45s ease .2s both; }
+.ms-launch.is-open .ms-launch-card { animation: msLaunchOut .34s ease both; }
+.ms-launch.is-close .ms-launch-wash { animation: msFadeIn .4s ease .12s both; }
+.ms-launch.is-close .ms-launch-card { animation: msFadeIn .28s ease .3s both; }
+/* Читалка проявляется поверх того же фона, на который лёг лист. */
+.ms-reader-head, .ms-reader-body { animation: msFadeIn .4s ease both; }
+
 /* Hover styles that the original expressed as style-hover attributes. */
 .ms-lift { transition: transform .22s cubic-bezier(.2,.85,.2,1), background .22s ease, box-shadow .22s ease, border-color .22s ease; }
 .ms-lift:hover:not(:disabled) { transform: translateY(-2px); }
@@ -47,6 +77,11 @@ button { font-family: inherit; }
 .ms-card:hover .ms-card-inner:not(.is-flipped) { transform: translateY(-2px); }
 .ms-card:focus-visible { outline: 2px solid #1CABE2; outline-offset: 3px; }
 
+/* D4 — колонка чтения не прокручивается вбок. Скрытые тултипы у правого
+   края и улетающие карточки интерактивных блоков иначе давали на телефоне
+   горизонтальный скролл. Видимый тултип placeTip держит внутри экрана. */
+.ms-reader-scroll { overflow-x: hidden; }
+
 /* An explained term: emphasised, with a tooltip on hover or keyboard focus.
    Focus makes it reachable without a pointer — on touch, a tap focuses it. */
 .ms-term { position: relative; cursor: help; border-bottom: 1px dashed rgba(15,127,168,.5); }
@@ -65,6 +100,12 @@ button { font-family: inherit; }
   border: 6px solid transparent; border-top-color: #151A21;
 }
 .ms-term:hover .ms-tip, .ms-term:focus .ms-tip, .ms-term:focus-within .ms-tip { opacity: 1; visibility: visible; }
+/* Сдвиг внутрь экрана и раскрытие вниз — Block.jsx › placeTip. Стрелка
+   остаётся над термином, сдвигается только сам тултип. */
+.ms-term .ms-tip { transform: translateX(calc(-50% + var(--tip-dx, 0px))); }
+.ms-term .ms-tip::after { margin-left: calc(-6px - var(--tip-dx, 0px)); }
+.ms-term.is-below .ms-tip { bottom: auto; top: calc(100% + 9px); }
+.ms-term.is-below .ms-tip::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: #151A21; }
 
 /* §5 — with motion reduced the flip is a swap, not a rotation. */
 @media (prefers-reduced-motion: reduce) {
@@ -174,7 +215,6 @@ button { font-family: inherit; }
     margin-top: calc(var(--ms-w-mobile) * var(--ms-headroom-ratio)) !important;
   }
   .ms-table { display: block !important; overflow-x: auto; }
-  .ms-pair { grid-template-columns: 1fr !important; }
   /* Флеш-карточки: обе стороны лежат в одной ячейке, и карточка получает
      высоту самой высокой из них. На телефоне оборот с тремя полями растёт
      до ~950px, и лицевая сторона висит посреди пустой коробки. Поэтому здесь
@@ -392,6 +432,7 @@ button { font-family: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ms-reader-head, .ms-reader-body { animation: none; }
   .ms-help-overlay, .ms-help-panel { animation: none; }
   .ms-help-btn:hover { transform: none; }
 }

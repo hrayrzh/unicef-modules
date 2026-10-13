@@ -1,9 +1,29 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { MODULES } from '../data/module01';
 import { useProgressStore } from '../store/progress';
+import { reducedMotion } from '../components/ix/shared';
 
 const ANGLE_STEP = 20; // was an editor-tunable prop in the source design
+
+// Карточка → весь экран. Лист цвета читалки (#F7F5F0) вырастает из карточки
+// клип-маской, а не масштабом: так скругление и текст не растягиваются, а в
+// конце лист совпадает с фоном читалки и смена страницы не видна. Обратный
+// путь (✕ в читалке) сжимает лист в ту же карточку.
+const OPEN_MS = 680;
+const CLOSE_MS = 560;
+const clipOf = (r) => {
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  return `inset(${r.top}px ${W - r.right}px ${H - r.bottom}px ${r.left}px round 18px)`;
+};
+const FULL = 'inset(0px 0px 0px 0px round 0px)';
+// Пятно в читалке — то же пятно карточки (240px), увеличенное до
+// min(528px, 110vw): см. .ms-reader-glow в global.css.
+const readerGlowScale = () => Math.min(528, window.innerWidth * 1.1) / 240;
+// В читалке пятно сидит выше и правее угла экрана, чем на карточке: у
+// .ms-reader-glow top −160 / right −150 против −100 / −90 на карточке.
+const READER_GLOW_SHIFT = 60;
 
 export default function SelectPage() {
   const navigate = useNavigate();
@@ -21,11 +41,63 @@ export default function SelectPage() {
     [n, setActive],
   );
 
+  const location = useLocation();
+  const cardRefs = useRef([]);
+  const sheetRef = useRef(null);
+  const glowRef = useRef(null);
+  // { dir: 'open' | 'close', i, rect } while the card ↔ screen transition runs.
+  const [launch, setLaunch] = useState(null);
+
   const start = useCallback(() => {
-    // Module 1 is the only one with content; the rest open the same reader and
-    // show the "not filled in yet" state.
-    navigate(`/module/${active + 1}`);
-  }, [active, navigate]);
+    if (launch) return;
+    const el = cardRefs.current[active];
+    if (!el || reducedMotion()) { navigate(`/module/${active + 1}`); return; }
+    setLaunch({ dir: 'open', i: active, rect: el.getBoundingClientRect() });
+  }, [active, navigate, launch]);
+
+  // Back from the reader: the sheet starts full screen and shrinks into the
+  // card of the module that was just closed.
+  useLayoutEffect(() => {
+    if (location.state?.from !== 'reader') return;
+    navigate('/', { replace: true, state: null });
+    const el = cardRefs.current[active];
+    if (!el || reducedMotion()) return;
+    setLaunch({ dir: 'close', i: active, rect: el.getBoundingClientRect() });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // `navigate` changes identity with the location; the animation must not
+  // restart because of that, so it is read through a ref.
+  const navRef = useRef(navigate);
+  navRef.current = navigate;
+
+  useLayoutEffect(() => {
+    const sheet = sheetRef.current;
+    if (!launch || !sheet) return undefined;
+    const open = launch.dir === 'open';
+    const card = clipOf(launch.rect);
+    const timing = { duration: open ? OPEN_MS : CLOSE_MS, easing: 'cubic-bezier(.72,0,.18,1)', fill: 'forwards' };
+    const anim = sheet.animate([{ clipPath: open ? card : FULL }, { clipPath: open ? FULL : card }], timing);
+    // The card's glow rides along: its anchor is the card's top-right corner,
+    // which travels to the screen's top-right corner as the sheet grows, and
+    // it lands exactly where the reader keeps it (ReaderPage › .ms-reader-glow),
+    // so the hand-over is invisible.
+    const glow = glowRef.current;
+    if (glow) {
+      const r = launch.rect;
+      const atCard = { transform: 'translate(0px, 0px) scale(1)' };
+      const dx = window.innerWidth - r.right + READER_GLOW_SHIFT;
+      const dy = -r.top - READER_GLOW_SHIFT;
+      const atScreen = { transform: `translate(${dx}px, ${dy}px) scale(${readerGlowScale()})` };
+      glow.animate(open ? [atCard, atScreen] : [atScreen, atCard], timing);
+    }
+    let live = true;
+    anim.finished.then(() => {
+      if (!live) return;
+      if (open) navRef.current(`/module/${launch.i + 1}`);
+      else setLaunch(null);
+    }).catch(() => {});
+    return () => { live = false; anim.cancel(); };
+  }, [launch]);
 
   // Swipe left/right anywhere on the screen moves the deck. Pointer events
   // cover touch, mouse drag and pen alike. A recognised swipe suppresses the
@@ -53,13 +125,14 @@ export default function SelectPage() {
 
   useEffect(() => {
     const onKey = (e) => {
+      if (launch) return;
       if (['ArrowDown', 'ArrowRight'].includes(e.key)) { e.preventDefault(); jump(active + 1); }
       if (['ArrowUp', 'ArrowLeft'].includes(e.key)) { e.preventDefault(); jump(active - 1); }
       if (e.key === 'Enter') start();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [active, jump, start]);
+  }, [active, jump, start, launch]);
 
   return (
     <div
@@ -156,6 +229,7 @@ export default function SelectPage() {
               }}
             >
               <div
+                ref={(el) => { cardRefs.current[i] = el; }}
                 style={{
                   position: 'relative', width: '100%', height: '100%', borderRadius: 18, overflow: 'hidden',
                   background: '#F7F5F0',
@@ -259,6 +333,33 @@ export default function SelectPage() {
           <span style={{ fontSize: 15 }}>→</span>
         </button>
       </div>
+
+      {/* Лист перехода. Внутри — копия лица карточки на её месте: при открытии
+          она гаснет, пока лист растёт, при возврате проявляется в конце. */}
+      {launch && (() => {
+        const m = MODULES[launch.i];
+        const r = launch.rect;
+        return (
+          <div
+            ref={sheetRef}
+            className={`ms-launch is-${launch.dir}`}
+            aria-hidden
+            style={{ clipPath: launch.dir === 'open' ? clipOf(r) : FULL }}
+          >
+            <div className="ms-launch-wash" style={{ background: m.wash }} />
+            {/* Пятно из правого верхнего угла карточки: то же место и размер,
+                что на самой карточке (240px, сдвиг −90/−100). */}
+            <span ref={glowRef} className="ms-launch-glow" style={{ left: r.right - 150, top: r.top - 100, background: m.glow }} />
+            <div className="ms-launch-card" style={{ left: r.left, top: r.top, width: r.width, height: r.height, '--ch': `${r.height}px` }}>
+              <span style={{ position: 'relative', fontSize: 'max(9px, calc(var(--ch) * .034))', letterSpacing: '.16em', textTransform: 'uppercase', color: '#7B8492' }}>{m.kicker}</span>
+              <span style={{ position: 'relative', fontFamily: "'Spectral', serif", fontSize: 'calc(var(--ch) * .25)', lineHeight: .8, fontWeight: 600, letterSpacing: '-.04em', marginTop: 'auto' }}>
+                {String(launch.i + 1).padStart(2, '0')}
+              </span>
+              <span style={{ position: 'relative', marginTop: 'calc(var(--ch) * .04)', fontSize: 'max(13px, calc(var(--ch) * .057))', lineHeight: 1.2, fontWeight: 600, letterSpacing: '-.5px' }}>{m.title}</span>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

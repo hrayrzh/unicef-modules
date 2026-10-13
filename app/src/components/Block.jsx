@@ -4,6 +4,8 @@ import FigureWithBubble from './FigureWithBubble';
 import GuideSimulator from './GuideSimulator';
 import PlatformLogo from './PlatformLogo';
 import { LinkIcon, PhoneIcon } from './HelpButton';
+import { interactiveFor } from './ix';
+import { Icon } from './ix/icons';
 
 // ((term||explanation)) marks a term that is emphasised and explained on
 // hover/focus. §5 — the tooltip is CSS-only and inline, so it survives an
@@ -13,6 +15,27 @@ import { LinkIcon, PhoneIcon } from './HelpButton';
 // eye catches what the item is about before reading it. All markers share one
 // pass so they can mix inside one string.
 const TERM = /\(\((.+?)\|\|(.+?)\)\)|\[([^\]]+)\]\(([^)\s]+)\)|\*\*(.+?)\*\*/g;
+
+// The tooltip is centred on its term, so near a screen edge half of it was
+// cut off, and near the top of the column it slid under the reader header.
+// Before it shows, shift it back inside the screen and, if there is no room
+// above, open it below the term.
+function placeTip(term) {
+  const tip = term.querySelector('.ms-tip');
+  if (!tip) return;
+  term.style.setProperty('--tip-dx', '0px');
+  term.classList.remove('is-below');
+  const r = tip.getBoundingClientRect();
+  const pad = 10;
+  const vw = document.documentElement.clientWidth;
+  let dx = 0;
+  if (r.left < pad) dx = pad - r.left;
+  else if (r.right > vw - pad) dx = vw - pad - r.right;
+  term.style.setProperty('--tip-dx', `${Math.round(dx)}px`);
+  const scroller = term.closest('.ms-reader-scroll');
+  const top = scroller ? scroller.getBoundingClientRect().top : 0;
+  if (r.top < top + pad) term.classList.add('is-below');
+}
 
 function renderInline(text, onOpenHelp) {
   if (typeof text !== 'string'
@@ -73,6 +96,8 @@ function renderInline(text, onOpenHelp) {
         key={m.index}
         className="ms-term"
         tabIndex={0}
+        onMouseEnter={(e) => placeTip(e.currentTarget)}
+        onFocus={(e) => placeTip(e.currentTarget)}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') e.stopPropagation(); }}
       >
@@ -187,6 +212,14 @@ export default function Block({ block: b, mod, scope, step, index, state, update
     return ok && ![].concat(rule.not ?? []).some(on);
   };
   if (!flipOk(b.afterFlip)) return null;
+
+  // Интерактивные блоки (components/ix): тот же текст документа, другая
+  // подача. Пройденный блок засчитывается так же, как раскрытая панель, и
+  // после перезагрузки показывается уже собранным.
+  const Interactive = interactiveFor(b);
+  if (Interactive) {
+    return wrap(<Interactive block={b} done={seen} onDone={credit} R={R} />);
+  }
 
   if (b.k === 'p') {
     return wrap(<p style={{ margin: 0, fontSize: 16, lineHeight: 1.8, color: '#2B313A' }}>{R(b.text)}</p>);
@@ -343,55 +376,49 @@ export default function Block({ block: b, mod, scope, step, index, state, update
   }
 
   // Collapsible panels: guide, table and pair — opening is enough (OQ5).
-  const panelBorder = isOpen || seen ? '#1CABE2' : 'rgba(21,26,33,.12)';
+  // Рамка и шапка — те же, что у интерактивных блоков модуля 2 (ix/shared ›
+  // Frame, классы `ix-*`), чтобы все модули выглядели одинаково.
+  const panelClass = `ix${seen ? ' is-done' : isOpen ? ' is-open' : ''}`;
   // Closed but already read: the header says so, so the credit is visible.
   const panelLabel = (readLabel) => (isOpen ? 'Փակել' : seen ? readLabel : 'Բացել');
-  // Colour follows credit, not expansion: an open but unread panel keeps the
-  // grey of «Բացել», so cyan always means "done".
-  const panelFg = seen ? '#0F7FA8' : '#8A919D';
 
   // `icon` — optional tile between the +/− box and the title (guides show
   // their platform's logo there).
-  const head = (title, sub, rightLabel, rightFg, icon = null) => (
+  const head = (title, sub, rightLabel, icon = null) => (
     <div
-      className="ms-panel-head"
+      className="ix-head is-toggle ms-panel-head"
       role="button"
       tabIndex={0}
       aria-expanded={isOpen}
       onClick={toggle}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } }}
-      style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '18px 22px', cursor: 'pointer', transition: 'background .2s ease' }}
     >
-      <span style={{ flexShrink: 0, display: 'grid', placeItems: 'center', width: 26, height: 26, borderRadius: 8, background: 'rgba(28,171,226,.12)', color: '#0F7FA8', fontSize: 15, lineHeight: 1 }}>
-        {isOpen ? '−' : '+'}
+      <span className="ix-head-icon" aria-hidden>
+        <Icon name={isOpen ? 'minus' : 'plus'} size={15} strokeWidth={2.4} />
       </span>
       {icon}
-      <span style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'baseline', gap: 11, flexWrap: 'wrap' }}>
-        <span style={{ fontSize: 16.5, fontWeight: 600, letterSpacing: '-.3px' }}>{title}</span>
-        {sub ? <span style={{ fontSize: 12, color: '#6E7787' }}>{sub}</span> : null}
+      <span className="ix-head-text">
+        <span className="ix-title">{title}</span>
+        {sub ? <span className="ix-hint">{sub}</span> : null}
       </span>
-      <span style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8, fontSize: 10.5, letterSpacing: '.12em', textTransform: 'uppercase', color: rightFg }}>
-        {/* Credited: a ticked box stays before the label whether the panel is
-            open or closed, so the reader sees the block is done while inside it.
-            Just the coloured tick — no box, no fill. */}
-        {seen && (
-          <span aria-label="Դիտված է" role="img" style={{ display: 'grid', placeItems: 'center', width: 16, height: 16 }}>
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true">
-              <path d="M5 12.5l4.6 4.6L19 7.5" stroke="#1CABE2" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </span>
-        )}
-        {rightLabel}
+      {/* Credited: the tick stays before the label whether the panel is open
+          or closed, so the reader sees the block is done while inside it.
+          Colour follows credit, not expansion — cyan always means "done". */}
+      <span className="ix-head-side">
+        <span className={seen ? 'ix-progress' : 'ix-progress is-muted'}>
+          {seen && <Icon name="check" size={13} strokeWidth={3} />}
+          {rightLabel}
+        </span>
       </span>
     </div>
   );
 
   if (b.k === 'guide') {
     return wrap(
-      <div style={{ borderRadius: 16, background: '#FFFFFF', border: `1px solid ${panelBorder}`, overflow: 'hidden', transition: 'border-color .25s ease' }}>
-        {head(b.name, b.sub, panelLabel('Դիտված է'), panelFg, <PlatformLogo name={b.name} />)}
+      <div className={panelClass}>
+        {head(b.name, b.sub, panelLabel('Դիտված է'), <PlatformLogo name={b.name} />)}
         {isOpen && (
-          <div style={{ padding: '4px 24px 24px 62px', display: 'flex', flexDirection: 'column', gap: 13, animation: 'msFadeUp .32s cubic-bezier(.2,.85,.2,1) both' }}>
+          <div className="ms-guide-body" style={{ display: 'flex', flexDirection: 'column', gap: 13, animation: 'msFadeUp .32s cubic-bezier(.2,.85,.2,1) both' }}>
             {/* Требование заказчика: инструкция показывается наглядно И остаётся
                 текстовым пошаговиком. Не «или» — обе подачи доступны в один клик,
                 потому что на симуляторе учат путь, а по списку сверяются, когда
@@ -449,22 +476,23 @@ export default function Block({ block: b, mod, scope, step, index, state, update
       });
 
     return wrap(
-      <div style={{ border: `1px solid ${panelBorder}`, borderRadius: 16, overflow: 'hidden', background: '#FFFFFF', transition: 'border-color .25s ease' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '18px 22px' }}>
-          <span style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'baseline', gap: 11, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 16.5, fontWeight: 600, letterSpacing: '-.3px' }}>{b.title}</span>
-            <span style={{ fontSize: 12, color: '#6E7787' }}>{b.hint}</span>
+      <div className={seen > 0 ? 'ix is-done' : 'ix'}>
+        <div className="ix-head">
+          <span className="ix-head-icon" aria-hidden><Icon name="cards" /></span>
+          <span className="ix-head-text">
+            <span className="ix-title">{b.title}</span>
+            <span className="ix-hint">{b.hint}</span>
           </span>
           {/* Счётчик появляется после первого переворота. Подсказка «переверни»
               стоит на самой карточке — в шапке она дублировалась. */}
           {seen > 0 && (
-            <span style={{ flexShrink: 0, fontSize: 10.5, letterSpacing: '.12em', textTransform: 'uppercase', color: '#0F7FA8' }}>
-              ✓ {seen} / {cards.length}
+            <span className="ix-head-side">
+              <span className="ix-progress"><Icon name="check" size={13} strokeWidth={3} />{seen} / {cards.length}</span>
             </span>
           )}
         </div>
 
-        <div role="tablist" aria-label={b.title} style={{ display: 'flex', gap: 8, padding: '0 22px', flexWrap: 'wrap' }}>
+        <div role="tablist" aria-label={b.title} style={{ display: 'flex', gap: 8, padding: '14px 22px 0', flexWrap: 'wrap' }}>
           {cards.map((c, i) => {
             const on = i === active;
             return (
@@ -540,8 +568,8 @@ export default function Block({ block: b, mod, scope, step, index, state, update
   // в том, чтобы видеть колонки рядом.
   if (b.k === 'table') {
     return wrap(
-      <div style={{ border: `1px solid ${panelBorder}`, borderRadius: 16, overflow: 'hidden', background: '#FFFFFF', transition: 'border-color .25s ease' }}>
-        {head(b.title, null, panelLabel('Կարդացված'), panelFg)}
+      <div className={panelClass}>
+        {head(b.title, null, panelLabel('Կարդացված'))}
         {isOpen && (
           <div style={{ padding: '0 16px 18px', animation: 'msFadeUp .32s cubic-bezier(.2,.85,.2,1) both' }}>
             <table className={b.plain ? 'ms-cmp is-plain' : 'ms-cmp'}>
@@ -584,34 +612,34 @@ export default function Block({ block: b, mod, scope, step, index, state, update
     );
   }
 
+  // Две колонки «что сказать / что не говорить» — тот же вид, что у
+  // разложенного `sort` в модуле 2 (ix/Sort › результат).
   if (b.k === 'pair') {
+    // В данных части заголовков уже стоит ✓/✕ — значок рисуется отдельно.
+    const bare = (t) => String(t || '').replace(/^[✓✕]\s*/, '');
+    const col = (tone, icon, title, items) => (
+      <div className={`ix-sort-col tone-${tone}`}>
+        <div className="ix-sort-col-h">
+          <span className="ix-bin-ico" aria-hidden><Icon name={icon} size={14} strokeWidth={2.6} /></span>
+          {bare(title)}
+        </div>
+        <div className="ix-sort-col-list">
+          {(items || []).map((t, i) => (
+            <div key={i} className="ix-sort-item" style={{ '--i': i }}>
+              <span className="ix-sort-dot" aria-hidden />
+              <span>{R(t)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
     return wrap(
-      <div style={{ border: `1px solid ${panelBorder}`, borderRadius: 16, overflow: 'hidden', background: '#FFFFFF', transition: 'border-color .25s ease' }}>
-        {head(b.title, null, panelLabel('Կարդացված'), panelFg)}
+      <div className={panelClass}>
+        {head(b.title, null, panelLabel('Կարդացված'))}
         {isOpen && (
-          <div className="ms-pair" style={{ padding: '0 16px 18px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, animation: 'msFadeUp .32s cubic-bezier(.2,.85,.2,1) both' }}>
-            <div style={{ padding: '22px 24px', borderRadius: 16, background: 'rgba(28,171,226,.07)', border: '1px solid rgba(28,171,226,.3)' }}>
-              <div style={{ fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: '#0F7FA8', fontWeight: 600 }}>✓ {b.doTitle}</div>
-              <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 11 }}>
-                {(b.doItems || []).map((t, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', fontSize: 14.5, lineHeight: 1.7, color: '#2B313A' }}>
-                    <span aria-hidden style={{ flexShrink: 0, marginTop: 9, width: 5, height: 5, borderRadius: '50%', background: '#1CABE2' }} />
-                    <span>{R(t)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div style={{ padding: '22px 24px', borderRadius: 16, background: 'rgba(255,107,90,.07)', border: '1px solid rgba(255,107,90,.32)' }}>
-              <div style={{ fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: '#C74232', fontWeight: 600 }}>✕ {b.dontTitle}</div>
-              <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 11 }}>
-                {(b.dontItems || []).map((t, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', fontSize: 14.5, lineHeight: 1.7, color: '#2B313A' }}>
-                    <span aria-hidden style={{ flexShrink: 0, marginTop: 9, width: 5, height: 5, borderRadius: '50%', background: '#FF6B5A' }} />
-                    <span>{R(t)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div className="ix-sort-result" style={{ padding: '0 16px 18px', animation: 'msFadeUp .32s cubic-bezier(.2,.85,.2,1) both' }}>
+            {col('do', 'check', b.doTitle, b.doItems)}
+            {col('dont', 'close', b.dontTitle, b.dontItems)}
           </div>
         )}
       </div>,
