@@ -45,8 +45,8 @@ button { font-family: inherit; }
    пятна нет: шапка непрозрачная и выше. Панель помощи открывается
    изнутри шапки (без портала) — поэтому шапка выше всех. */
 .ms-reader-glow {
-  /* Смещение = угол карточки (−100/−90) + READER_GLOW_SHIFT (SelectPage). */
-  position: absolute; top: -220px; right: -210px; z-index: 2; pointer-events: none;
+  /* Смещение = угол карточки (−100/−90) + READER_GLOW_SHIFT_Y/_X (SelectPage). */
+  position: absolute; top: -220px; right: -290px; z-index: 2; pointer-events: none;
   width: min(528px, 110vw); height: min(528px, 110vw); border-radius: 50%;
   filter: blur(min(57px, 12vw)); mix-blend-mode: multiply;
 }

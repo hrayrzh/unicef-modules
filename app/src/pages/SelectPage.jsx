@@ -22,8 +22,9 @@ const FULL = 'inset(0px 0px 0px 0px round 0px)';
 // min(528px, 110vw): см. .ms-reader-glow в global.css.
 const readerGlowScale = () => Math.min(528, window.innerWidth * 1.1) / 240;
 // В читалке пятно сидит выше и правее угла экрана, чем на карточке: у
-// .ms-reader-glow top −220 / right −210 против −100 / −90 на карточке.
-const READER_GLOW_SHIFT = 120;
+// .ms-reader-glow top −220 / right −290 против −100 / −90 на карточке.
+const READER_GLOW_SHIFT_X = 200;
+const READER_GLOW_SHIFT_Y = 120;
 
 export default function SelectPage() {
   const navigate = useNavigate();
@@ -85,8 +86,8 @@ export default function SelectPage() {
     if (glow) {
       const r = launch.rect;
       const atCard = { transform: 'translate(0px, 0px) scale(1)' };
-      const dx = window.innerWidth - r.right + READER_GLOW_SHIFT;
-      const dy = -r.top - READER_GLOW_SHIFT;
+      const dx = window.innerWidth - r.right + READER_GLOW_SHIFT_X;
+      const dy = -r.top - READER_GLOW_SHIFT_Y;
       const atScreen = { transform: `translate(${dx}px, ${dy}px) scale(${readerGlowScale()})` };
       glow.animate(open ? [atCard, atScreen] : [atScreen, atCard], timing);
     }
