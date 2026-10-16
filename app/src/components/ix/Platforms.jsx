@@ -57,7 +57,7 @@ export function Matrix({ block: b, done, onDone, R }) {
   };
 
   return (
-    <Frame icon={<Icon name="grid" />} title={b.title} hint={complete ? null : MATRIX_HINT} progress={`${count} / ${rows.length}`} done={complete}>
+    <Frame icon={<Icon name="grid" />} title={b.title} hint={MATRIX_HINT} progress={`${count} / ${rows.length}`} done={complete}>
       <div className="ix-mx" style={{ '--cols': pls.length }}>
         <span className="ix-mx-corner" aria-hidden />
         {pls.map((p, j) => (
@@ -103,7 +103,31 @@ export function Matrix({ block: b, done, onDone, R }) {
         ))}
       </div>
 
-      {row != null && (
+      {/* Платформа выбрана — её риски, как строка «Instagram — …» в 5_1.html,
+          только кнопками: нажатие открывает риск. */}
+      {col != null ? (
+        <div className="ix-mx-panel is-pl" key={`p${col}`} aria-live="polite">
+          <span className="ix-mx-pl-head">
+            <AppTile name={pls[col]} />
+            <span className="ix-mx-panel-h">{pls[col]}</span>
+          </span>
+          <div className="ix-mx-pl-risks">
+            {rows.map((r, i) => (has[i][col] ? (
+              <button
+                key={i}
+                type="button"
+                className={`ix-mx-pl-risk${opened[i] ? ' is-open' : ''}`}
+                style={{ '--i': i }}
+                onClick={() => pickRow(i)}
+              >
+                <span className="ix-mx-mark" aria-hidden>{opened[i] && <Icon name="check" size={11} strokeWidth={3.2} />}</span>
+                {r[0]}
+                <Icon name="next" size={13} strokeWidth={2.4} />
+              </button>
+            ) : null))}
+          </div>
+        </div>
+      ) : row != null && (
         <div className="ix-mx-panel" key={row} aria-live="polite">
           <span className="ix-mx-panel-h">{rows[row][0]}</span>
           <div className="ix-mx-panel-cols">
