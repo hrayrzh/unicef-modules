@@ -498,7 +498,7 @@ function LangToggle({ lang, onChange, skin }) {
               padding: '2px 7px', borderRadius: 100, border: 'none',
               fontSize: 10, fontWeight: 700, letterSpacing: '.06em', lineHeight: 1.5,
               background: on ? '#1CABE2' : 'transparent',
-              color: on ? '#0E1218' : dark ? '#C9CDD4' : '#6E7787',
+              color: on ? '#fff' : dark ? '#C9CDD4' : '#6E7787',
               cursor: on ? 'default' : 'pointer',
             }}
           >

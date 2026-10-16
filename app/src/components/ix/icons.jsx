@@ -31,6 +31,12 @@ const PATHS = {
   law: <><path d="M12 4v16M8 20h8M5 7.5h14" /><path d="M5 7.5l-2.5 6h5zM19 7.5l-2.5 6h5z" /></>,
   scratch: <><rect x="3" y="6" width="18" height="12" rx="2.5" /><path d="M6.5 13.5c1.4-2.4 2.8-2.4 4.2 0s2.8 2.4 4.2 0 2.1-1.6 2.6-1.4" /></>,
   quote: <><path d="M4.5 5.5h15V15h-8L7 18.5V15H4.5z" /><path d="M9 9.2h6M9 11.8h4" /></>,
+  // Module 4: a myth cracked in two, the wall of silence, a phrase's ripples.
+  curtain: <><rect x="3.5" y="4.5" width="17" height="15" rx="2" /><path d="M12 3v18" /><path d="M8.5 9.5L6 12l2.5 2.5M15.5 9.5L18 12l-2.5 2.5" /></>,
+  crack: <><path d="M4.5 5h15v14h-15z" /><path d="M12.6 5l-2.2 4.4 3.2 2.8-2.6 3.4 1.4 3.4" /></>,
+  wall: <><rect x="3" y="5" width="18" height="14" rx="1.5" /><path d="M3 9.7h18M3 14.3h18M9 5v4.7M15 5v4.7M6 9.7v4.6M12 9.7v4.6M18 9.7v4.6M9 14.3V19M15 14.3V19" /></>,
+  ripple: <><path d="M12 3.5s-3.4 3.9-3.4 6.4a3.4 3.4 0 006.8 0c0-2.5-3.4-6.4-3.4-6.4z" /><path d="M4.5 15.5c1.8 1.8 4.5 3 7.5 3s5.7-1.2 7.5-3" /><path d="M8 15c1.1.6 2.5 1 4 1s2.9-.4 4-1" /></>,
+  heart: <path d="M12 19.5s-7.5-4.4-7.5-9.7A4.1 4.1 0 0112 7.5a4.1 4.1 0 017.5 2.3c0 5.3-7.5 9.7-7.5 9.7z" />,
 
   // People and places.
   family: <><circle cx="7.5" cy="6" r="2.2" /><circle cx="16.5" cy="6" r="2.2" /><circle cx="12" cy="12.6" r="1.8" /><path d="M4 20v-5.5A3.5 3.5 0 017.5 11M20 20v-5.5a3.5 3.5 0 00-3.5-3.5" /><path d="M9.2 20v-2.6a2.8 2.8 0 015.6 0V20" /></>,

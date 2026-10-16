@@ -27,7 +27,7 @@ export function Person({ x, y = 226, s = 1, at = 0, tone, className }) {
 }
 
 /** Облачко реплики с хвостом к говорящему (`tail`: 'left' | 'right' | 'down'). */
-function Bubble({ x, y, w, h, at, tail = 'down', tone = 'paper', className = '' }) {
+export function Bubble({ x, y, w, h, at, tail = 'down', tone = 'paper', className = '' }) {
   const r = 14;
   const tx = tail === 'left' ? x + 26 : tail === 'right' ? x + w - 26 : x + w / 2;
   const d = `M${x + r} ${y}h${w - 2 * r}a${r} ${r} 0 01${r} ${r}v${h - 2 * r}a${r} ${r} 0 01-${r} ${r}`

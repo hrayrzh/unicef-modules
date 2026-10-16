@@ -278,7 +278,7 @@ export default function SelectPage() {
               style={{
                 padding: '15px 28px', borderRadius: 13, border: 'none',
                 background: a.ready ? '#1CABE2' : 'rgba(246,244,239,.10)',
-                color: a.ready ? '#10141A' : '#6E7787',
+                color: a.ready ? '#fff' : '#6E7787',
                 fontSize: 14.5, fontWeight: 600,
                 cursor: a.ready ? 'pointer' : 'not-allowed',
                 boxShadow: a.ready ? '0 14px 34px -12px rgba(28,171,226,.55)' : 'none',

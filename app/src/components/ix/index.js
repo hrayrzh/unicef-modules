@@ -8,6 +8,10 @@ import { Lock, Network, Orb, Timeline } from './Map';
 import { Scene } from './Scene';
 import { Scratch } from './Scratch';
 import { Unfold } from './Unfold';
+import { Myths } from './Myths';
+import { Curtain } from './Curtain';
+import { Ripple, Trust } from './Talk';
+import { Wall } from './Wall';
 
 // Интерактивные блоки (модуль 2, по предложениям из «Մոդուլ 2 _որոշ
 // առաջարկություններ.html»). Тексты в них — те же абзацы документа, блок
@@ -30,6 +34,12 @@ const KINDS = {
   scene: Scene,
   scratch: Scratch,
   unfold: Unfold,
+  // Модуль 4 — по файлу предложений 4.html.
+  curtain: Curtain,
+  myths: Myths,
+  trust: Trust,
+  ripple: Ripple,
+  wall: Wall,
 };
 
 /** The component for an interactive block, or null for an ordinary one. */

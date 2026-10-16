@@ -376,7 +376,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); update((prev) => ({ checks: { ...prev.checks, [ck]: !prev.checks[ck] } })); } }}
               style={{ display: 'flex', gap: 14, alignItems: 'flex-start', padding: '16px 18px', borderRadius: 14, background: '#FFFFFF', border: '1px solid rgba(21,26,33,.1)', cursor: 'pointer', transition: 'transform .2s cubic-bezier(.2,.85,.2,1), border-color .2s' }}
             >
-              <span style={{ flexShrink: 0, display: 'grid', placeItems: 'center', width: 22, height: 22, borderRadius: 7, background: on ? '#1CABE2' : 'transparent', border: `1.5px solid ${on ? '#1CABE2' : 'rgba(21,26,33,.28)'}`, color: on ? '#0E1218' : 'transparent', fontSize: 12, transition: 'background .2s, border-color .2s' }}>
+              <span style={{ flexShrink: 0, display: 'grid', placeItems: 'center', width: 22, height: 22, borderRadius: 7, background: on ? '#1CABE2' : 'transparent', border: `1.5px solid ${on ? '#1CABE2' : 'rgba(21,26,33,.28)'}`, color: on ? '#fff' : 'transparent', fontSize: 12, transition: 'background .2s, border-color .2s' }}>
                 {on ? '✓' : ''}
               </span>
               <span style={{ fontSize: 15, lineHeight: 1.7, color: on ? '#5A6270' : '#151A21' }}>{R(typeof t === 'string' ? t : t.text)}</span>
@@ -514,7 +514,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
                 aria-selected={on}
                 className="ms-lift"
                 onClick={() => pick(i)}
-                style={{ padding: '9px 18px', borderRadius: 999, cursor: 'pointer', fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit', background: on ? '#1CABE2' : 'transparent', border: `1px solid ${on ? '#1CABE2' : 'rgba(21,26,33,.18)'}`, color: on ? '#0E1218' : '#5A6270', transition: 'background .2s, color .2s, border-color .2s' }}
+                style={{ padding: '9px 18px', borderRadius: 999, cursor: 'pointer', fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit', background: on ? '#1CABE2' : 'transparent', border: `1px solid ${on ? '#1CABE2' : 'rgba(21,26,33,.18)'}`, color: on ? '#fff' : '#5A6270', transition: 'background .2s, color .2s, border-color .2s' }}
               >
                 {c.tab}
                 {state.cardFlip?.[`${key}:${i}`] ? <span style={{ marginInlineStart: 7, opacity: .75 }}>✓</span> : null}

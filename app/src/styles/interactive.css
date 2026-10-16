@@ -74,7 +74,7 @@
   transition: background .2s, border-color .2s, color .2s, transform .22s cubic-bezier(.2,.85,.2,1);
 }
 .ix-btn:hover { transform: translateY(-1px); border-color: #1CABE2; }
-.ix-btn.is-primary { background: #1CABE2; border-color: #1CABE2; color: #0E1218; }
+.ix-btn.is-primary { background: #1CABE2; border-color: #1CABE2; color: #fff; }
 .ix-btn.is-primary:hover { background: #33B8EA; }
 .ix-btn.is-ghost { padding: 7px 12px; font-size: 11.5px; color: #5A6270; }
 .ix-round {
@@ -84,8 +84,8 @@
 }
 .ix-round:hover:not(:disabled) { border-color: #1CABE2; color: #0F7FA8; transform: scale(1.06); }
 .ix-round:disabled { opacity: .35; cursor: default; }
-.ix-round.is-primary { background: #1CABE2; border-color: #1CABE2; color: #0E1218; }
-.ix-round.is-primary:hover:not(:disabled) { background: #33B8EA; color: #0E1218; }
+.ix-round.is-primary { background: #1CABE2; border-color: #1CABE2; color: #fff; }
+.ix-round.is-primary:hover:not(:disabled) { background: #33B8EA; color: #fff; }
 .ix-round.is-lg { width: 48px; height: 48px; }
 .ix-chip {
   display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 12px; cursor: pointer;
@@ -96,7 +96,7 @@
 }
 .ix-chip:hover { border-color: #1CABE2; transform: translateY(-2px); }
 .ix-chip.is-sel { border-color: #1CABE2; background: rgba(28,171,226,.1); box-shadow: 0 0 0 3px rgba(28,171,226,.2), 0 12px 22px -14px rgba(15,127,168,.7); transform: translateY(-3px); }
-.ix-chip.is-done { background: #1CABE2; border-color: #1CABE2; color: #0E1218; cursor: default; transform: none; }
+.ix-chip.is-done { background: #1CABE2; border-color: #1CABE2; color: #fff; cursor: default; transform: none; }
 .ix-chip.is-drag { touch-action: none; user-select: none; -webkit-user-select: none; }
 .ix-chip.is-dragging { z-index: 30; cursor: grabbing; box-shadow: 0 18px 34px -16px rgba(15,127,168,.75); border-color: #1CABE2; }
 .ix-line { display: block; height: 6px; border-radius: 4px; background: rgba(21,26,33,.14); }
@@ -109,7 +109,7 @@
   transition: background .25s, color .25s, border-color .25s, transform .22s cubic-bezier(.2,.85,.2,1);
 }
 .ix-tab:hover { transform: translateY(-1px); border-color: #1CABE2; }
-.ix-tab.is-on { background: #1CABE2; border-color: #1CABE2; color: #0E1218; }
+.ix-tab.is-on { background: #1CABE2; border-color: #1CABE2; color: #fff; }
 .ix-tab svg { color: #1CABE2; }
 .ix-tab.is-on svg { color: inherit; }
 
@@ -405,8 +405,8 @@
 .ix-mcard-ico { flex-shrink: 0; color: #0F7FA8; margin-top: 1px; }
 .ix-mcard:hover { border-color: #1CABE2; transform: translateY(-2px); }
 .ix-mcard.is-sel { border-color: #1CABE2; background: rgba(28,171,226,.1); box-shadow: 0 0 0 3px rgba(28,171,226,.2); }
-.ix-mcard.is-good { border-color: #1CABE2; background: #1CABE2; color: #0E1218; transform: scale(1.02); }
-.ix-mcard.is-good .ix-match-tag, .ix-mcard.is-good .ix-mcard-ico { color: #0E1218; }
+.ix-mcard.is-good { border-color: #1CABE2; background: #1CABE2; color: #fff; transform: scale(1.02); }
+.ix-mcard.is-good .ix-match-tag, .ix-mcard.is-good .ix-mcard-ico { color: #fff; }
 .ix-mcard.is-bad { border-color: #D93A3A; background: rgba(217,58,58,.07); animation: ixShakeX .42s ease; }
 @keyframes ixShakeX { 20% { transform: translateX(-7px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(3px); } }
 
@@ -450,7 +450,7 @@
 .ix-story-play {
   position: absolute; inset: 0; margin: auto; width: 72px; height: 72px; border-radius: 50%; cursor: pointer;
   display: grid; place-items: center; padding-left: 4px;
-  background: #1CABE2; border: none; color: #0E1218;
+  background: #1CABE2; border: none; color: #fff;
   box-shadow: 0 16px 34px -14px rgba(15,127,168,.9);
   animation: ixRing 1.8s ease-out infinite;
   transition: transform .25s cubic-bezier(.2,.85,.2,1);
@@ -546,7 +546,7 @@
 @keyframes ixLabelIn { from { opacity: 0; transform: translateY(-50%) translateX(var(--from, 8px)); } to { opacity: 1; transform: translateY(-50%); } }
 @keyframes ixKeyPress {
   0% { transform: none; background: #fff; color: #151A21; box-shadow: 0 4px 0 rgba(21,26,33,.18); }
-  12%, 72% { transform: translateY(3px); background: #1CABE2; color: #0E1218; box-shadow: 0 1px 0 rgba(15,127,168,.6); }
+  12%, 72% { transform: translateY(3px); background: #1CABE2; color: #fff; box-shadow: 0 1px 0 rgba(15,127,168,.6); }
   100% { transform: none; background: #fff; color: #151A21; box-shadow: 0 4px 0 rgba(21,26,33,.18); }
 }
 @keyframes ixSnip { 0% { opacity: 0; width: 0; height: 0; } 15% { opacity: 1; } 70% { opacity: 1; width: 52%; height: 46%; } 100% { opacity: 1; width: 52%; height: 46%; background: rgba(28,171,226,.14); } }
@@ -649,7 +649,7 @@
 .ix-ss-seg, .ix-ss-bar { display: flex; gap: 3px; padding: 3px; border-radius: 9px; background: #fff; box-shadow: 0 4px 10px -6px rgba(21,26,33,.5); }
 .ix-ss-seg span, .ix-ss-bar span { flex: 1; padding: 4px 2px; border-radius: 6px; font-size: 8.5px; font-weight: 700; text-align: center; color: #5A6270; white-space: nowrap; }
 .ix-ss-bar span:first-child, .ix-ss-bar span:last-child { flex: 0 0 18px; }
-.ix-ss-seg .is-on, .ix-ss-bar .is-on { background: #1CABE2; color: #0E1218; animation: ixBreathe 1.4s ease-in-out infinite; border: 1px solid #1CABE2; }
+.ix-ss-seg .is-on, .ix-ss-bar .is-on { background: #1CABE2; color: #fff; animation: ixBreathe 1.4s ease-in-out infinite; border: 1px solid #1CABE2; }
 .ix-ss-text { margin: 0; font-size: 15px; line-height: 1.72; color: #2B313A; }
 .ix-ss-note { margin: 16px 0 0; padding: 12px 14px; border-radius: 12px; background: rgba(245,182,42,.1); font-size: 14px; line-height: 1.68; color: #2B313A; }
 
@@ -705,7 +705,7 @@
   position: relative; flex-shrink: 0; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%;
   font-size: 13px; font-weight: 700; background: #fff; color: #8A919D; border: 2px dashed rgba(21,26,33,.2);
 }
-.ix-tl-item.is-on .ix-tl-dot { background: #1CABE2; color: #0E1218; border: 2px solid #1CABE2; animation: ixPopIn .5s cubic-bezier(.3,1.4,.5,1) both; }
+.ix-tl-item.is-on .ix-tl-dot { background: #1CABE2; color: #fff; border: 2px solid #1CABE2; animation: ixPopIn .5s cubic-bezier(.3,1.4,.5,1) both; }
 .ix-tl-text { flex: 1; min-width: 0; padding-top: 5px; font-size: 15px; line-height: 1.72; color: #2B313A; }
 .ix-tl-item.is-on .ix-tl-text { animation: ixRise .5s cubic-bezier(.2,.85,.2,1) .1s both; }
 .ix-tl-ghost { display: flex; flex-direction: column; gap: 8px; padding-top: 6px; }
@@ -811,7 +811,7 @@
   background: rgba(21,26,33,.06); color: #6E7787; font-size: 12px; font-weight: 700;
 }
 .ix-st-item.is-seen .ix-st-n { background: rgba(28,171,226,.16); color: #0F7FA8; }
-.ix-st-item[aria-current] .ix-st-n { background: #1CABE2; color: #0E1218; }
+.ix-st-item[aria-current] .ix-st-n { background: #1CABE2; color: #fff; }
 /* Ещё не открытый шаг: по порядку, только стрелкой «вперёд». */
 .ix-st-item.is-locked { cursor: not-allowed; color: #A3AAB5; background: #FAFBFC; }
 .ix-st-item.is-locked:hover { border-color: rgba(21,26,33,.1); transform: none; }
@@ -836,6 +836,245 @@
 .is-faded { opacity: .45; }
 .ix-art-label { fill: #5A6270; font-size: 17px; font-weight: 700; font-family: inherit; }
 .ix-swing { transform-box: view-box; transform-origin: 300px 96px; animation: ixSettle 1.6s cubic-bezier(.2,.85,.2,1) 1.4s both; }
+
+/* ---------- Модуль 4 (4.html): мифы, выбор реплики, круги, стена ---------- */
+@keyframes ixFadeOut { to { opacity: 0; } }
+@keyframes ixKnock { 0%, 100% { transform: none; } 25% { transform: translateX(-4px) rotate(-.6deg); } 60% { transform: translateX(3px) rotate(.4deg); } }
+
+/* Curtain: «шторка» между двумя сторонами признака (Curtain.jsx). Левая
+   сторона лежит сверху и обрезается по границе; обе стороны в одной ячейке
+   сетки, поэтому высота сцены — по более длинному тексту. */
+@keyframes ixNudge { 0%, 55%, 100% { transform: translateX(0); } 68% { transform: translateX(-8px); } 84% { transform: translateX(8px); } }
+.ix-cur {
+  position: relative; display: grid; border-radius: 16px; overflow: hidden; cursor: ew-resize;
+  touch-action: pan-y; user-select: none; -webkit-user-select: none;
+  border: 1px solid rgba(21,26,33,.1); animation: ixFadeIn .35s ease both;
+}
+/* z-index у сторон обязателен: без него текст правой стороны (z 1 внутри)
+   всплывал поверх левой, когда та закрывала сцену целиком. */
+.ix-cur-side { position: relative; z-index: 0; grid-area: 1 / 1; display: flex; flex-direction: column; gap: 14px; min-height: 200px; padding: 18px 24px 24px; overflow: hidden; }
+.ix-cur-side.is-warn { align-items: flex-end; text-align: end; background: linear-gradient(135deg, #FFF4F1, #FFE3DD); }
+.ix-cur-side.is-ok { z-index: 1; align-items: flex-start; background: linear-gradient(135deg, #EDF8FD, #D5EFFA); transition: clip-path .45s cubic-bezier(.2,.85,.2,1); }
+.ix-cur.is-drag .ix-cur-side.is-ok, .ix-cur.is-drag .ix-cur-line, .ix-cur.is-drag .ix-cur-knob { transition: none; }
+.ix-cur-tag {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 100px;
+  font-size: 12px; font-weight: 700; line-height: 1.3; background: #fff; box-shadow: 0 6px 14px -10px rgba(21,26,33,.5);
+}
+.is-warn .ix-cur-tag { color: #C74232; }
+.is-ok .ix-cur-tag { color: #0F7FA8; }
+/* Левая фраза — сверху, правая — снизу: на середине они не сливаются в
+   одну строку из двух половинок. */
+.ix-cur-text {
+  position: relative; z-index: 1; max-width: 74%;
+  font-family: 'Noto Serif Armenian', 'Spectral', serif; font-size: 21px; line-height: 1.45; font-weight: 600;
+}
+.is-ok .ix-cur-text { margin: 4px 0 auto; }
+.is-warn .ix-cur-text { margin: auto 0 0; }
+.is-warn .ix-cur-text { color: #8E2E22; }
+.is-ok .ix-cur-text { color: #0B5F80; }
+/* Стороны зеркальны (просьба Армана): слева текст сверху, значок внизу;
+   справа значок сверху, текст внизу. */
+.ix-cur-mark { position: absolute; opacity: .1; pointer-events: none; }
+.is-ok .ix-cur-mark { bottom: -14px; left: -8px; color: #0F7FA8; }
+/* Справа значок в потоке — прямо над фразой, а не в углу. */
+.is-warn .ix-cur-mark { position: static; order: 1; margin: auto -4px -12px 0; color: #D93A3A; line-height: 0; }
+.is-warn .ix-cur-text { order: 2; margin: 0; }
+.ix-cur-line {
+  position: absolute; top: 0; bottom: 0; z-index: 2; width: 3px; margin-left: -1.5px; pointer-events: none;
+  background: #fff; box-shadow: 0 0 0 1px rgba(21,26,33,.06), 0 0 16px rgba(21,26,33,.2);
+  transition: left .45s cubic-bezier(.2,.85,.2,1);
+}
+/* Центровка — свойством translate, сдвиг-подсказка и увеличение —
+   transform и scale: они не перебивают друг друга. */
+.ix-cur-knob {
+  position: absolute; top: 50%; z-index: 3; translate: -50% -50%;
+  display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; border-radius: 50%;
+  background: #fff; color: #2B313A; cursor: ew-resize; outline: none;
+  box-shadow: 0 10px 22px -10px rgba(21,26,33,.6), 0 0 0 1px rgba(21,26,33,.08);
+  transition: left .45s cubic-bezier(.2,.85,.2,1), scale .25s cubic-bezier(.2,.85,.2,1), box-shadow .25s;
+}
+.ix-cur-knob svg + svg { margin-left: -3px; }
+.ix-cur:hover .ix-cur-knob, .ix-cur.is-drag .ix-cur-knob { scale: 1.08; }
+.ix-cur-knob:focus-visible { box-shadow: 0 0 0 3px rgba(28,171,226,.5), 0 10px 22px -10px rgba(21,26,33,.6); }
+.ix-cur.is-idle .ix-cur-knob { animation: ixNudge 2.6s ease-in-out .9s infinite; }
+.ix-cur-todo {
+  display: flex; gap: 12px; align-items: flex-start; margin-top: 14px; padding: 14px 16px; border-radius: 14px;
+  background: rgba(245,182,42,.1); border: 1px solid rgba(227,162,20,.32);
+  animation: ixRise .5s cubic-bezier(.2,.85,.2,1) both;
+}
+.ix-cur-todo-ico { flex-shrink: 0; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: #E3A214; color: #fff; }
+.ix-cur-todo-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; padding-top: 1px; }
+.ix-cur-todo-h { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: #7C5500; }
+.ix-cur-todo p { margin: 0; font-size: 15px; line-height: 1.65; color: #2B313A; }
+.ix-cur-todo.is-locked { background: #FAFBFC; border: 1px dashed rgba(21,26,33,.16); animation: none; }
+.ix-cur-todo.is-locked .ix-cur-todo-ico { background: rgba(21,26,33,.06); color: #8A919D; }
+.ix-cur-todo.is-locked .ix-cur-todo-h { color: #8A919D; }
+.ix-cur-todo.is-locked .ix-tl-ghost { padding-top: 4px; }
+
+/* Myths: миф раскалывается по трещине (Myths.jsx). Анимации — с заливкой
+   backwards: после конца не держат transform, иначе :hover не работал бы. */
+.ix-myths { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; align-items: start; }
+.ix-myth {
+  border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid rgba(21,26,33,.12);
+  transition: border-color .5s ease;
+  animation: ixRise .5s cubic-bezier(.2,.85,.2,1) backwards; animation-delay: calc(var(--i) * 90ms + .1s);
+}
+.ix-myth.is-broken { border-color: rgba(28,171,226,.45); }
+.ix-myth-top { padding: 26px 22px; background: linear-gradient(160deg, #FFF2EF, #FBE2DC); transition: background .6s ease .35s; }
+.is-broken .ix-myth-top { background: linear-gradient(160deg, #F6F7F9, #ECEEF2); }
+.ix-myth-split { position: relative; display: grid; }
+.is-broken .ix-myth-split { animation: ixKnock .3s ease; }
+.ix-myth-half {
+  grid-area: 1 / 1; text-align: center;
+  font-family: 'Noto Serif Armenian', 'Spectral', serif; font-size: 22px; line-height: 1.38; font-weight: 700; color: #9C3426;
+  transition: transform .65s cubic-bezier(.3,1.5,.5,1) .3s, color .5s ease .3s;
+}
+.is-broken .ix-myth-half { color: #8A919D; transform: translate(-5px, 2px) rotate(-2deg); }
+.is-broken .ix-myth-half.is-r { transform: translate(5px, 6px) rotate(2.2deg); }
+/* Трещина бежит сверху вниз: открывается клип-маской, а не штрихом —
+   с non-scaling-stroke Chrome не считает pathLength, и хвост линии был
+   виден ещё до удара. */
+@keyframes ixCrackRun { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+.ix-myth-crack { position: absolute; inset: -6px 0; width: 100%; height: calc(100% + 12px); overflow: visible; pointer-events: none; opacity: 0; }
+.ix-myth-crack path { fill: none; stroke: #2B313A; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.is-broken .ix-myth-crack { opacity: 1; animation: ixCrackRun .3s ease-in both, ixFadeOut .4s ease .75s forwards; }
+.ix-myth-act { display: flex; justify-content: center; padding: 16px; }
+.ix-myth-fact { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .65s cubic-bezier(.2,.85,.2,1) .5s; }
+.is-broken .ix-myth-fact { grid-template-rows: 1fr; }
+.ix-myth-fact-in { min-height: 0; overflow: hidden; display: flex; gap: 12px; align-items: flex-start; padding: 0 20px; }
+.ix-myth-fact-in p { margin: 0; padding: 18px 0 20px; font-size: 15px; line-height: 1.72; color: #2B313A; }
+.ix-myth-ok { flex-shrink: 0; margin-top: 20px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #1CABE2; color: #fff; }
+
+/* Trust: две реплики, лицо ребёнка и полоска доверия (Talk.jsx). */
+.ix-trust-top { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; padding: 12px 18px 12px 12px; border-radius: 16px; background: #F7F8FA; }
+.ix-face { flex-shrink: 0; width: 58px; height: 58px; overflow: visible; }
+.ix-face-head { fill: #FFE7B0; stroke: #2B313A; stroke-width: 2.5; transition: fill .6s ease; }
+.ix-face.is-sad .ix-face-head { fill: #FFE1D9; }
+.ix-face-cheek { fill: #FF8A7C; opacity: 0; transition: opacity .5s ease; }
+.ix-face.is-glad .ix-face-cheek { opacity: .35; }
+.ix-face-eye { fill: #2B313A; }
+.ix-face-brow, .ix-face-mouth { fill: none; stroke: #2B313A; stroke-width: 2.6; stroke-linecap: round; }
+.ix-face-brow { transform-box: fill-box; transform-origin: center; transition: transform .55s cubic-bezier(.3,1.4,.5,1); }
+.ix-face.is-sad .ix-face-brow.is-l { transform: rotate(-18deg); }
+.ix-face.is-sad .ix-face-brow.is-r { transform: rotate(18deg); }
+.ix-face.is-glad .ix-face-brow { transform: translateY(-2.5px); }
+.ix-face-mouth { opacity: 0; transition: opacity .35s ease; }
+.ix-face.is-sad .ix-face-mouth.is-sad, .ix-face.is-flat .ix-face-mouth.is-flat, .ix-face.is-glad .ix-face-mouth.is-glad { opacity: 1; }
+.ix-trust-meter { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; color: #E3A214; transition: color .6s ease; }
+.ix-trust-meter.is-sad { color: #FF6B5A; }
+.ix-trust-meter.is-glad { color: #1CABE2; }
+.ix-trust-bar { flex: 1; height: 10px; border-radius: 6px; background: rgba(21,26,33,.08); overflow: hidden; }
+.ix-trust-bar i { display: block; height: 100%; width: calc(var(--t) * 100%); border-radius: inherit; background: currentColor; transition: width .9s cubic-bezier(.3,1.3,.5,1); }
+.ix-trust-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: stretch; }
+.ix-trust-opt {
+  display: flex; flex-direction: column; gap: 10px; padding: 18px 18px 16px; text-align: start; cursor: pointer;
+  font: inherit; color: #151A21; background: #fff; border: 1px solid rgba(21,26,33,.14);
+  border-radius: 22px 22px 6px 22px; box-shadow: 0 16px 30px -26px rgba(21,26,33,.7);
+  transition: border-color .3s, background .3s, opacity .4s, transform .25s cubic-bezier(.2,.85,.2,1), box-shadow .3s;
+  animation: ixRise .45s cubic-bezier(.2,.85,.2,1) backwards; animation-delay: calc(var(--i) * 90ms);
+}
+.ix-trust-opt:hover:not([aria-disabled]) { border-color: #1CABE2; transform: translateY(-2px); }
+.ix-trust-opt:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
+.ix-trust-opt[aria-disabled] { cursor: default; }
+.ix-trust-text { font-family: 'Noto Serif Armenian', 'Spectral', serif; font-size: 16px; line-height: 1.6; }
+.ix-trust-opt.is-right { border-color: #1CABE2; background: rgba(28,171,226,.07); }
+.ix-trust-opt.is-wrong { border-color: rgba(255,107,90,.6); background: rgba(255,107,90,.06); }
+.ix-trust-opt.is-chosen.is-right { box-shadow: 0 0 0 3px rgba(28,171,226,.22); }
+.ix-trust-opt.is-chosen.is-wrong { box-shadow: 0 0 0 3px rgba(255,107,90,.2); }
+.ix-trust-opt.is-other { opacity: .8; }
+.ix-trust-tag {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 100px;
+  font-size: 11.5px; font-weight: 700; line-height: 1.35; animation: ixPopIn .4s cubic-bezier(.3,1.4,.5,1) both;
+}
+.is-right .ix-trust-tag { background: #1CABE2; color: #fff; }
+.is-wrong .ix-trust-tag { background: #FF6B5A; color: #fff; }
+.ix-trust-foot { display: flex; justify-content: flex-end; margin-top: 12px; animation: ixFadeIn .3s ease both; }
+
+/* Ripple: фраза — камень в воду (Talk.jsx). */
+.ix-rip-list { display: flex; flex-direction: column; gap: 10px; }
+.ix-rip {
+  position: relative; overflow: hidden; padding: 14px 16px; border-radius: 14px; cursor: pointer;
+  background: #fff; border: 1px solid rgba(21,26,33,.12);
+  transition: border-color .4s, background .6s, transform .25s cubic-bezier(.2,.85,.2,1);
+  animation: ixRise .45s cubic-bezier(.2,.85,.2,1) backwards; animation-delay: calc(var(--i) * 55ms + .1s);
+}
+.ix-rip:hover:not(.is-open) { transform: translateX(3px); }
+.ix-rip.tone-do:hover:not(.is-open) { border-color: rgba(28,171,226,.6); }
+.ix-rip.tone-dont:hover:not(.is-open) { border-color: rgba(255,107,90,.6); }
+.ix-rip:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
+.ix-rip.is-open { cursor: default; }
+.ix-rip.tone-do.is-open { border-color: rgba(28,171,226,.42); background: rgba(28,171,226,.05); }
+.ix-rip.tone-dont.is-open { border-color: rgba(255,107,90,.42); background: rgba(255,107,90,.05); }
+.ix-rip-say, .ix-rip-more { position: relative; z-index: 1; }
+.ix-rip-say { display: flex; gap: 12px; align-items: flex-start; }
+/* Плитка светлая, пока фразу не открыли: залитая галочка на каждой строке
+   читалась как «уже пройдено». */
+.ix-rip-ico { flex-shrink: 0; display: grid; place-items: center; width: 26px; height: 26px; margin-top: 1px; border-radius: 50%; transition: background .4s, color .4s; }
+.tone-do .ix-rip-ico { background: rgba(28,171,226,.14); color: #0F7FA8; }
+.tone-dont .ix-rip-ico { background: rgba(255,107,90,.14); color: #C74232; }
+.tone-do.is-open .ix-rip-ico { background: #1CABE2; color: #fff; }
+.tone-dont.is-open .ix-rip-ico { background: #FF6B5A; color: #fff; }
+.ix-rip-quote { flex: 1; min-width: 0; font-family: 'Noto Serif Armenian', 'Spectral', serif; font-size: 16.5px; line-height: 1.55; color: #151A21; }
+.ix-rip-more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s cubic-bezier(.2,.85,.2,1) .15s; }
+.ix-rip.is-open .ix-rip-more { grid-template-rows: 1fr; }
+.ix-rip-more-in { min-height: 0; overflow: hidden; padding-left: 38px; }
+.ix-rip-label {
+  display: flex; align-items: center; gap: 6px; margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(21,26,33,.14);
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+}
+.tone-do .ix-rip-label { color: #0F7FA8; }
+.tone-dont .ix-rip-label { color: #C74232; }
+.ix-rip-effect { margin: 6px 0 2px; font-size: 14.5px; line-height: 1.68; color: #2B313A; }
+/* Круги растут размером, а не scale(): при масштабе толщина обводки
+   росла вместе с кругом, и волна шла по тексту жирной дугой. */
+@keyframes ixWave { 0% { opacity: .7; width: 8px; height: 8px; } 100% { opacity: 0; width: 720px; height: 720px; } }
+.ix-rip-waves { position: absolute; width: 0; height: 0; pointer-events: none; }
+.ix-rip-waves i {
+  position: absolute; left: 0; top: 0; width: 8px; height: 8px; border-radius: 50%; transform: translate(-50%, -50%);
+  border: 2px solid; opacity: 0; animation: ixWave 1.6s cubic-bezier(.2,.7,.3,1) forwards;
+}
+.ix-rip-waves i:nth-child(2) { animation-delay: .2s; }
+.ix-rip-waves i:nth-child(3) { animation-delay: .4s; }
+.tone-do .ix-rip-waves i { border-color: rgba(28,171,226,.75); }
+.tone-dont .ix-rip-waves i { border-color: rgba(255,107,90,.75); }
+
+/* Wall: стена молчания из причин (Wall.jsx). Сцена — за кирпичами и
+   проступает по мере того, как они падают (--p — доля упавших). */
+@keyframes ixCrumble { to { transform: translateY(260px) rotate(var(--rot, 24deg)); opacity: 0; } }
+.ix-wall {
+  position: relative; display: flex; min-height: 248px; border-radius: 16px; overflow: hidden;
+  background-color: #FAFBFC; background-image: radial-gradient(rgba(21,26,33,.07) 1px, transparent 1.2px);
+  background-size: 18px 18px; border: 1px solid rgba(21,26,33,.08);
+}
+.ix-wall-scene {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: calc(.16 + .84 * var(--p)); filter: blur(calc((1 - var(--p)) * 2.5px));
+  transition: opacity .7s ease, filter .7s ease;
+}
+.ix-wall-bricks { position: relative; z-index: 1; flex: 1; display: flex; flex-wrap: wrap; align-content: stretch; gap: 6px; padding: 6px; }
+.ix-brick {
+  flex: 1 1 auto; min-height: 56px; display: grid; place-items: center; padding: 10px 18px; border-radius: 5px; cursor: pointer;
+  font: inherit; font-size: 14px; font-weight: 600; line-height: 1.4; text-align: center; color: #5C2D20;
+  background: linear-gradient(180deg, #F1CFC0, #E5B49F); border: none;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.45), inset 0 -3px 0 rgba(120,50,30,.16);
+  transition: transform .2s cubic-bezier(.2,.85,.2,1), filter .2s;
+  animation: ixRise .45s cubic-bezier(.2,.85,.2,1) backwards; animation-delay: calc(var(--i) * 45ms + .1s);
+}
+.ix-brick:nth-child(3n+2) { background: linear-gradient(180deg, #EDC6B5, #DFA993); }
+.ix-brick:nth-child(3n) { background: linear-gradient(180deg, #F4D8CB, #EAC0AE); }
+button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
+.ix-brick:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
+.ix-brick.is-filler { flex: .35 1 46px; cursor: default; }
+.ix-brick.is-down, .ix-brick.is-gone { visibility: hidden; pointer-events: none; }
+.ix-wall.is-open .ix-brick.is-filler { --rot: 22deg; animation: ixCrumble .8s cubic-bezier(.5,0,.9,.45) forwards; animation-delay: calc(var(--i) * 55ms); }
+.ix-wall.is-open .ix-brick.is-filler:nth-child(even) { --rot: -26deg; }
+.ix-wall-pile { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.ix-wall-chip {
+  padding: 6px 12px; border-radius: 5px; font-size: 13px; font-weight: 600; line-height: 1.4; color: #5C2D20;
+  background: linear-gradient(180deg, #F4D8CB, #EAC0AE); box-shadow: inset 0 -2px 0 rgba(120,50,30,.14);
+  animation: ixLand .45s cubic-bezier(.3,1.4,.5,1) both;
+}
+.ix-wall-after { animation: ixRise .5s cubic-bezier(.2,.85,.2,1) both; animation-delay: calc(var(--i) * 140ms + .5s); }
 
 /* ---------- Narrow screens (D4) ---------- */
 @media (max-width: 720px) {
@@ -887,6 +1126,21 @@
   .ix-story-cap { min-height: 0; }
   /* Сбоку от телефона ~100px: подпись в две-три строки, но целиком. */
   .ix-dev-label { width: 80px; font-size: 11px; }
+  /* Модуль 4: шторка ниже, реплики друг под другом, кирпичи ниже, миф мельче. */
+  .ix-cur-side { min-height: 210px; padding: 14px 16px 22px; }
+  .ix-cur-text { max-width: 86%; font-size: 18px; }
+  .ix-cur-tag { font-size: 11px; padding: 4px 10px; }
+  .ix-trust-opts { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .ix-trust-text { font-size: 15px; }
+  .ix-face { width: 50px; height: 50px; }
+  .ix-myth-top { padding: 22px 16px; }
+  .ix-myth-half { font-size: 19px; }
+  .ix-rip-quote { font-size: 15.5px; }
+  .ix-rip-more-in { padding-left: 0; }
+  .ix-wall { min-height: 260px; }
+  .ix-brick { min-height: 48px; padding: 8px 12px; font-size: 13px; }
+  /* На узкой стене пустой кирпич вставал один в целый ряд. */
+  .ix-brick.is-filler { display: none; }
 }
 
 /* §5 — reduced motion: every animation and transition finishes at once, in

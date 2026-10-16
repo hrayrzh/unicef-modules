@@ -15,7 +15,7 @@ body {
 a { color: #1CABE2; text-decoration: none; }
 a:hover { color: #F6F4EF; text-decoration: underline; }
 button { font-family: inherit; }
-::selection { background: #1CABE2; color: #14181F; }
+::selection { background: #1CABE2; color: #fff; }
 
 @keyframes msGlow { 0%,100% { opacity: .5; transform: scale(1); } 50% { opacity: .85; transform: scale(1.09); } }
 @keyframes msFadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }

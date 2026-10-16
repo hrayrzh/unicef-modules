@@ -392,7 +392,7 @@ function NextButton({ advanceOk, onNext, mod, scope, step, state }) {
       onClick={onNext}
       aria-disabled={!advanceOk}
       title={advanceOk ? undefined : nextHint(state, mod, scope, step)}
-      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', borderRadius: 11, background: advanceOk ? '#1CABE2' : 'rgba(21,26,33,.12)', border: 'none', color: advanceOk ? '#0E1218' : '#8A919D', fontSize: 13.5, fontWeight: 600, cursor: advanceOk ? 'pointer' : 'not-allowed' }}
+      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', borderRadius: 11, background: advanceOk ? '#1CABE2' : 'rgba(21,26,33,.12)', border: 'none', color: advanceOk ? '#fff' : '#8A919D', fontSize: 13.5, fontWeight: 600, cursor: advanceOk ? 'pointer' : 'not-allowed' }}
     >
       <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1.25 }}>
         <span>{nextLabel(mod, step)}</span>
