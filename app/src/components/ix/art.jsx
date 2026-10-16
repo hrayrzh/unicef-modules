@@ -118,6 +118,43 @@ export const STEP_ART = {
       <S d="M470 160l14 14 26-28" at={1.7} className="is-accent is-thick" />
     </g>
   ),
+  // Մի՛ խոստացեք «բացարձակ գաղտնիություն», բայց խոստացեք «անվտանգություն»:
+  // замок тайны перечёркнут, над ребёнком — щит (модуль 4, педагоги).
+  promise: (
+    <g>
+      <Floor />
+      <Person x={150} y={FLOOR} at={0.1} tone="cyan" />
+      <Person x={430} y={FLOOR} s={0.74} at={0.3} tone="amber" />
+      <S t="rect" x="238" y="70" width="44" height="34" rx="6" at={0.7} />
+      <S d="M246 70v-10a14 14 0 0128 0v10" at={0.9} />
+      <S d="M226 52l68 68M294 52l-68 68" at={1.3} className="is-alert is-thick" />
+      <F d="M430 34l40 14v30c0 26-18 42-40 50-22-8-40-24-40-50V48z" at={1.7} className="tone-cyan" />
+      <S d="M430 34l40 14v30c0 26-18 42-40 50-22-8-40-24-40-50V48z" at={1.3} className="is-accent" />
+      <S d="M413 80l12 12 22-24" at={1.9} className="is-accent is-thick" />
+    </g>
+  ),
+  // Գործողությունների հստակ պլան — список следующих шагов и дорожка к флажку.
+  plan: (
+    <g>
+      <Floor />
+      <Person x={104} y={FLOOR} s={0.74} at={0.1} tone="amber" />
+      <F t="rect" x="190" y="56" width="132" height="164" rx="10" at={0.9} className="tone-paper" />
+      <S t="rect" x="190" y="56" width="132" height="164" rx="10" at={0.4} />
+      <S t="rect" x="232" y="44" width="48" height="22" rx="6" at={0.6} />
+      <S d="M210 104l8 8 14-16" at={1} className="is-accent is-thick" />
+      <S d="M246 104h56" at={1.1} />
+      <S d="M210 148l8 8 14-16" at={1.2} className="is-accent is-thick" />
+      <S d="M246 148h46" at={1.3} />
+      <S t="circle" cx="221" cy="190" r="8" at={1.4} />
+      <S d="M246 190h38" at={1.5} />
+      <S t="circle" cx="378" cy="246" r="11" at={1.6} className="is-accent" />
+      <S t="circle" cx="430" cy="232" r="11" at={1.75} className="is-accent" />
+      <S t="circle" cx="482" cy="246" r="11" at={1.9} className="is-accent" />
+      <S d={`M530 ${FLOOR}V150`} at={2} />
+      <F d="M530 150h46l-12 15 12 15h-46z" at={2.4} className="tone-cyan" />
+      <S d="M530 150h46l-12 15 12 15h-46" at={2.2} className="is-accent" />
+    </g>
+  ),
   // Կիրառեք իրական հետևանքներ — справедливо и соразмерно.
   fair: (
     <g>
