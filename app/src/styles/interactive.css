@@ -1361,6 +1361,17 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
 .ix-tg-row.is-on .ix-sw i { transform: translateX(18px); }
 .ix-tg-src { display: flex; gap: 8px; align-items: flex-start; margin: 0 16px 14px; font-size: 12.5px; line-height: 1.5; color: #6E7787; overflow-wrap: anywhere; }
 .ix-tg-src > svg { flex-shrink: 0; margin-top: 1px; color: #0F7FA8; }
+/* «Տեքստն ամբողջությամբ» — исходная таблица целиком под блоком. */
+.ix-full { margin-top: 16px; padding-top: 12px; border-top: 1px dashed rgba(21,26,33,.14); }
+.ix-full > summary {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 8px; cursor: pointer; list-style: none;
+  font-size: 13.5px; font-weight: 600; color: #0F7FA8;
+}
+.ix-full > summary::-webkit-details-marker { display: none; }
+.ix-full > summary svg { transition: transform .25s cubic-bezier(.2,.85,.2,1); }
+.ix-full[open] > summary svg { transform: rotate(90deg); }
+.ix-full > summary:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
+.ix-full-body { margin-top: 10px; animation: ixFadeIn .3s ease both; }
 
 /* Vault: данные под замок (Vault.jsx). Пока данное «на виду» — пунктир и
    глаз; спрятанное — тёмная плашка с замком. */

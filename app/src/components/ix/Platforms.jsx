@@ -158,6 +158,47 @@ export function Matrix({ block: b, done, onDone, R }) {
  * источника со ссылкой, разметкой `[подпись](адрес)`.
  */
 const TOGGLES_HINT = 'Ընտրեք հարթակը և նշեք կիրառված կարգավորումները։';
+const FULL = 'Տեքստն ամբողջությամբ'; // подпись из 5_1.html
+
+/**
+ * «Տեքստն ամբողջությամբ» под переключателями (5_1.html): исходная таблица
+ * целиком, ячейка — дословный `text` и источник после «–», как в документе.
+ * Вид — та же `ms-cmp`, что у обычной таблицы; на телефоне — карточки.
+ */
+function FullTable({ head, items, R }) {
+  const cell = (it) => `${it.text || (it.settings || []).join(', ')}${it.src ? ` – ${it.src}` : ''}`;
+  return (
+    <details className="ix-full">
+      <summary><Icon name="next" size={14} strokeWidth={2.4} />{FULL}</summary>
+      <div className="ix-full-body">
+        <table className="ms-cmp">
+          <thead>
+            <tr>{head.map((h) => <th key={h} scope="col">{h}</th>)}</tr>
+          </thead>
+          <tbody>
+            {items.map((it) => (
+              <tr key={it.name}>
+                <th scope="row">{it.name}</th>
+                <td>{R(cell(it))}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="ms-cmp-cards">
+          {items.map((it) => (
+            <div key={it.name} className="ms-cmp-card">
+              <div className="ms-cmp-card-h">{it.name}</div>
+              <div className="ms-cmp-card-row">
+                <span className="ms-cmp-card-k">{head[1]}</span>
+                <span>{R(cell(it))}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </details>
+  );
+}
 // На плитке — название до скобки: «Minecraft (հատկապես …)» целиком стоит в шапке экрана.
 const short = (name) => name.split(' (')[0];
 
@@ -226,6 +267,7 @@ export function Toggles({ block: b, done, onDone, R }) {
           )}
         </div>
       </div>
+      {b.head && <FullTable head={b.head} items={items} R={R} />}
     </Frame>
   );
 }
