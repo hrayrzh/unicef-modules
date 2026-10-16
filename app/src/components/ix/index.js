@@ -10,6 +10,7 @@ import { Scratch } from './Scratch';
 import { Unfold } from './Unfold';
 import { Myths } from './Myths';
 import { Curtain } from './Curtain';
+import { Spot } from './Spot';
 import { Ripple, Trust } from './Talk';
 import { Wall } from './Wall';
 
@@ -36,6 +37,7 @@ const KINDS = {
   unfold: Unfold,
   // Модуль 4 — по файлу предложений 4.html.
   curtain: Curtain,
+  spot: Spot,
   myths: Myths,
   trust: Trust,
   ripple: Ripple,

@@ -911,6 +911,55 @@
 .ix-cur-todo.is-locked .ix-cur-todo-h { color: #8A919D; }
 .ix-cur-todo.is-locked .ix-tl-ghost { padding-top: 4px; }
 
+/* Spot: заметить признаки на рисунке (Spot.jsx, сцены — art.jsx › SPOT_SCENES).
+   Точки центрируются свойством translate, а пульс и появление идут через
+   box-shadow и scale — друг друга не перебивают. */
+@keyframes ixSpotPulse { from { box-shadow: 0 0 0 0 rgba(227,162,20,.55); } to { box-shadow: 0 0 0 14px rgba(227,162,20,0); } }
+@keyframes ixSpotPulseSm { from { box-shadow: 0 0 0 0 rgba(227,162,20,.55); } to { box-shadow: 0 0 0 7px rgba(227,162,20,0); } }
+@keyframes ixSpotIn { from { opacity: 0; scale: .3; } to { opacity: 1; scale: 1; } }
+.ix-spot {
+  position: relative; aspect-ratio: 2 / 1; border-radius: 16px; overflow: hidden;
+  background-color: #FAFBFC; background-image: radial-gradient(rgba(21,26,33,.07) 1px, transparent 1.2px);
+  background-size: 18px 18px; border: 1px solid rgba(21,26,33,.08);
+}
+.ix-d.is-warn { stroke: #E3A214; }
+.ix-f.tone-ink { fill: #2B313A; }
+.ix-art-say { fill: #7C5500; font-size: 16px; font-weight: 700; font-family: inherit; }
+.ix-art-q { fill: #C98A00; font-size: 16px; font-weight: 800; font-family: inherit; }
+.ix-spot-dot {
+  position: absolute; z-index: 1; translate: -50% -50%; width: 30px; height: 30px; padding: 0; border-radius: 50%; cursor: pointer;
+  display: grid; place-items: center; font: inherit; font-size: 13px; font-weight: 800; color: #fff;
+  background: rgba(255,255,255,.9); border: 2px solid #E3A214;
+  transition: scale .25s cubic-bezier(.2,.85,.2,1), background .3s, border-color .3s;
+  animation: ixSpotIn .45s cubic-bezier(.3,1.4,.5,1) backwards, ixSpotPulse 1.8s ease-out infinite;
+  animation-delay: calc(1s + var(--i) * 90ms), calc(1.4s + var(--i) * 230ms);
+}
+.ix-spot-dot:hover { scale: 1.15; }
+.ix-spot-dot:focus-visible { outline: 2px solid #1CABE2; outline-offset: 3px; }
+.ix-spot-core { width: 10px; height: 10px; border-radius: 50%; background: #E3A214; }
+.ix-spot-dot.is-found {
+  width: 24px; height: 24px; font-size: 12px; background: #E3A214; border-color: #fff;
+  box-shadow: 0 6px 14px -6px rgba(124,85,0,.7); animation: ixPopIn .45s cubic-bezier(.3,1.4,.5,1);
+}
+.ix-spot-dot.is-found.is-hi { box-shadow: 0 0 0 4px rgba(245,182,42,.4), 0 6px 14px -6px rgba(124,85,0,.7); }
+.ix-spot-list { margin: 14px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.ix-spot-item {
+  display: flex; gap: 12px; align-items: flex-start; padding: 11px 14px; border-radius: 12px;
+  background: rgba(245,182,42,.08); border: 1px solid rgba(227,162,20,.28);
+  font-size: 14.5px; line-height: 1.65; color: #2B313A;
+  transition: border-color .25s, background .25s;
+  animation: ixRise .45s cubic-bezier(.2,.85,.2,1) backwards;
+}
+.ix-spot-item.is-hi { border-color: #E3A214; background: rgba(245,182,42,.15); }
+.ix-spot-n {
+  flex-shrink: 0; display: grid; place-items: center; width: 24px; height: 24px; margin-top: 1px; border-radius: 50%;
+  background: #E3A214; color: #fff; font-size: 12px; font-weight: 800;
+}
+.ix-spot-text { flex: 1; min-width: 0; }
+.ix-spot-item.is-ghost { background: #FAFBFC; border: 1px dashed rgba(21,26,33,.16); animation: none; }
+.ix-spot-item.is-ghost .ix-spot-n { background: rgba(21,26,33,.06); color: #8A919D; }
+.ix-spot-item.is-ghost .ix-tl-ghost { flex: 1; padding-top: 4px; }
+
 /* Myths: миф раскалывается по трещине (Myths.jsx). Анимации — с заливкой
    backwards: после конца не держат transform, иначе :hover не работал бы. */
 .ix-myths { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; align-items: start; }
@@ -1126,7 +1175,13 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
   .ix-story-cap { min-height: 0; }
   /* Сбоку от телефона ~100px: подпись в две-три строки, но целиком. */
   .ix-dev-label { width: 80px; font-size: 11px; }
-  /* Модуль 4: шторка ниже, реплики друг под другом, кирпичи ниже, миф мельче. */
+  /* Модуль 4: точки на рисунке мельче, шторка ниже, реплики друг под
+     другом, кирпичи ниже, миф мельче. */
+  .ix-spot-dot { width: 20px; height: 20px; border-width: 1.5px; animation-name: ixSpotIn, ixSpotPulseSm; }
+  .ix-spot-dot.is-found { width: 17px; height: 17px; font-size: 10px; border-width: 1.5px; animation: ixPopIn .45s cubic-bezier(.3,1.4,.5,1); }
+  .ix-spot-core { width: 7px; height: 7px; }
+  /* Точку легче нажать, чем видно: невидимая зона вокруг — 36px. */
+  .ix-spot-dot::after { content: ''; position: absolute; inset: -8px; border-radius: 50%; }
   .ix-cur-side { min-height: 210px; padding: 14px 16px 22px; }
   .ix-cur-text { max-width: 86%; font-size: 18px; }
   .ix-cur-tag { font-size: 11px; padding: 4px 10px; }
