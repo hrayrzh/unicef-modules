@@ -1715,12 +1715,44 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
 }
 .ix-pw-input::placeholder { color: #A2A9B4; }
 .ix-pw-input:focus { border-color: #1CABE2; box-shadow: 0 0 0 3px rgba(28,171,226,.18); }
-.ix-pw.is-ok .ix-pw-input { border-color: #1CABE2; }
+/* Тон — уровень стойкости, а не длина: 16 «a» подряд — длинно, но красно. */
+.ix-pw { --tone: #1CABE2; --tone-ink: #0F7FA8; }
+.ix-pw.is-bad { --tone: #D93A3A; --tone-ink: #B32B2B; }
+.ix-pw.is-low { --tone: #EF7D3C; --tone-ink: #B4531C; }
+.ix-pw.is-mid { --tone: #F5B62A; --tone-ink: #8A5A00; }
+.ix-pw.is-ok { --tone: #1CABE2; --tone-ink: #0F7FA8; }
+.ix-pw.is-top { --tone: #0F7FA8; --tone-ink: #0B5E7D; }
+.ix-pw.is-ok .ix-pw-input, .ix-pw.is-top .ix-pw-input { border-color: #1CABE2; }
 .ix-pw-meter { display: grid; grid-template-columns: repeat(var(--n, 15), minmax(0, 1fr)); gap: 4px; margin-top: 12px; }
 .ix-pw-meter i { height: 10px; border-radius: 3px; background: rgba(21,26,33,.1); transition: background .25s ease; }
-.ix-pw.is-low .ix-pw-meter i.is-on { background: #D93A3A; }
-.ix-pw.is-mid .ix-pw-meter i.is-on { background: #F5B62A; }
-.ix-pw.is-ok .ix-pw-meter i.is-on { background: #1CABE2; }
+.ix-pw-meter i.is-on { background: var(--tone); }
+.ix-pw-info { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+.ix-pw-verdict { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; animation: ixFadeIn .3s ease both; }
+.ix-pw-level {
+  padding: 4px 12px; border-radius: 100px; font-size: 13px; font-weight: 700; line-height: 1.4;
+  color: var(--tone-ink); background: color-mix(in srgb, var(--tone) 14%, #fff); border: 1px solid color-mix(in srgb, var(--tone) 45%, #fff);
+  transition: color .25s, background .25s, border-color .25s;
+}
+.ix-pw.is-top .ix-pw-level { color: #fff; background: #1CABE2; border-color: #1CABE2; }
+.ix-pw-time { font-size: 13.5px; line-height: 1.5; color: #5A6270; }
+.ix-pw-time b { color: #151A21; font-weight: 700; }
+.ix-pw-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.ix-pw-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 100px;
+  font-size: 12.5px; line-height: 1.4; color: #8A919D; background: #fff; border: 1px solid rgba(21,26,33,.14);
+  transition: color .25s, background .25s, border-color .25s;
+}
+.ix-pw-chip.is-key { font-weight: 600; }
+.ix-pw-chip.is-on { color: #0F7FA8; background: rgba(28,171,226,.1); border-color: rgba(28,171,226,.45); }
+.ix-pw-chip.is-on svg { animation: ixPopIn .35s cubic-bezier(.3,1.4,.5,1) both; }
+.ix-pw-dot { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid currentColor; opacity: .7; }
+.ix-pw-warn {
+  display: flex; gap: 8px; align-items: flex-start; margin: 0; padding: 9px 12px; border-radius: 10px;
+  font-size: 13.5px; line-height: 1.5; color: #8E2A2A; background: rgba(217,58,58,.07);
+  animation: ixRise .35s cubic-bezier(.2,.85,.2,1) both;
+}
+.ix-pw-warn svg { flex-shrink: 0; margin-top: 2px; color: #D93A3A; }
+.ix-pw-note { margin: 0; font-size: 12px; line-height: 1.5; color: #8A919D; }
 
 @media (hover: hover) {
   .ix-mem-card:not(.is-up):hover .ix-mem-back { filter: brightness(1.07); }
