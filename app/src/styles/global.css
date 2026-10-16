@@ -308,6 +308,18 @@ button { font-family: inherit; }
 }
 .ms-linkcard:hover:not(.is-plain) { border-color: #1CABE2; }
 .ms-linkcard.is-plain:hover { transform: none; }
+.ms-linkcard-host {
+  display: inline-block; margin-top: 10px; padding: 4px 10px; border-radius: 100px;
+  background: rgba(28,171,226,.1); color: #0F7FA8; font-size: 12px; font-weight: 600;
+}
+
+/* Блок `contacts` в тексте: карточки панели помощи, на сером листе — белые,
+   на широком экране в две колонки. */
+.ms-contacts { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.ms-contacts .ms-help-card { display: flex; flex-direction: column; padding: 18px 20px; border-radius: 14px; background: #fff; }
+.ms-contacts .ms-help-name { font-size: 15px; }
+.ms-contacts .ms-help-role { font-size: 13.5px; }
+.ms-contacts .ms-help-actions { margin-top: auto; padding-top: 14px; }
 
 /* №9 «Հետաքրքիր է» и №11 подсказка-лампочка. Оба — необязательное
    углубление: свёрнуты, чтобы не разрывать основной текст, и не участвуют

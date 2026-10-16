@@ -4,6 +4,7 @@ import FigureWithBubble from './FigureWithBubble';
 import GuideSimulator from './GuideSimulator';
 import PlatformLogo from './PlatformLogo';
 import { LinkIcon, PhoneIcon } from './HelpButton';
+import ContactCard from './ContactCard';
 import { interactiveFor } from './ix';
 import { Icon } from './ix/icons';
 
@@ -315,6 +316,8 @@ export default function Block({ block: b, mod, scope, step, index, state, update
                 {it.url && <span style={{ display: 'inline-flex', color: '#1CABE2' }}><LinkIcon size={14} /></span>}
               </div>
               <div style={{ marginTop: 5, fontSize: 13, lineHeight: 1.6, color: '#5A6270' }}>{it.meta}</div>
+              {/* Адрес, как он написан в документе («moh.am», «unicef.org/armenia»). */}
+              {it.host && <span className="ms-linkcard-host">{it.host}</span>}
             </>
           );
           // Адрес в документе был живой ссылкой — здесь он тоже кликается,
@@ -327,6 +330,16 @@ export default function Block({ block: b, mod, scope, step, index, state, update
             <div key={i} className="ms-slide ms-linkcard is-plain">{body}</div>
           );
         })}
+      </div>,
+    );
+  }
+
+  // Организации с телефонами и сайтом — те же карточки, что в панели помощи
+  // (ContactCard): номер набирается нажатием, сайт открывается в новой вкладке.
+  if (b.k === 'contacts') {
+    return wrap(
+      <div className="ms-contacts">
+        {(b.items || []).map((c) => <ContactCard key={c.name} c={c} />)}
       </div>,
     );
   }
