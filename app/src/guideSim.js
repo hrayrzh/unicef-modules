@@ -141,6 +141,13 @@ export function platformOf(name = '') {
   if (n.includes('apple')) return 'apple';
   if (n.includes('facebook')) return 'facebook';
   if (n.includes('microsoft')) return 'microsoft';
+  // Модуль 5 (таблица рисков, настройки платформ). Гайдов-симуляторов у
+  // них нет, поэтому SKINS/DECOY для них не нужны — там свои запасные.
+  if (n.includes('telegram')) return 'telegram';
+  if (n.includes('fortnite') || n.includes('epic games')) return 'fortnite';
+  if (n.includes('pubg')) return 'pubg';
+  if (n.includes('minecraft')) return 'minecraft';
+  if (n.includes('brawl')) return 'brawlstars';
   return 'ios';
 }
 

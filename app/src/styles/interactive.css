@@ -1152,6 +1152,327 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
 }
 .ix-wall-after { animation: ixRise .5s cubic-bezier(.2,.85,.2,1) both; animation-delay: calc(var(--i) * 140ms + .5s); }
 
+/* ---------- Модуль 5 (5_1.html, 5_2.html): платформы, кольца, айсберг, сейф, человек ---------- */
+.ix-kicker { display: block; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: #0F7FA8; }
+.ix-kicker.is-warn { color: #9A6A00; }
+
+/* Плитка приложения (Platforms.jsx › AppTile): фирменный цвет, белый знак. */
+.ix-app {
+  flex-shrink: 0; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 30%;
+  background: var(--bg); color: var(--fg); box-shadow: inset 0 0 0 1px rgba(21,26,33,.08);
+}
+.ix-app svg { width: 62%; height: 62%; }
+.ix-app.is-plain { --bg: #E9EDF2; --fg: #5A6270; }
+
+/* Matrix: риск × платформа. Строка — обёртка с display: contents, чтобы
+   ячейки оставались детьми сетки; на телефоне название риска встаёт над
+   своим рядом точек во всю ширину. */
+.ix-mx {
+  display: grid; grid-template-columns: minmax(170px, 2.2fr) repeat(var(--cols), minmax(0, 1fr));
+  border-radius: 14px; border: 1px solid rgba(21,26,33,.08); overflow: hidden; background: #fff;
+}
+.ix-mx-row { display: contents; }
+.ix-mx-corner { background: #F7F8FA; }
+.ix-mx-pl {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; padding: 10px 1px 9px;
+  border: none; background: #F7F8FA; cursor: pointer; font: inherit; color: #5A6270;
+  transition: background .2s, color .2s;
+}
+.ix-mx-pl .ix-app { transition: transform .25s cubic-bezier(.2,.85,.2,1); }
+.ix-mx-pl:hover .ix-app { transform: translateY(-2px); }
+.ix-mx-pl.is-on { background: rgba(28,171,226,.16); color: #0F7FA8; }
+.ix-mx-pl:focus-visible, .ix-mx-risk:focus-visible { outline: 2px solid #1CABE2; outline-offset: -2px; }
+.ix-mx-pl-name { max-width: 100%; font-size: 10px; font-weight: 600; line-height: 1.2; letter-spacing: -.2px; }
+.ix-mx-risk {
+  display: flex; align-items: center; gap: 9px; min-width: 0; padding: 10px 12px; text-align: start; cursor: pointer;
+  font: inherit; font-size: 13.5px; font-weight: 600; line-height: 1.35; color: #2B313A;
+  border: none; border-top: 1px solid rgba(21,26,33,.07); background: transparent; transition: background .2s;
+}
+.ix-mx-risk:hover { background: rgba(245,182,42,.08); }
+.ix-mx-risk.is-on { background: rgba(245,182,42,.16); color: #151A21; }
+.ix-mx-mark {
+  flex-shrink: 0; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%;
+  border: 1.5px solid rgba(21,26,33,.2); color: #fff; transition: background .25s, border-color .25s;
+}
+.ix-mx-risk.is-open .ix-mx-mark { background: #1CABE2; border-color: #1CABE2; }
+/* Выбрана платформа — риски, где она названа, окрашены её цветом выбора. */
+.ix-mx-risk.is-hit { color: #0F7FA8; }
+.ix-mx-cell { display: grid; place-items: center; min-height: 46px; border-top: 1px solid rgba(21,26,33,.07); transition: background .2s; }
+.ix-mx-cell i { display: block; width: 6px; height: 6px; border-radius: 50%; background: rgba(21,26,33,.14); transition: background .3s, box-shadow .3s; }
+.ix-mx-cell.is-miss i { background: rgba(21,26,33,.05); }
+.ix-mx-cell.is-hit i {
+  width: 14px; height: 14px; background: #E3A214; box-shadow: 0 0 0 3px rgba(245,182,42,.22);
+  animation: ixPopIn .45s cubic-bezier(.3,1.4,.5,1) backwards; animation-delay: calc(var(--j) * 35ms);
+}
+.ix-mx-cell.in-row { background: rgba(245,182,42,.16); }
+.ix-mx-cell.in-col { background: rgba(28,171,226,.12); }
+.ix-mx-cell.in-col.is-hit i { background: #1CABE2; box-shadow: 0 0 0 3px rgba(28,171,226,.24); }
+.ix-mx-panel {
+  margin-top: 14px; padding: 16px 18px; border-radius: 14px;
+  background: #FFFBF1; border: 1px solid rgba(227,162,20,.28); animation: ixRise .45s cubic-bezier(.2,.85,.2,1) both;
+}
+.ix-mx-panel-h { display: block; margin-bottom: 10px; font-size: 16px; font-weight: 700; color: #151A21; }
+.ix-mx-panel-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.ix-mx-panel p { margin: 6px 0 0; font-size: 14.5px; line-height: 1.68; color: #2B313A; }
+
+/* Rings: защитные кольца вокруг ребёнка (Rings.jsx). Кольцо обводится
+   штрихом от верхней точки по часовой; подпись — по верхней дуге. */
+.ix-rg { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 24px; align-items: center; }
+.ix-rg-svg { display: block; width: 100%; height: auto; overflow: visible; -webkit-tap-highlight-color: transparent; }
+.ix-ring { cursor: pointer; }
+.ix-ring-base { fill: none; stroke: #EDF5FA; stroke-width: 20; transition: stroke .25s; }
+.ix-ring:hover .ix-ring-base { stroke: #D9EEF8; }
+.ix-ring-fill {
+  fill: none; stroke: #1CABE2; stroke-width: 20; stroke-dasharray: 1; stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1s cubic-bezier(.45,.05,.3,1), stroke .3s;
+}
+.ix-ring.is-lit .ix-ring-fill { stroke-dashoffset: 0; }
+.ix-ring.is-cur .ix-ring-fill { stroke: #0F7FA8; }
+.ix-ring-hit { fill: none; stroke: transparent; stroke-width: 24; pointer-events: stroke; }
+.ix-ring-label { font-size: 10.5px; font-weight: 700; letter-spacing: .02em; fill: #6E7787; pointer-events: none; transition: fill .3s ease .45s; }
+.ix-ring.is-lit .ix-ring-label { fill: #fff; }
+.ix-rg-child circle, .ix-rg-child path { fill: rgba(245,182,42,.34); stroke: #2B313A; stroke-width: 2.5; stroke-linejoin: round; }
+.ix-rg-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.ix-rg-chip {
+  display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px 7px 8px; border-radius: 100px; cursor: pointer;
+  font: inherit; font-size: 13px; font-weight: 600; line-height: 1.3; text-align: start; color: #2B313A;
+  background: #fff; border: 1px solid rgba(21,26,33,.16);
+  transition: background .25s, color .25s, border-color .25s, transform .22s cubic-bezier(.2,.85,.2,1);
+}
+.ix-rg-chip:hover { border-color: #1CABE2; transform: translateY(-1px); }
+.ix-rg-dot {
+  flex-shrink: 0; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%;
+  border: 1.5px solid rgba(21,26,33,.2); color: #fff; transition: background .25s, border-color .25s, color .25s;
+}
+.ix-rg-chip.is-lit .ix-rg-dot { background: #1CABE2; border-color: #1CABE2; }
+.ix-rg-chip.is-cur { background: #1CABE2; border-color: #1CABE2; color: #fff; }
+.ix-rg-chip.is-cur .ix-rg-dot { background: #fff; border-color: #fff; color: #0F7FA8; }
+.ix-rg-card {
+  margin-top: 14px; padding: 16px 18px; border-radius: 14px;
+  background: #F2FAFD; border: 1px solid rgba(28,171,226,.25); animation: ixRise .45s cubic-bezier(.2,.85,.2,1) both;
+}
+.ix-rg-card-h { display: block; margin-top: 4px; font-size: 16px; font-weight: 700; color: #151A21; }
+.ix-rg-card p { margin: 6px 0 0; font-size: 14.5px; line-height: 1.7; color: #2B313A; }
+.ix-rg-card.is-ghost { background: #FAFBFC; border: 1px dashed rgba(21,26,33,.16); animation: none; }
+.ix-rg-card.is-ghost .ix-kicker { color: #8A919D; }
+.ix-rg-card.is-ghost .ix-tl-ghost { padding-top: 10px; }
+
+/* Iceberg: над водой — активный след, под водой в темноте — пассивный
+   (Iceberg.jsx). Подписи и значки — HTML поверх SVG, координаты в %. */
+.ix-ice-mark {
+  color: inherit; background: none; border-radius: 4px; padding: 0 2px; margin: 0 -2px;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background .5s ease, box-shadow .5s ease;
+}
+.ix-ice-mark.is-top.is-on { background: rgba(28,171,226,.16); box-shadow: inset 0 -2px 0 #1CABE2; }
+.ix-ice-mark.is-deep.is-on { background: rgba(10,63,94,.1); box-shadow: inset 0 -2px 0 #0A3F5E; }
+.ix-ice {
+  position: relative; aspect-ratio: 600 / 380; border-radius: 16px; overflow: hidden; background: #0A3F5E;
+  user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.ix-ice-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.ix-ice-tip, .ix-ice-under { cursor: pointer; }
+.ix-ice.has-top .ix-ice-tip, .ix-ice.has-deep .ix-ice-under { cursor: default; }
+.ix-ice-ice { fill: #fff; stroke: rgba(10,63,94,.28); stroke-width: 2; stroke-linejoin: round; }
+.ix-ice-facet { fill: #D3ECF8; }
+.ix-ice-facet.is-soft { fill: #F1F9FD; }
+.ix-ice-tip { transition: filter .6s ease; }
+.ix-ice.has-top .ix-ice-tip { filter: drop-shadow(0 0 12px rgba(28,171,226,.6)); }
+.ix-ice-deep { opacity: .22; transition: opacity 1.2s ease .15s; }
+.ix-ice.has-deep .ix-ice-deep { opacity: 1; }
+.ix-ice-deep .ix-ice-ice { fill: #E6F5FC; }
+.ix-ice-murk { fill: #04202F; opacity: .6; transition: opacity 1.2s ease; }
+.ix-ice.has-deep .ix-ice-murk { opacity: 0; }
+.ix-ice-rays path { fill: #fff; opacity: 0; transition: opacity 1.4s ease .4s; }
+.ix-ice.has-deep .ix-ice-rays path { opacity: .08; }
+.ix-ice-line { fill: none; stroke: #fff; stroke-width: 2.5; opacity: .75; pointer-events: none; }
+.ix-ice-tag {
+  position: absolute; z-index: 1; display: flex; flex-direction: column; gap: 3px; padding: 7px 12px; border-radius: 12px; cursor: pointer;
+  font: inherit; text-align: start; border: 1px solid transparent; box-shadow: 0 10px 24px -14px rgba(0,0,0,.6);
+  animation: ixRing 1.8s ease-out infinite; transition: background .4s, color .4s, border-color .4s;
+}
+.ix-ice-tag.is-on { cursor: default; animation: none; }
+.ix-ice-tag:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.ix-ice-tag.is-top { left: 64%; top: 6%; max-width: 34%; background: #fff; color: #0F7FA8; }
+.ix-ice-tag.is-deep { left: 50%; top: 64%; translate: -50% -50%; max-width: 52%; background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.4); color: #fff; }
+.ix-ice.has-deep .ix-ice-tag.is-deep { background: #0A3F5E; border-color: #0A3F5E; }
+.ix-ice-tag-h { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 800; line-height: 1.3; }
+.ix-ice-tag-t { font-size: 13px; line-height: 1.45; font-weight: 500; color: #2B313A; animation: ixFadeIn .4s ease both; }
+.ix-ice-tag.is-deep .ix-ice-tag-t { color: #fff; }
+.ix-ice-bit {
+  position: absolute; z-index: 1; display: grid; place-items: center; width: 30px; height: 30px; margin: -15px 0 0 -15px;
+  border-radius: 50%; opacity: 0; scale: .4; pointer-events: none;
+  transition: opacity .4s ease, scale .55s cubic-bezier(.3,1.4,.5,1); transition-delay: calc(var(--i) * 90ms + .25s);
+}
+.ix-ice-bit.is-up { background: #fff; color: #1CABE2; box-shadow: 0 6px 14px -8px rgba(0,0,0,.45); }
+.ix-ice-bit.is-down { background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.45); }
+.ix-ice.has-top .ix-ice-bit.is-up, .ix-ice.has-deep .ix-ice-bit.is-down { opacity: 1; scale: 1; }
+
+/* Toggles: экран приложений и экран настроек (Platforms.jsx). */
+.ix-tg { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 18px; align-items: start; }
+.ix-tg-apps {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 4px; padding: 16px 8px;
+  border-radius: 22px; background: linear-gradient(160deg, #E4F4FC, #F4F6F9);
+}
+.ix-tg-app {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; padding: 4px 2px; cursor: pointer;
+  font: inherit; border: none; background: transparent; border-radius: 14px;
+}
+.ix-tg-app:focus-visible { outline: 2px solid #1CABE2; outline-offset: 0; }
+.ix-tg-app-ico { position: relative; display: block; border-radius: 30%; transition: transform .25s cubic-bezier(.2,.85,.2,1), box-shadow .25s; }
+.ix-tg-app-ico .ix-app { width: 46px; height: 46px; box-shadow: 0 8px 16px -12px rgba(21,26,33,.7), inset 0 0 0 1px rgba(21,26,33,.08); }
+.ix-tg-app:hover .ix-tg-app-ico { transform: translateY(-2px); }
+.ix-tg-app.is-on .ix-tg-app-ico { box-shadow: 0 0 0 3px #fff, 0 0 0 5px #1CABE2; }
+.ix-tg-app-name { max-width: 100%; font-size: 11px; font-weight: 600; line-height: 1.25; text-align: center; color: #2B313A; }
+.ix-tg-badge {
+  position: absolute; right: -6px; top: -6px; display: grid; place-items: center; width: 19px; height: 19px; border-radius: 50%;
+  background: #1CABE2; color: #fff; box-shadow: 0 0 0 2px #fff; animation: ixPopIn .4s cubic-bezier(.3,1.4,.5,1) both;
+}
+.ix-tg-screen { border-radius: 18px; background: #F2F4F7; border: 1px solid rgba(21,26,33,.1); overflow: hidden; animation: ixFadeIn .3s ease both; }
+.ix-tg-bar { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #fff; border-bottom: 1px solid rgba(21,26,33,.08); }
+.ix-tg-bar .ix-app { width: 30px; height: 30px; }
+.ix-tg-name { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 700; line-height: 1.35; color: #151A21; }
+.ix-tg-count { flex-shrink: 0; font-size: 10.5px; letter-spacing: .12em; font-weight: 600; color: #0F7FA8; font-variant-numeric: tabular-nums; }
+.ix-tg-list { list-style: none; margin: 12px; padding: 0; border-radius: 14px; background: #fff; overflow: hidden; border: 1px solid rgba(21,26,33,.06); }
+.ix-tg-list li + li { border-top: 1px solid rgba(21,26,33,.07); }
+.ix-tg-row {
+  width: 100%; display: flex; align-items: center; gap: 14px; padding: 13px 14px; cursor: pointer;
+  font: inherit; font-size: 14.5px; line-height: 1.55; text-align: start; color: #2B313A; border: none; background: transparent;
+  transition: background .2s; animation: ixRise .4s cubic-bezier(.2,.85,.2,1) backwards; animation-delay: calc(var(--i) * 50ms);
+}
+.ix-tg-row:hover { background: rgba(28,171,226,.05); }
+.ix-tg-row:focus-visible { outline: 2px solid #1CABE2; outline-offset: -2px; }
+.ix-tg-text { flex: 1; min-width: 0; }
+.ix-sw { flex-shrink: 0; position: relative; width: 44px; height: 26px; border-radius: 100px; background: #D5DAE1; transition: background .3s cubic-bezier(.2,.85,.2,1); }
+.ix-sw i {
+  position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 50%; background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.22); transition: transform .3s cubic-bezier(.2,.85,.2,1);
+}
+.ix-tg-row.is-on .ix-sw { background: #1CABE2; }
+.ix-tg-row.is-on .ix-sw i { transform: translateX(18px); }
+.ix-tg-src { display: flex; gap: 8px; align-items: flex-start; margin: 0 16px 14px; font-size: 12.5px; line-height: 1.5; color: #6E7787; overflow-wrap: anywhere; }
+.ix-tg-src > svg { flex-shrink: 0; margin-top: 1px; color: #0F7FA8; }
+
+/* Vault: данные под замок (Vault.jsx). Пока данное «на виду» — пунктир и
+   глаз; спрятанное — тёмная плашка с замком. */
+.ix-vault { display: flex; flex-direction: column; gap: 14px; }
+.ix-vault-g {
+  padding: 14px 16px 16px; border-radius: 16px; background: #F7F8FA; border: 1px solid rgba(21,26,33,.08);
+  transition: background .5s ease, border-color .5s ease;
+  animation: ixRise .45s cubic-bezier(.2,.85,.2,1) backwards; animation-delay: calc(var(--i) * 70ms);
+}
+.ix-vault-g.is-shut { background: #F1F8FC; border-color: rgba(28,171,226,.32); }
+.ix-vault-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.ix-safe { flex-shrink: 0; width: 40px; height: 40px; overflow: visible; }
+.ix-safe-body { fill: #fff; stroke: #2B313A; stroke-width: 2.2; }
+.ix-safe-hole { fill: #2B313A; opacity: .16; }
+.ix-safe-door { transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(-.42) skewY(-10deg); transition: transform .6s cubic-bezier(.3,1.3,.5,1); }
+.ix-safe-door rect { fill: #fff; stroke: #2B313A; stroke-width: 2.2; transition: fill .4s ease .2s; }
+.ix-safe-door circle, .ix-safe-door path { fill: none; stroke: #2B313A; stroke-width: 1.8; stroke-linecap: round; transition: stroke .4s ease .2s; }
+.ix-safe.is-shut .ix-safe-door { transform: none; }
+.ix-safe.is-shut .ix-safe-door rect { fill: #1CABE2; }
+.ix-safe.is-shut .ix-safe-door circle, .ix-safe.is-shut .ix-safe-door path { stroke: #fff; }
+.ix-safe-feet { fill: none; stroke: #2B313A; stroke-width: 2.2; stroke-linecap: round; }
+.ix-vault-n {
+  flex-shrink: 0; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(21,26,33,.08); color: #5A6270; font-size: 12px; font-weight: 800; transition: background .4s, color .4s;
+}
+.ix-vault-g.is-shut .ix-vault-n { background: #1CABE2; color: #fff; }
+.ix-vault-title { flex: 1; min-width: 0; font-size: 15px; font-weight: 700; line-height: 1.4; color: #151A21; }
+.ix-vault-pre { margin: 0 0 12px; font-size: 14.5px; line-height: 1.65; color: #2B313A; }
+.ix-vault-items { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.ix-vault-items li { display: contents; }
+.ix-vault-item {
+  display: inline-flex; align-items: center; gap: 9px; max-width: 100%; padding: 8px 14px 8px 8px; border-radius: 12px; cursor: pointer;
+  font: inherit; font-size: 14px; line-height: 1.45; text-align: start; color: #151A21;
+  background: #fff; border: 1px dashed rgba(21,26,33,.28);
+  transition: background .35s, color .35s, border-color .35s, transform .25s cubic-bezier(.2,.85,.2,1);
+}
+.ix-vault-item:hover:not(.is-locked) { border-color: #1CABE2; transform: translateY(-2px); }
+.ix-vault-item:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
+.ix-vault-ico {
+  flex-shrink: 0; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px;
+  background: rgba(245,182,42,.18); color: #9A6A00; transition: background .35s, color .35s;
+}
+.ix-vault-item.is-locked { cursor: default; background: #24323F; border: 1px solid #24323F; color: #fff; }
+.ix-vault-item.is-locked .ix-vault-ico { background: rgba(255,255,255,.14); color: #fff; animation: ixBadge .45s cubic-bezier(.3,1.4,.5,1); }
+.ix-vault-why {
+  flex-basis: 100%; display: flex; gap: 10px; align-items: flex-start; margin: 12px 0 0; padding: 12px 14px; border-radius: 12px;
+  background: #fff; border: 1px solid rgba(28,171,226,.3); font-size: 14.5px; line-height: 1.65; color: #2B313A;
+  animation: ixRise .45s cubic-bezier(.2,.85,.2,1) both;
+}
+.ix-vault-why.is-item { margin: 0 0 6px; }
+.ix-vault-why b { color: #0F7FA8; }
+.ix-vault-why-ico { flex-shrink: 0; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: #1CABE2; color: #fff; }
+
+/* Identity: примеры из абзаца садятся подписями на фигуру (Identity.jsx).
+   Пока ничего не отмечено, силуэт пунктирный и безликий. */
+.ix-id-word {
+  color: #0F7FA8; font-weight: 600; cursor: pointer; border-radius: 4px; padding: 0 2px; margin: 0 -2px;
+  background: rgba(28,171,226,.08); box-shadow: inset 0 -2px 0 rgba(28,171,226,.5);
+  -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background .3s, color .3s, box-shadow .3s;
+}
+.ix-id-word:hover { background: rgba(28,171,226,.18); }
+.ix-id-word:focus-visible { outline: 2px solid #1CABE2; outline-offset: 1px; }
+.ix-id-word.is-on { cursor: default; background: #1CABE2; color: #fff; box-shadow: none; }
+.ix-id {
+  position: relative; aspect-ratio: 440 / 320; max-width: 640px; margin: 0 auto; border-radius: 16px;
+  background-color: #FAFBFC; background-image: radial-gradient(rgba(21,26,33,.07) 1px, transparent 1.2px);
+  background-size: 18px 18px; border: 1px solid rgba(21,26,33,.08);
+}
+.ix-id-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.ix-id-body * {
+  fill: none; stroke: #A9B2BE; stroke-width: 3; stroke-dasharray: 7 7; stroke-linecap: round; stroke-linejoin: round;
+  transition: stroke .6s ease, fill .6s ease;
+}
+.ix-id.is-known .ix-id-body * { stroke: #2B313A; stroke-dasharray: none; }
+.ix-id.is-known .ix-id-body circle, .ix-id.is-known .ix-id-body path:nth-child(2) { fill: rgba(28,171,226,.14); }
+.ix-id-q { font-size: 30px; font-weight: 800; fill: #A9B2BE; text-anchor: middle; }
+.ix-id-pin {
+  fill: #fff; stroke: #A9B2BE; stroke-width: 2; transform-box: fill-box; transform-origin: center;
+  animation: ixTwinkle 2.2s ease-in-out infinite; animation-delay: calc(var(--i) * -.3s);
+}
+.ix-id-spot.is-on .ix-id-pin { fill: #1CABE2; stroke: #fff; animation: none; }
+.ix-d.ix-id-lead { stroke: #1CABE2; stroke-width: 1.6; }
+.ix-id-label {
+  position: absolute; z-index: 1; max-width: 29%; translate: 0 -50%; padding: 5px 10px; border-radius: 10px;
+  background: #1CABE2; color: #fff; font-size: 12.5px; font-weight: 600; line-height: 1.35;
+  box-shadow: 0 8px 18px -12px rgba(15,127,168,.9);
+}
+.ix-id-label.is-l { text-align: end; }
+
+@media (max-width: 720px) {
+  .ix-mx-panel-cols { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .ix-rg { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .ix-rg-stage { width: 100%; max-width: 300px; margin: 0 auto; }
+  .ix-tg { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .ix-tg-apps { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px 2px; padding: 12px 4px; }
+  .ix-tg-app-ico .ix-app { width: 40px; height: 40px; }
+  .ix-tg-app-name { font-size: 10px; }
+}
+@media (max-width: 560px) {
+  .ix-mx { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); }
+  .ix-mx-corner, .ix-mx-pl-name { display: none; }
+  .ix-mx-pl { padding: 9px 0 7px; }
+  .ix-mx-pl .ix-app { width: 24px; height: 24px; }
+  .ix-mx-risk { grid-column: 1 / -1; padding: 10px 10px 4px; }
+  .ix-mx-cell { min-height: 32px; border-top: none; }
+  .ix-ice-tag { padding: 5px 9px; }
+  .ix-ice-tag-h { font-size: 12px; }
+  .ix-ice-tag-t { font-size: 11.5px; line-height: 1.35; }
+  .ix-ice-tag.is-top { top: 4%; max-width: 35%; }
+  .ix-ice-tag.is-deep { max-width: 60%; }
+  .ix-ice-bit { width: 24px; height: 24px; margin: -12px 0 0 -12px; }
+  .ix-ice-bit svg { width: 13px; height: 13px; }
+  .ix-tg-list { margin: 10px; }
+  .ix-tg-row { padding: 12px; font-size: 14px; }
+  .ix-vault-g { padding: 12px 12px 14px; }
+  .ix-vault-item { font-size: 13.5px; }
+  /* На узкой сцене подписи резали слова и наезжали друг на друга. Пояснения
+     айсберга подсвечены в абзаце прямо над ним; у человека слово в абзаце
+     окрашивается, а на фигуре дорисовывается его место. */
+  .ix-ice-tag-t, .ix-id-label, .ix-d.ix-id-lead { display: none; }
+}
+
 /* ---------- Narrow screens (D4) ---------- */
 @media (max-width: 720px) {
   .ix-head { padding: 16px 16px 2px; gap: 12px; }

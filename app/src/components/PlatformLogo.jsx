@@ -11,10 +11,14 @@ import { platformOf } from '../guideSim';
  * симулятора это безобидно, а здесь дало бы чужой логотип. Поэтому Apple
  * показывается только когда название действительно про Apple.
  */
-export default function PlatformLogo({ name = '', size = 26 }) {
+export function logoFor(name = '') {
   const platform = platformOf(name);
   if (platform === 'ios' && !/iphone|ipad|ios/i.test(name)) return null;
-  const logo = LOGOS[platform];
+  return LOGOS[platform] || null;
+}
+
+export default function PlatformLogo({ name = '', size = 26 }) {
+  const logo = logoFor(name);
   if (!logo) return null;
   return (
     <span

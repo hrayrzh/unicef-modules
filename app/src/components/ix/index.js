@@ -13,6 +13,11 @@ import { Curtain } from './Curtain';
 import { Spot } from './Spot';
 import { Ripple, Trust } from './Talk';
 import { Wall } from './Wall';
+import { Matrix, Toggles } from './Platforms';
+import { Rings } from './Rings';
+import { Iceberg } from './Iceberg';
+import { Vault } from './Vault';
+import { Identity } from './Identity';
 
 // Интерактивные блоки (модуль 2, по предложениям из «Մոդուլ 2 _որոշ
 // առաջարկություններ.html»). Тексты в них — те же абзацы документа, блок
@@ -42,6 +47,13 @@ const KINDS = {
   trust: Trust,
   ripple: Ripple,
   wall: Wall,
+  // Модуль 5 — по файлам предложений 5_1.html и 5_2.html.
+  matrix: Matrix,
+  rings: Rings,
+  iceberg: Iceberg,
+  toggles: Toggles,
+  vault: Vault,
+  identity: Identity,
 };
 
 /** The component for an interactive block, or null for an ordinary one. */

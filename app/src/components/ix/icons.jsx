@@ -37,6 +37,12 @@ const PATHS = {
   wall: <><rect x="3" y="5" width="18" height="14" rx="1.5" /><path d="M3 9.7h18M3 14.3h18M9 5v4.7M15 5v4.7M6 9.7v4.6M12 9.7v4.6M18 9.7v4.6M9 14.3V19M15 14.3V19" /></>,
   ripple: <><path d="M12 3.5s-3.4 3.9-3.4 6.4a3.4 3.4 0 006.8 0c0-2.5-3.4-6.4-3.4-6.4z" /><path d="M4.5 15.5c1.8 1.8 4.5 3 7.5 3s5.7-1.2 7.5-3" /><path d="M8 15c1.1.6 2.5 1 4 1s2.9-.4 4-1" /></>,
   heart: <path d="M12 19.5s-7.5-4.4-7.5-9.7A4.1 4.1 0 0112 7.5a4.1 4.1 0 017.5 2.3c0 5.3-7.5 9.7-7.5 9.7z" />,
+  // Module 5: settings switch, protective rings, iceberg, safe, a tagged person.
+  toggle: <><rect x="2.5" y="7" width="19" height="10" rx="5" /><circle cx="16.5" cy="12" r="2.8" /></>,
+  rings: <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5.6" /><circle cx="12" cy="12" r="2.2" /></>,
+  iceberg: <><path d="M2.5 10.5h19" /><path d="M8 10.5l3-5.5 1.8 2.4 1.4-1.2 2.8 4.3" /><path d="M7.5 10.5L5 15l3.5 4.5h7l3-4.5-2-4.5" strokeDasharray="2 1.7" /></>,
+  safe: <><rect x="3.5" y="4" width="17" height="15" rx="2" /><circle cx="12" cy="11.5" r="3.2" /><path d="M12 8.3v1M12 13.7v1M8.8 11.5h1M14.2 11.5h1M6.5 19v1.5M17.5 19v1.5" /></>,
+  idtag: <><circle cx="10" cy="7" r="3" /><path d="M4.5 20.5V16a5.5 5.5 0 018.6-4.5" /><path d="M14 14.5h6.5v5H14l-1.8-2.5z" /></>,
 
   // People and places.
   family: <><circle cx="7.5" cy="6" r="2.2" /><circle cx="16.5" cy="6" r="2.2" /><circle cx="12" cy="12.6" r="1.8" /><path d="M4 20v-5.5A3.5 3.5 0 017.5 11M20 20v-5.5a3.5 3.5 0 00-3.5-3.5" /><path d="M9.2 20v-2.6a2.8 2.8 0 015.6 0V20" /></>,
