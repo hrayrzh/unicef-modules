@@ -911,37 +911,55 @@
 .ix-cur-todo.is-locked .ix-cur-todo-h { color: #8A919D; }
 .ix-cur-todo.is-locked .ix-tl-ghost { padding-top: 4px; }
 
-/* Spot: заметить признаки на рисунке (Spot.jsx, сцены — art.jsx › SPOT_SCENES).
-   Точки центрируются свойством translate, а пульс и появление идут через
-   box-shadow и scale — друг друга не перебивают. */
-@keyframes ixSpotPulse { from { box-shadow: 0 0 0 0 rgba(227,162,20,.55); } to { box-shadow: 0 0 0 14px rgba(227,162,20,0); } }
-@keyframes ixSpotPulseSm { from { box-shadow: 0 0 0 0 rgba(227,162,20,.55); } to { box-shadow: 0 0 0 7px rgba(227,162,20,0); } }
-@keyframes ixSpotIn { from { opacity: 0; scale: .3; } to { opacity: 1; scale: 1; } }
-.ix-spot {
-  position: relative; aspect-ratio: 2 / 1; border-radius: 16px; overflow: hidden;
-  background-color: #FAFBFC; background-image: radial-gradient(rgba(21,26,33,.07) 1px, transparent 1.2px);
-  background-size: 18px 18px; border: 1px solid rgba(21,26,33,.08);
+/* Spot — «фонарик» (Spot.jsx): иллюстрация в темноте, луч за курсором или
+   пальцем, найденные места остаются освещёнными, в конце включается свет.
+   pan-y: вертикальный свайп по картинке по-прежнему листает страницу,
+   луч водят горизонтально или нажатием. */
+@keyframes ixHole { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes ixTwinkle { 0%, 100% { opacity: .55; scale: .85; } 50% { opacity: 1; scale: 1.1; } }
+@keyframes ixDwell { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes ixSayIn { from { opacity: 0; transform: translate(-10%, -60%) scale(.6); } to { opacity: 1; transform: translate(-10%, -100%) scale(1); } }
+.ix-torch {
+  position: relative; overflow: hidden; border-radius: 16px; background: #060D1A;
+  touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: none;
 }
-.ix-d.is-warn { stroke: #E3A214; }
-.ix-f.tone-ink { fill: #2B313A; }
-.ix-art-say { fill: #7C5500; font-size: 16px; font-weight: 700; font-family: inherit; }
-.ix-art-q { fill: #C98A00; font-size: 16px; font-weight: 800; font-family: inherit; }
-.ix-spot-dot {
-  position: absolute; z-index: 1; translate: -50% -50%; width: 30px; height: 30px; padding: 0; border-radius: 50%; cursor: pointer;
-  display: grid; place-items: center; font: inherit; font-size: 13px; font-weight: 800; color: #fff;
-  background: rgba(255,255,255,.9); border: 2px solid #E3A214;
-  transition: scale .25s cubic-bezier(.2,.85,.2,1), background .3s, border-color .3s;
-  animation: ixSpotIn .45s cubic-bezier(.3,1.4,.5,1) backwards, ixSpotPulse 1.8s ease-out infinite;
-  animation-delay: calc(1s + var(--i) * 90ms), calc(1.4s + var(--i) * 230ms);
+.ix-torch.is-lit { cursor: default; }
+.ix-torch-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.ix-torch-dark { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.ix-torch-shade { fill: #050B16; opacity: .9; transition: opacity 1.4s ease .2s; }
+.ix-torch.is-lit .ix-torch-shade { opacity: 0; }
+.ix-torch-hole { transform-box: fill-box; transform-origin: center; animation: ixHole .7s cubic-bezier(.2,.85,.2,1) both; }
+.ix-torch-ring { fill: none; stroke: rgba(255,255,255,.4); stroke-width: 1.5; vector-effect: non-scaling-stroke; transition: opacity .4s; }
+.ix-torch.is-lit .ix-torch-ring { opacity: 0; }
+
+/* Место признака: в темноте — мерцающая искра, найденное — янтарный номер. */
+.ix-torch-spot {
+  position: absolute; z-index: 1; translate: -50% -50%; width: 34px; height: 34px; padding: 0; border: none; border-radius: 50%;
+  display: grid; place-items: center; cursor: none; background: transparent;
+  font: inherit; font-size: 12px; font-weight: 800; color: #fff;
 }
-.ix-spot-dot:hover { scale: 1.15; }
-.ix-spot-dot:focus-visible { outline: 2px solid #1CABE2; outline-offset: 3px; }
-.ix-spot-core { width: 10px; height: 10px; border-radius: 50%; background: #E3A214; }
-.ix-spot-dot.is-found {
-  width: 24px; height: 24px; font-size: 12px; background: #E3A214; border-color: #fff;
-  box-shadow: 0 6px 14px -6px rgba(124,85,0,.7); animation: ixPopIn .45s cubic-bezier(.3,1.4,.5,1);
+.ix-torch.is-lit .ix-torch-spot { cursor: default; }
+.ix-torch-spot::before {
+  content: ''; position: absolute; inset: 11px; border-radius: 50%;
+  background: radial-gradient(circle, #FFE7A3 0 30%, rgba(245,182,42,.85) 45%, rgba(245,182,42,0) 72%);
+  animation: ixTwinkle 2.2s ease-in-out infinite; animation-delay: calc(var(--i) * -.37s);
 }
-.ix-spot-dot.is-found.is-hi { box-shadow: 0 0 0 4px rgba(245,182,42,.4), 0 6px 14px -6px rgba(124,85,0,.7); }
+.ix-torch-spot:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
+.ix-torch-dwell { position: absolute; inset: 0; width: 100%; height: 100%; rotate: -90deg; overflow: visible; }
+.ix-torch-dwell circle { fill: none; stroke: #F5B62A; stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; }
+.ix-torch-spot.is-aim .ix-torch-dwell circle { opacity: 1; animation: ixDwell .48s linear forwards; }
+.ix-torch-spot.is-found { width: 24px; height: 24px; background: #E3A214; box-shadow: 0 0 0 3px rgba(255,255,255,.85), 0 8px 18px -6px rgba(0,0,0,.6); animation: ixPopIn .45s cubic-bezier(.3,1.4,.5,1); }
+.ix-torch-spot.is-found::before { display: none; }
+.ix-torch-spot.is-found.is-hi { box-shadow: 0 0 0 3px #fff, 0 0 0 7px rgba(245,182,42,.55), 0 8px 18px -6px rgba(0,0,0,.6); }
+/* Облачко короткого ответа над местом: «չգիտեմ». */
+.ix-torch-say {
+  position: absolute; z-index: 1; padding: 6px 12px; border-radius: 14px 14px 14px 4px; white-space: nowrap;
+  background: #fff; border: 2px solid #E3A214; color: #7C5500; font-size: 14px; font-weight: 700; line-height: 1.2;
+  transform: translate(-10%, -100%); margin-top: -18px; pointer-events: none;
+  box-shadow: 0 10px 22px -12px rgba(0,0,0,.6);
+  animation: ixSayIn .5s cubic-bezier(.3,1.4,.5,1) .2s both;
+}
+
 .ix-spot-list { margin: 14px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .ix-spot-item {
   display: flex; gap: 12px; align-items: flex-start; padding: 11px 14px; border-radius: 12px;
@@ -1054,7 +1072,7 @@
 .ix-rip.is-open { cursor: default; }
 .ix-rip.tone-do.is-open { border-color: rgba(28,171,226,.42); background: rgba(28,171,226,.05); }
 .ix-rip.tone-dont.is-open { border-color: rgba(255,107,90,.42); background: rgba(255,107,90,.05); }
-.ix-rip-say, .ix-rip-more { position: relative; z-index: 1; }
+.ix-rip-say, .ix-rip-more, .ix-rip-label { position: relative; z-index: 1; }
 .ix-rip-say { display: flex; gap: 12px; align-items: flex-start; }
 /* Плитка светлая, пока фразу не открыли: залитая галочка на каждой строке
    читалась как «уже пройдено». */
@@ -1068,11 +1086,12 @@
 .ix-rip.is-open .ix-rip-more { grid-template-rows: 1fr; }
 .ix-rip-more-in { min-height: 0; overflow: hidden; padding-left: 38px; }
 .ix-rip-label {
-  display: flex; align-items: center; gap: 6px; margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(21,26,33,.14);
-  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  display: flex; align-items: center; gap: 6px; margin: 10px 0 0 38px; padding-top: 9px; border-top: 1px dashed rgba(21,26,33,.14);
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: #8A919D;
+  transition: color .3s;
 }
-.tone-do .ix-rip-label { color: #0F7FA8; }
-.tone-dont .ix-rip-label { color: #C74232; }
+.ix-rip:hover:not(.is-open) .ix-rip-label, .tone-do.is-open .ix-rip-label { color: #0F7FA8; }
+.tone-dont:hover:not(.is-open) .ix-rip-label, .tone-dont.is-open .ix-rip-label { color: #C74232; }
 .ix-rip-effect { margin: 6px 0 2px; font-size: 14.5px; line-height: 1.68; color: #2B313A; }
 /* Круги растут размером, а не scale(): при масштабе толщина обводки
    росла вместе с кругом, и волна шла по тексту жирной дугой. */
@@ -1177,11 +1196,10 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
   .ix-dev-label { width: 80px; font-size: 11px; }
   /* Модуль 4: точки на рисунке мельче, шторка ниже, реплики друг под
      другом, кирпичи ниже, миф мельче. */
-  .ix-spot-dot { width: 20px; height: 20px; border-width: 1.5px; animation-name: ixSpotIn, ixSpotPulseSm; }
-  .ix-spot-dot.is-found { width: 17px; height: 17px; font-size: 10px; border-width: 1.5px; animation: ixPopIn .45s cubic-bezier(.3,1.4,.5,1); }
-  .ix-spot-core { width: 7px; height: 7px; }
-  /* Точку легче нажать, чем видно: невидимая зона вокруг — 36px. */
-  .ix-spot-dot::after { content: ''; position: absolute; inset: -8px; border-radius: 50%; }
+  .ix-torch-spot { width: 28px; height: 28px; }
+  .ix-torch-spot::before { inset: 8px; }
+  .ix-torch-spot.is-found { width: 19px; height: 19px; font-size: 10px; box-shadow: 0 0 0 2px rgba(255,255,255,.85), 0 6px 14px -6px rgba(0,0,0,.6); }
+  .ix-torch-say { font-size: 12px; padding: 4px 9px; margin-top: -12px; }
   .ix-cur-side { min-height: 210px; padding: 14px 16px 22px; }
   .ix-cur-text { max-width: 86%; font-size: 18px; }
   .ix-cur-tag { font-size: 11px; padding: 4px 10px; }
@@ -1192,6 +1210,7 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
   .ix-myth-half { font-size: 19px; }
   .ix-rip-quote { font-size: 15.5px; }
   .ix-rip-more-in { padding-left: 0; }
+  .ix-rip-label { margin-left: 0; }
   .ix-wall { min-height: 260px; }
   .ix-brick { min-height: 48px; padding: 8px 12px; font-size: 13px; }
   /* На узкой стене пустой кирпич вставал один в целый ряд. */

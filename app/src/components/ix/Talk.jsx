@@ -149,7 +149,7 @@ function Face({ mood }) {
  *
  * Поля — как у таблицы: `title`, `head[2]` = [фраза, действие], `rows[]`, `tone`.
  */
-const RIPPLE_HINT = 'Սեղմեք յուրաքանչյուր արտահայտությանը։';
+const RIPPLE_HINT = 'Սեղմեք արտահայտության վրա՝ տեսնելու, թե ինչպես է այն ազդում երեխայի վրա։';
 
 export function Ripple({ block: b, done, onDone, R }) {
   const head = b.head || [];
@@ -177,7 +177,9 @@ export function Ripple({ block: b, done, onDone, R }) {
       icon={<Icon name="ripple" />}
       className={tone === 'dont' ? 'is-danger' : ''}
       title={b.title}
-      hint={complete ? null : RIPPLE_HINT}
+      // Подсказка остаётся и у пройденного блока: без неё таблица выглядит
+      // как обычный список фраз (просьба Армана).
+      hint={RIPPLE_HINT}
       progress={`${count} / ${n}`}
       done={complete}
     >
@@ -206,9 +208,14 @@ export function Ripple({ block: b, done, onDone, R }) {
               <span className="ix-rip-ico" aria-hidden><Icon name={tone === 'dont' ? 'close' : 'check'} size={13} strokeWidth={3} /></span>
               <span className="ix-rip-quote">{R(row[0])}</span>
             </div>
+            {/* Подпись второй колонки видна и у закрытой фразы: сразу ясно,
+                что за нажатием (просьба Армана). */}
+            <span className="ix-rip-label">
+              <Icon name={open[i] ? 'next' : 'plus'} size={12} strokeWidth={2.6} />
+              {head[1]}
+            </span>
             <div className="ix-rip-more">
               <div className="ix-rip-more-in">
-                <span className="ix-rip-label"><Icon name="next" size={12} strokeWidth={2.6} />{head[1]}</span>
                 <p className="ix-rip-effect">{R(row[1])}</p>
               </div>
             </div>
