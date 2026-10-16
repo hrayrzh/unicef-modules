@@ -1441,31 +1441,16 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
   background-size: 18px 18px; border: 1px solid rgba(21,26,33,.08);
 }
 .ix-id-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-/* Фигура: серая, как аватар «без фото»; часть окрашивается, когда отмечен её
-   пример (.is-on), всё — когда отмечены все (.is-known). */
+/* Фигура: снизу серая размытая копия иллюстрации, сверху цветная — видна
+   через маску там, где пример отмечен; когда отмечены все, маска
+   открывается целиком, а серая копия гаснет. */
 .ix-id-shadow { fill: rgba(21,26,33,.07); }
-.ix-id-part { fill: #DCE1E7; stroke: #B9C1CC; stroke-width: 2.5; stroke-linejoin: round; transition: fill .6s ease, stroke .6s ease; }
-.ix-id-part.is-skin.is-on, .ix-id.is-known .ix-id-part.is-skin { fill: #FFD9B5; stroke: #2B313A; }
-.ix-id-part.is-shirt.is-on, .ix-id.is-known .ix-id-part.is-shirt { fill: #8ED4F1; stroke: #2B313A; }
-.ix-id-tube-o { fill: none; stroke: #B9C1CC; stroke-width: 15; stroke-linecap: round; transition: stroke .6s ease; }
-.ix-id-tube { fill: none; stroke: #DCE1E7; stroke-width: 10; stroke-linecap: round; transition: stroke .6s ease; }
-.is-on > .ix-id-tube-o, .ix-id.is-known .ix-id-tube-o { stroke: #2B313A; }
-.ix-id-arm.is-on .ix-id-tube.is-shirt, .ix-id.is-known .ix-id-tube.is-shirt { stroke: #8ED4F1; }
-.ix-id-leg.is-on .ix-id-tube.is-pants, .ix-id.is-known .ix-id-tube.is-pants { stroke: #46617A; }
-.ix-id-shoe { fill: #C9D0D9; stroke: #B9C1CC; stroke-width: 2.5; stroke-linejoin: round; transition: fill .6s ease, stroke .6s ease; }
-.ix-id-leg.is-on .ix-id-shoe, .ix-id.is-known .ix-id-shoe { fill: #2B313A; stroke: #2B313A; }
-/* «Շարժուձև» — ноги расходятся в шаг от бедра. */
-.ix-id-leg { transform-box: fill-box; transform-origin: 50% 0; transition: rotate .8s cubic-bezier(.3,1.3,.5,1); }
-.ix-id-leg.is-l.is-step { rotate: 8deg; }
-.ix-id-leg.is-r.is-step { rotate: -8deg; }
-.ix-id .ix-f.tone-hair { fill: #3A3F47; }
-.ix-id .ix-f.tone-ink { fill: #2B313A; }
-.ix-id .ix-f.tone-blush { fill: rgba(255,138,124,.45); }
-.ix-id .ix-f.tone-navy { fill: #2F5D8C; }
-.ix-id .ix-f.tone-skin { fill: #FFD9B5; }
-.ix-id .ix-f.tone-screen { fill: #8ED4F1; }
-.ix-id .ix-d.is-gold { stroke: #F5B62A; stroke-width: 2.2; }
-.ix-id-q { font-size: 28px; font-weight: 800; fill: #9AA4B1; text-anchor: middle; }
+.ix-id-ghost { opacity: .5; transition: opacity 1s ease .4s; }
+.ix-id.is-known .ix-id-ghost { opacity: 0; }
+.ix-id-hole { transform-box: fill-box; transform-origin: center; animation: ixHole .8s cubic-bezier(.2,.85,.2,1); }
+.ix-id-all { opacity: 0; transition: opacity 1.1s ease .2s; }
+.ix-id.is-known .ix-id-all { opacity: 1; }
+.ix-id .ix-d.is-thin { stroke-width: 2; }
 .ix-id-pin {
   fill: #fff; stroke: #9AA4B1; stroke-width: 2; transform-box: fill-box; transform-origin: center;
   animation: ixTwinkle 2.2s ease-in-out infinite; animation-delay: calc(var(--i) * -.3s);

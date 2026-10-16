@@ -1,4 +1,5 @@
-import { Fragment, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useId, useLayoutEffect, useRef, useState } from 'react';
+import person from '../../assets/m5-person.webp';
 import { Icon } from './icons';
 import { F, S } from './art';
 import { EASE, Frame, onKey, reducedMotion, useDone } from './shared';
@@ -6,91 +7,55 @@ import { EASE, Frame, onKey, reducedMotion, useDone } from './shared';
 /**
  * `identity` — «из чего складывается человек» (5_1.html, «tags»; 5_2.html,
  * «удостоверение»). Абзац определения дословный; примеры в нём — `items`,
- * подчёркнуты. Нажатие на пример отправляет его подписью к фигуре. Фигура
- * сначала серая и безликая, как аватар «без фото»; каждый пример проявляет в
- * цвете свою часть: лицо, голос, рубашку с бейджем, паспорт и телефон в руках,
- * подпись, шаг. Когда отмечены все, из силуэта получается узнаваемый
- * человек — в этом и мысль абзаца.
+ * подчёркнуты. Нажатие на пример отправляет его подписью к фигуре.
+ *
+ * Фигура — иллюстрация (`assets/m5-person.webp`, сделана генератором
+ * изображений; пол персонажа нарочно не угадывается — просьба Армана). Снизу
+ * лежит её серая размытая копия — человек «не в фокусе», безликий. Каждый
+ * пример проявляет резкой и цветной свою часть (маска поверх цветной копии):
+ * лицо, рот, бейдж, футболку, руку с паспортом, руку с телефоном, ноги; плюс
+ * штрихи поверх — рамка камеры, звук, лист с подписью, линии шага. Когда
+ * отмечены все, человек виден целиком — в этом и мысль абзаца.
  *
  * Поля: `title`, `text`, `items[]` из `{text, at}`: `text` — дословный кусок
- * абзаца (ищется по порядку), `at` — ключ места в `SPOTS`.
+ * абзаца (ищется по порядку), `at` — ключ места в `SPOTS`. Координаты мест
+ * привязаны к картинке: при её замене их надо снять заново.
  */
 const HINT = 'Սեղմեք ընդգծված բառերին՝ դրանք մարդու վրա տեսնելու համար։';
 
-// Холст 440×320, фигура по центру (x 220). `p` — точка на фигуре, `y` —
-// высота подписи, `side` — с какой стороны подпись. Предметы нарисованы
-// между EDGE_L и EDGE_R, подписи — снаружи, поэтому друг друга не закрывают.
+// Холст 440×320, иллюстрация по центру (IMG). `p` — точка на фигуре, `y` —
+// высота подписи, `side` — с какой стороны подпись; `area` — что проявляется
+// в цвете (эллипс с мягким краем), координаты холста.
 const SPOTS = {
-  image: { p: [194, 44], y: 46, side: 'l' },
-  voice: { p: [264, 60], y: 60, side: 'r' },
-  name: { p: [204, 122], y: 118, side: 'l' },
-  surname: { p: [236, 128], y: 128, side: 'r' },
-  passport: { p: [148, 182], y: 186, side: 'l' },
-  phone: { p: [289, 170], y: 168, side: 'r' },
-  sign: { p: [301, 238], y: 240, side: 'r' },
-  gait: { p: [186, 288], y: 286, side: 'l' },
+  image: { p: [170, 40], y: 34, side: 'l', area: [218, 40, 47, 42] },
+  voice: { p: [266, 58], y: 58, side: 'r', area: [218, 58, 15, 10] },
+  name: { p: [228, 96], y: 84, side: 'l', area: [234, 97, 16, 12] },
+  surname: { p: [200, 146], y: 168, side: 'l', area: [220, 124, 50, 56] },
+  passport: { p: [163, 112], y: 122, side: 'l', area: [175, 115, 27, 29] },
+  phone: { p: [284, 104], y: 104, side: 'r', area: [270, 106, 26, 31] },
+  sign: { p: [308, 237], y: 237, side: 'r' },
+  gait: { p: [200, 294], y: 290, side: 'l', area: [220, 236, 45, 80] },
 };
 const W = 440;
 const H = 320;
 const EDGE_L = 132;
 const EDGE_R = 308;
+// Где лежит картинка (682×1024) на холсте: фигура по высоте холста.
+const IMG = { x: 118.7, y: 8, w: 202.7, h: 304 };
 
-// Что проявляется на фигуре для каждого примера: контур рисует себя (S),
-// заливка — следом (F).
+// Штрихи поверх иллюстрации: контур рисует себя (S), заливка — следом (F).
 const DRAW = {
-  image: (
-    <>
-      <F d="M193 61C190 41 203 30 220 30c18 0 29 12 27 29-3-6-8-10-14-12-9 6-23 7-34 3-3 3-5 6-6 11z" className="tone-hair" />
-      <S d="M193 61C190 41 203 30 220 30c18 0 29 12 27 29-3-6-8-10-14-12-9 6-23 7-34 3-3 3-5 6-6 11z" />
-      <F t="circle" cx="211" cy="62" r="2.6" at={0.3} className="tone-ink" />
-      <F t="circle" cx="229" cy="62" r="2.6" at={0.35} className="tone-ink" />
-      <F t="circle" cx="205" cy="71" r="4" at={0.5} className="tone-blush" />
-      <F t="circle" cx="235" cy="71" r="4" at={0.5} className="tone-blush" />
-      <S d="M180 30v-9h9M260 30v-9h-9M180 92v9h9M260 92v9h-9" className="is-accent" at={0.4} />
-    </>
-  ),
-  voice: (
-    <>
-      <S d="M212 74c5 5 11 5 16 0" className="is-thick" />
-      <S d="M254 51a13 13 0 010 18M262 44a24 24 0 010 32" className="is-accent" at={0.3} />
-    </>
-  ),
-  name: (
-    <>
-      <F t="rect" x="204" y="112" width="32" height="24" rx="4" className="tone-paper" />
-      <S t="rect" x="204" y="112" width="32" height="24" rx="4" className="is-accent" />
-      <S d="M210 121h20" className="is-thick" at={0.3} />
-    </>
-  ),
-  surname: <S d="M210 129h13" className="is-thick" />,
-  passport: (
-    <>
-      <F t="rect" x="148" y="166" width="25" height="33" rx="3" className="tone-navy" />
-      <S t="rect" x="148" y="166" width="25" height="33" rx="3" />
-      <S t="circle" cx="160.5" cy="178" r="4.5" className="is-gold" at={0.3} />
-      <S d="M154 188h13" className="is-gold" at={0.4} />
-      <F t="circle" cx="162" cy="202" r="8" className="tone-skin" at={0.2} />
-      <S t="circle" cx="162" cy="202" r="8" at={0.1} />
-    </>
-  ),
-  phone: (
-    <>
-      <F t="rect" x="270" y="156" width="19" height="32" rx="4" className="tone-ink" />
-      <F t="rect" x="273" y="160" width="13" height="21" rx="2" className="tone-screen" at={0.3} />
-      <S t="rect" x="270" y="156" width="19" height="32" rx="4" />
-      <F t="circle" cx="279" cy="186" r="8" className="tone-skin" at={0.2} />
-      <S t="circle" cx="279" cy="186" r="8" at={0.1} />
-    </>
-  ),
+  image: <S d="M160 18v-10h10M276 18v-10h-10M160 66v10h10M276 66v10h-10" className="is-accent" />,
+  voice: <S d="M255 50a11 11 0 010 16M262 44a20 20 0 010 28" className="is-accent" />,
   sign: (
     <>
-      <F t="rect" x="249" y="222" width="52" height="34" rx="3" className="tone-paper" />
-      <S t="rect" x="249" y="222" width="52" height="34" rx="3" />
-      <S d="M256 245c5-12 9 6 13-3s7 5 11-4 6 4 12-2" className="is-accent is-thick" at={0.3} />
-      <S d="M256 250h36" className="is-soft" at={0.5} />
+      <F t="rect" x="256" y="220" width="52" height="34" rx="3" className="tone-paper" />
+      <S t="rect" x="256" y="220" width="52" height="34" rx="3" className="is-thin" />
+      <S d="M263 243c5-12 9 6 13-3s7 5 11-4 6 4 12-2" className="is-accent is-thick" at={0.3} />
+      <S d="M263 248h36" className="is-soft" at={0.5} />
     </>
   ),
-  gait: <S d="M176 238h-20M180 254h-28M176 270h-18" className="is-accent" at={0.3} />,
+  gait: <S d="M184 236h-20M188 252h-28M184 268h-18" className="is-accent" at={0.3} />,
 };
 
 /** Абзац на куски по примерам: кусок с `i` — пример номер i. */
@@ -117,6 +82,7 @@ export function Identity({ block: b, done, onDone, R }) {
   const from = useRef(null);
   const labelRefs = useRef([]);
   const parts = split(b.text, items);
+  const uid = useId().replace(/:/g, '');
   const on = (at) => complete || tagged[items.findIndex((it) => it.at === at)];
 
   const tag = (i, e) => {
@@ -163,31 +129,29 @@ export function Identity({ block: b, done, onDone, R }) {
 
       <div className={`ix-id${complete ? ' is-known' : ''}`}>
         <svg viewBox={`0 0 ${W} ${H}`} className="ix-id-svg" aria-hidden>
-          {/* Фигура: части серые, пока их пример не отмечен (или пока не
-              отмечены все). Руки и ноги — «трубки»: тёмный штрих под цветным. */}
-          <ellipse className="ix-id-shadow" cx="220" cy="292" rx="66" ry="6" />
-          <g className={`ix-id-leg is-l${on('gait') ? ' is-on is-step' : ''}`}>
-            <path className="ix-id-tube-o" d="M208 186v92" />
-            <path className="ix-id-tube is-pants" d="M208 186v92" />
-            <path className="ix-id-shoe" d="M210 274h-19a7 7 0 000 14h19z" />
-          </g>
-          <g className={`ix-id-leg is-r${on('gait') ? ' is-on is-step' : ''}`}>
-            <path className="ix-id-tube-o" d="M232 186v92" />
-            <path className="ix-id-tube is-pants" d="M232 186v92" />
-            <path className="ix-id-shoe" d="M230 274h19a7 7 0 010 14h-19z" />
-          </g>
-          <g className={`ix-id-arm${on('name') ? ' is-on' : ''}`}>
-            <path className="ix-id-tube-o" d="M190 112c-14 22-24 50-28 84" />
-            <path className="ix-id-tube is-shirt" d="M190 112c-14 22-24 50-28 84" />
-            <path className="ix-id-tube-o" d="M250 112c14 20 24 44 29 72" />
-            <path className="ix-id-tube is-shirt" d="M250 112c14 20 24 44 29 72" />
-          </g>
-          <rect className={`ix-id-part is-skin${on('image') ? ' is-on' : ''}`} x="212" y="80" width="16" height="16" rx="4" />
-          <path className={`ix-id-part is-shirt${on('name') ? ' is-on' : ''}`} d="M184 106c10-9 23-14 36-14s26 5 36 14l-10 82h-52z" />
-          <circle className="ix-id-part is-skin" cx="162" cy="202" r="8" />
-          <circle className="ix-id-part is-skin" cx="279" cy="186" r="8" />
-          <circle className={`ix-id-part is-skin${on('image') ? ' is-on' : ''}`} cx="220" cy="60" r="27" />
-          {!on('image') && <text x="220" y="70" className="ix-id-q">?</text>}
+          <defs>
+            <filter id={`${uid}g`} x="-15%" y="-15%" width="130%" height="130%">
+              <feColorMatrix type="saturate" values="0" />
+              <feGaussianBlur stdDeviation="3.2" />
+            </filter>
+            <radialGradient id={`${uid}r`}>
+              <stop offset="0.6" stopColor="#fff" />
+              <stop offset="1" stopColor="#fff" stopOpacity="0" />
+            </radialGradient>
+            <mask id={`${uid}m`} maskUnits="userSpaceOnUse" x="0" y="0" width={W} height={H}>
+              <rect width={W} height={H} fill="#000" />
+              {items.map((it, i) => {
+                const a = SPOTS[it.at]?.area;
+                return a && on(it.at) ? (
+                  <ellipse key={it.at} className="ix-id-hole" cx={a[0]} cy={a[1]} rx={a[2]} ry={a[3]} fill={`url(#${uid}r)`} style={{ '--i': i }} />
+                ) : null;
+              })}
+              <rect className="ix-id-all" width={W} height={H} fill="#fff" />
+            </mask>
+          </defs>
+          <ellipse className="ix-id-shadow" cx="220" cy="304" rx="58" ry="6" />
+          <image className="ix-id-ghost" href={person} x={IMG.x} y={IMG.y} width={IMG.w} height={IMG.h} filter={`url(#${uid}g)`} />
+          <image href={person} x={IMG.x} y={IMG.y} width={IMG.w} height={IMG.h} mask={`url(#${uid}m)`} />
           {items.map((it, i) => {
             const s = SPOTS[it.at];
             if (!s) return null;
@@ -196,7 +160,7 @@ export function Identity({ block: b, done, onDone, R }) {
               <g key={it.at} className={`ix-id-spot${tagged[i] ? ' is-on' : ''}`}>
                 {tagged[i] && (
                   <>
-                    <g className="ix-id-draw">{DRAW[it.at]}</g>
+                    {DRAW[it.at] && <g className="ix-id-draw">{DRAW[it.at]}</g>}
                     <S d={`M${edge} ${s.y}L${s.p[0]} ${s.p[1]}`} className="ix-id-lead" at={0.15} />
                   </>
                 )}
