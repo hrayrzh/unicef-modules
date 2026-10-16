@@ -169,10 +169,15 @@ export function TableGame({ block: b, done, onDone, R }) {
  * в одной колонке, затем её пару в другой. Найденная пара уезжает наверх
  * строкой таблицы — к концу задания на экране собранная таблица со
  * ссылками на статьи. `tag` — вид ответственности над случаем.
+ *
+ * `keys: true` — слева короткие названия (термин, риск), справа их
+ * описания (модуль 3): колонки меняются шириной, жирное — слева.
+ * `icon` — значок блока и правых карточек (по умолчанию `law`).
  */
 export function Match({ block: b, done, onDone, R }) {
   const pairs = b.pairs || [];
   const n = pairs.length;
+  const icon = b.icon || 'law';
   const fresh = () => shuffled(pairs.map((_, i) => i));
   const [rightOrder, setRightOrder] = useState(fresh);
   const [matched, setMatched] = useState(() => (done ? pairs.map((_, i) => i) : []));
@@ -211,14 +216,14 @@ export function Match({ block: b, done, onDone, R }) {
 
   return (
     <Frame
-      icon={<Icon name="law" />}
+      icon={<Icon name={icon} />}
       title={b.title}
       hint={complete ? null : 'Ընտրեք քարտ ձախ սյունակից, ապա՝ դրա զույգը աջից։'}
       progress={`${matched.length} / ${n}`}
       done={complete}
       tools={complete ? <Restart onClick={() => { setMatched([]); setRightOrder(fresh()); }} /> : null}
     >
-      <div className="ix-match" ref={rootRef}>
+      <div className={`ix-match${b.keys ? ' is-keys' : ''}`} ref={rootRef}>
         {matched.length > 0 && (
           <div className="ix-match-done">
             {pairs.map((p, i) => (matched.includes(i) ? (
@@ -249,7 +254,7 @@ export function Match({ block: b, done, onDone, R }) {
               {b.head && <div className="ix-match-h">{b.head[1]}</div>}
               {right.map((i) => (
                 <button key={`r${i}`} data-flip={`r${i}`} type="button" className={cls('r', i)} onClick={() => pickR(i)} aria-pressed={selR === i}>
-                  <span className="ix-mcard-ico" aria-hidden><Icon name="law" size={16} /></span>
+                  {!b.keys && <span className="ix-mcard-ico" aria-hidden><Icon name={icon} size={16} /></span>}
                   <span>{plain(pairs[i].right)}</span>
                 </button>
               ))}

@@ -100,6 +100,106 @@ const ART = {
       </g>
     </g>
   ),
+
+  // Модуль 3, «Ինչ է 2FA-ն» — абзац по фразам (доска из Module_3.html).
+  // Второй шаг после пароля: форма с паролем → код на телефоне → щит.
+  factor: (
+    <g>
+      <F t="rect" x="40" y="44" width="170" height="160" rx="14" at={0.9} className="tone-paper" />
+      <S t="rect" x="40" y="44" width="170" height="160" rx="14" at={0} />
+      <S t="circle" cx="125" cy="86" r="17" at={0.4} />
+      <S t="rect" x="62" y="124" width="126" height="30" rx="8" at={0.6} />
+      {[84, 103, 122, 141, 160].map((x, i) => <S key={x} t="circle" cx={x} cy="139" r="3.2" at={0.9 + i * 0.08} className="is-thick" />)}
+      <S d="M62 180h70" at={1.1} className="is-soft" />
+      <S d="M228 124h70" at={1.4} className="is-accent is-thick" />
+      <S d="M286 112l14 12-14 12" at={1.6} className="is-accent is-thick" />
+      <F t="rect" x="320" y="30" width="100" height="190" rx="16" at={2.2} className="tone-paper" />
+      <S t="rect" x="320" y="30" width="100" height="190" rx="16" at={1.7} />
+      <S d="M356 44h28" at={1.9} />
+      {[0, 1, 2, 3, 4, 5].map((k) => (
+        <g key={k}>
+          <F t="rect" x={333 + k * 13} y="116" width="10" height="16" rx="2.5" at={2.5 + k * 0.1} className="tone-cyan" />
+          <S t="rect" x={333 + k * 13} y="116" width="10" height="16" rx="2.5" at={2.2 + k * 0.1} />
+        </g>
+      ))}
+      <S d="M432 124h20" at={2.8} className="is-accent is-thick" />
+      <S d="M445 116l8 8-8 8" at={2.9} className="is-accent is-thick" />
+      <F d="M512 64l50 19v40c0 29-21 50-50 59-29-9-50-30-50-59V83z" at={3.4} className="tone-cyan" />
+      <S d="M512 64l50 19v40c0 29-21 50-50 59-29-9-50-30-50-59V83z" at={3} />
+      <S d="M491 122l15 15 28-30" at={3.5} className="is-accent is-thick" />
+    </g>
+  ),
+  // Пароль украден, но без второго шага замок не открыть; телефон у хозяина.
+  stolen: (
+    <g>
+      <Person x={84} at={0} tone="slate" />
+      <F t="rect" x="122" y="92" width="88" height="34" rx="8" at={0.9} className="tone-paper" />
+      <S t="rect" x="122" y="92" width="88" height="34" rx="8" at={0.6} />
+      {[140, 157, 174, 191].map((x, i) => <S key={x} t="circle" cx={x} cy="109" r="3.2" at={0.9 + i * 0.08} className="is-thick" />)}
+      <S d="M218 112c40-6 66 2 90 18" at={1.3} className="is-alert" />
+      <F t="rect" x="312" y="118" width="88" height="76" rx="12" at={1.9} className="tone-paper" />
+      <S d="M328 118V96a28 28 0 0156 0v22" at={1.6} />
+      <S t="rect" x="312" y="118" width="88" height="76" rx="12" at={1.5} />
+      <S d="M356 144v22" at={1.9} className="is-thick" />
+      <F t="circle" cx="404" cy="116" r="19" at={2.5} className="tone-paper" />
+      <S t="circle" cx="404" cy="116" r="19" at={2.3} className="is-alert is-thick" />
+      <S d="M391 103l26 26" at={2.6} className="is-alert is-thick" />
+      <F t="rect" x="452" y="104" width="56" height="98" rx="11" at={3} className="tone-paper" />
+      <S t="rect" x="452" y="104" width="56" height="98" rx="11" at={2.8} />
+      {[0, 1, 2].map((k) => <F key={k} t="rect" x={461 + k * 14} y="142" width="10" height="16" rx="2.5" at={3.2 + k * 0.1} className="tone-cyan" />)}
+      <Person x={552} s={0.86} at={2.7} tone="cyan" />
+    </g>
+  ),
+  // SMS можно перехватить, приложение-аутентификатор — нет.
+  sms: (
+    <g>
+      <F t="rect" x="56" y="26" width="104" height="196" rx="16" at={0.6} className="tone-paper" />
+      <S t="rect" x="56" y="26" width="104" height="196" rx="16" at={0} />
+      <S d="M94 40h28" at={0.3} />
+      <F d="M76 78h64a8 8 0 018 8v28a8 8 0 01-8 8H96l-12 10 2-10h-10a8 8 0 01-8-8V86a8 8 0 018-8z" at={1} className="tone-amber-soft" />
+      <S d="M76 78h64a8 8 0 018 8v28a8 8 0 01-8 8H96l-12 10 2-10h-10a8 8 0 01-8-8V86a8 8 0 018-8z" at={0.6} />
+      <S d="M82 100h52" at={1} />
+      <S d="M152 96c50-22 96-14 128 22" at={1.4} className="is-alert" />
+      <S d="M266 104l15 15-20 3" at={1.7} className="is-alert" />
+      <Person x={300} s={0.7} at={1.2} tone="slate" />
+      <F t="rect" x="404" y="26" width="104" height="196" rx="16" at={2.3} className="tone-paper" />
+      <S t="rect" x="404" y="26" width="104" height="196" rx="16" at={2} />
+      <S d="M442 40h28" at={2.2} />
+      <S t="circle" cx="456" cy="94" r="24" at={2.4} className="is-soft" />
+      <S d="M456 70a24 24 0 0124 24" at={2.8} className="is-accent is-thick" />
+      {[0, 1, 2, 3, 4, 5].map((k) => (
+        <g key={k}>
+          <F t="rect" x={419 + k * 13} y="140" width="10" height="16" rx="2.5" at={3 + k * 0.1} className="tone-cyan" />
+          <S t="rect" x={419 + k * 13} y="140" width="10" height="16" rx="2.5" at={2.7 + k * 0.1} />
+        </g>
+      ))}
+      <F t="circle" cx="540" cy="58" r="20" at={3.6} className="tone-cyan" />
+      <S t="circle" cx="540" cy="58" r="20" at={3.4} className="is-accent" />
+      <S d="M530 58l7 7 13-14" at={3.7} className="is-accent is-thick" />
+    </g>
+  ),
+  // Сильнее всего — ключ-брелок и passkey (отпечаток); столбики силы.
+  passkey: (
+    <g>
+      <F d="M92 98h150a28 28 0 010 56H92a28 28 0 010-56z" at={0.8} className="tone-paper" />
+      <S d="M92 98h150a28 28 0 010 56H92a28 28 0 010-56z" at={0} />
+      <S t="circle" cx="92" cy="126" r="10" at={0.4} />
+      <F t="rect" x="270" y="110" width="44" height="32" rx="4" at={1} className="tone-slate" />
+      <S t="rect" x="270" y="110" width="44" height="32" rx="4" at={0.6} />
+      <S d="M282 120h6M296 120h6M282 132h6M296 132h6" at={1.1} />
+      <F t="circle" cx="190" cy="126" r="16" at={1.4} className="tone-cyan" />
+      <S t="circle" cx="190" cy="126" r="16" at={1.2} className="is-accent" />
+      <S t="rect" x="376" y="66" width="104" height="120" rx="24" at={1.4} className="is-soft" />
+      <S d="M398 112a30 30 0 0160 0" at={1.7} className="is-accent" />
+      <S d="M406 152v-34a22 22 0 0144 0v12" at={1.9} className="is-accent" />
+      <S d="M418 160v-38a10 10 0 0120 0v30" at={2.1} className="is-accent" />
+      <S d="M450 146v14" at={2.3} className="is-accent" />
+      <F t="rect" x="514" y="168" width="16" height="28" rx="3" at={2.6} className="tone-slate" />
+      <F t="rect" x="538" y="146" width="16" height="50" rx="3" at={2.8} className="tone-cyan" />
+      <F t="rect" x="562" y="124" width="16" height="72" rx="3" at={3} className="tone-cyan" />
+      <S t="rect" x="562" y="124" width="16" height="72" rx="3" at={2.8} className="is-accent" />
+    </g>
+  ),
 };
 
 export function Story({ block: b, done, onDone, R }) {
@@ -170,7 +270,7 @@ export function Story({ block: b, done, onDone, R }) {
         </div>
         <div className="ix-story-stage" ref={stageRef}>
           {inView && (
-            <svg key={at} viewBox="0 0 600 250" className="ix-wb" role="img" aria-label={plain(sc.group)}>
+            <svg key={at} viewBox="0 0 600 250" className="ix-wb" {...(sc.group ? { role: 'img', 'aria-label': plain(sc.group) } : { 'aria-hidden': true })}>
               {ART[sc.art]}
             </svg>
           )}
@@ -181,7 +281,7 @@ export function Story({ block: b, done, onDone, R }) {
           )}
         </div>
         <div className="ix-story-cap" key={at} aria-live="polite">
-          <span className="ix-story-kicker">{sc.group}</span>
+          {sc.group && <span className="ix-story-kicker">{sc.group}</span>}
           <p>{R(sc.text)}</p>
         </div>
         <div className="ix-story-ctrl">

@@ -8,7 +8,8 @@ import { useDone } from './shared';
  * значком по кругу 💡 🔎 🛡️ 🔑 (те же, что в файле). Когда открыта последняя,
  * кнопка исчезает и блок засчитывается.
  *
- * Поля: `items[]` — части абзаца дословно, по порядку.
+ * Поля: `items[]` — части абзаца дословно, по порядку; `title?` — заголовок
+ * врезки, которую блок заменил (модуль 3), мелкой строкой сверху.
  */
 const MARKS = ['💡', '🔎', '🛡️', '🔑'];
 
@@ -21,6 +22,7 @@ export function Unfold({ block: b, done, onDone, R }) {
 
   return (
     <div className={`ix ix-uf${complete ? ' is-done' : ''}`}>
+      {b.title && <div className="ix-uf-title">{b.title}</div>}
       <div className="ix-uf-list" aria-live="polite">
         {items.slice(0, shown).map((t, i) => (
           <div key={i} className="ix-uf-item">

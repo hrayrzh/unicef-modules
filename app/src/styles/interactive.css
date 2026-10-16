@@ -1611,3 +1611,131 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
   .ix-flip:not(.is-flipped) .ix-flip-back { display: none; }
   .ix-flip.is-flipped .ix-flip-front { display: none; }
 }
+
+/* ---------- Модуль 3 (Module_3.html): порядок, пропуск, слова, память, пароль ---------- */
+/* Unfold с заголовком заменённой врезки. */
+.ix-uf-title { margin: 2px 2px 12px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; color: #0F7FA8; }
+
+/* Match «термин ↔ описание»: слева короткое и жирное, справа длинное. */
+.ix-match.is-keys .ix-match-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1.8fr); }
+.ix-match.is-keys .ix-mcard.is-l, .ix-match.is-keys .ix-match-l { font-weight: 700; color: #151A21; }
+.ix-match.is-keys .ix-mcard.is-r, .ix-match.is-keys .ix-match-r { font-weight: 400; color: #2B313A; }
+.ix-match.is-keys .ix-match-row { grid-template-columns: minmax(0, 1fr) auto minmax(0, 2fr); }
+
+/* Неверный вариант (cloze, scramble) — как неверная пара в match. */
+.ix-chip.is-bad { border-color: #D93A3A; background: rgba(217,58,58,.07); animation: ixShakeX .42s ease; }
+
+/* Order: места с номерами сверху, карточки вперемешку снизу. */
+.ix-ord { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.ix-ord-slot { display: flex; align-items: flex-start; gap: 12px; }
+.ix-ord-n {
+  flex-shrink: 0; display: grid; place-items: center; width: 30px; height: 30px; margin-top: 7px; border-radius: 50%;
+  font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums;
+  color: #8A919D; background: #fff; border: 1.5px dashed rgba(21,26,33,.22);
+  transition: background .3s, color .3s, border-color .3s;
+}
+.ix-ord-slot.is-next .ix-ord-n { color: #0F7FA8; border: 1.5px solid #1CABE2; animation: ixBreathe 2.4s ease-in-out infinite; }
+.ix-ord-slot.is-on .ix-ord-n { color: #fff; background: #1CABE2; border: 1.5px solid #1CABE2; animation: ixPopIn .45s cubic-bezier(.3,1.4,.5,1) both; }
+.ix-ord-text {
+  flex: 1; min-width: 0; padding: 10px 14px; border-radius: 12px;
+  font-size: 14.5px; line-height: 1.6; color: #2B313A;
+  background: rgba(28,171,226,.07); border: 1px solid rgba(28,171,226,.3);
+}
+.ix-ord-empty { flex: 1; height: 44px; border-radius: 12px; border: 1.5px dashed rgba(21,26,33,.13); }
+.ix-ord-slot.is-next .ix-ord-empty { border-color: rgba(28,171,226,.55); background: rgba(28,171,226,.04); }
+.ix-ord-bars { flex-shrink: 0; display: flex; align-items: flex-end; gap: 3px; height: 26px; margin-top: 9px; }
+.ix-ord-bars i { width: 6px; height: var(--h); border-radius: 2px; background: rgba(21,26,33,.1); transition: background .4s ease; }
+.ix-ord-slot.is-on .ix-ord-bars i.is-up { background: #1CABE2; }
+.ix-ord-pool { display: flex; flex-direction: column; gap: 8px; margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(21,26,33,.08); }
+.ix-ord-card { animation: ixRise .4s cubic-bezier(.2,.85,.2,1) both; }
+
+/* Cloze: пропуск одной ширины для любого ответа. */
+.ix-cz-text { margin: 0; font-size: 16px; line-height: 2; color: #2B313A; }
+.ix-cz-gap {
+  display: inline-block; min-width: 7.5em; height: 1.55em; margin: 0 3px; vertical-align: -.4em; border-radius: 8px;
+  border: 1.5px dashed #1CABE2; background: rgba(28,171,226,.06); animation: ixBreathe 2.4s ease-in-out infinite;
+}
+.ix-cz-gap.is-on {
+  min-width: 0; height: auto; padding: 0 10px; vertical-align: baseline; line-height: 1.6;
+  border: 0; background: #1CABE2; color: #fff; font-weight: 600; animation: none;
+}
+.ix-cz-opts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+
+/* Scramble: пустые места шириной в своё слово. */
+.ix-scr-line {
+  display: flex; flex-wrap: wrap; gap: 8px 6px; margin: 0; padding: 14px 16px; min-height: 62px; border-radius: 14px;
+  font-size: 16.5px; line-height: 1.5; background: #FAFBFC; border: 1px solid rgba(21,26,33,.08);
+  transition: background .4s, border-color .4s;
+}
+.ix-scr-w {
+  padding: 2px 8px; border-radius: 8px; color: transparent; user-select: none; -webkit-user-select: none;
+  border: 1.5px dashed rgba(21,26,33,.16); background: rgba(21,26,33,.025);
+  transition: padding .3s ease, background .3s, border-color .3s;
+}
+.ix-scr-w.is-next { border-color: #1CABE2; background: rgba(28,171,226,.06); }
+.ix-scr-w.is-on { color: #151A21; border: 1.5px solid transparent; background: rgba(28,171,226,.13); user-select: text; -webkit-user-select: text; }
+.ix-scr-line.is-done { gap: 8px 0; background: rgba(28,171,226,.06); border-color: rgba(28,171,226,.35); }
+.ix-scr-line.is-done .ix-scr-w { padding: 2px 3px; background: none; font-weight: 600; }
+.ix-scr-pool { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+
+/* Memory: карточки переворачиваются; найденная пара — с номером. */
+.ix-mem { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.ix-mem-card { position: relative; min-height: 104px; padding: 0; border: 0; background: none; cursor: pointer; perspective: 900px; font: inherit; text-align: center; border-radius: 14px; }
+.ix-mem-card:focus-visible { outline: 2px solid #1CABE2; outline-offset: 3px; }
+.ix-mem-inner { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.2,.85,.2,1); }
+.ix-mem-card.is-up .ix-mem-inner { transform: rotateY(180deg); }
+.ix-mem-back, .ix-mem-face {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
+  padding: 12px 10px; border-radius: 14px; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+}
+.ix-mem-back {
+  color: #fff; background-color: #1CABE2;
+  background-image: radial-gradient(rgba(255,255,255,.22) 1.2px, transparent 1.6px);
+  background-size: 12px 12px; box-shadow: 0 10px 20px -16px rgba(15,127,168,.9);
+}
+.ix-mem-face {
+  transform: rotateY(180deg); background: #fff; border: 1px solid rgba(21,26,33,.14);
+  font-size: 13.5px; line-height: 1.4; font-weight: 600; color: #151A21; overflow-wrap: anywhere;
+  transition: border-color .3s, background .3s;
+}
+.ix-mem-card.is-found .ix-mem-face { border-color: #1CABE2; background: linear-gradient(rgba(28,171,226,.08) 0 0), #fff; }
+.ix-mem-card.is-miss .ix-mem-face { border-color: #D93A3A; background: linear-gradient(rgba(217,58,58,.06) 0 0), #fff; }
+.ix-mem-card.is-found { cursor: default; }
+.ix-mem-n {
+  position: absolute; top: 7px; left: 8px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%;
+  font-size: 11px; font-weight: 700; color: #fff; background: #1CABE2; animation: ixPopIn .45s cubic-bezier(.3,1.4,.5,1) both;
+}
+.ix-mem-face .ix-app { width: 30px; height: 30px; }
+
+/* Passlen: поле и шкала из делений. */
+.ix-pw-input {
+  display: block; width: 100%; box-sizing: border-box; padding: 13px 16px; border-radius: 12px; outline: none;
+  font: inherit; font-size: 17px; color: #151A21; background: #fff; border: 1.5px solid rgba(21,26,33,.16);
+  transition: border-color .2s, box-shadow .2s;
+}
+.ix-pw-input::placeholder { color: #A2A9B4; }
+.ix-pw-input:focus { border-color: #1CABE2; box-shadow: 0 0 0 3px rgba(28,171,226,.18); }
+.ix-pw.is-ok .ix-pw-input { border-color: #1CABE2; }
+.ix-pw-meter { display: grid; grid-template-columns: repeat(var(--n, 15), minmax(0, 1fr)); gap: 4px; margin-top: 12px; }
+.ix-pw-meter i { height: 10px; border-radius: 3px; background: rgba(21,26,33,.1); transition: background .25s ease; }
+.ix-pw.is-low .ix-pw-meter i.is-on { background: #D93A3A; }
+.ix-pw.is-mid .ix-pw-meter i.is-on { background: #F5B62A; }
+.ix-pw.is-ok .ix-pw-meter i.is-on { background: #1CABE2; }
+
+@media (hover: hover) {
+  .ix-mem-card:not(.is-up):hover .ix-mem-back { filter: brightness(1.07); }
+}
+@media (max-width: 720px) {
+  .ix-match.is-keys .ix-match-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+}
+@media (max-width: 560px) {
+  .ix-match.is-keys .ix-match-cols { grid-template-columns: minmax(0, 1fr); }
+  .ix-mem { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .ix-mem-card { min-height: 92px; }
+  .ix-ord-slot { gap: 10px; }
+  .ix-ord-text { padding: 9px 12px; font-size: 14px; }
+  .ix-cz-text { font-size: 15.5px; }
+  .ix-scr-line { gap: 7px 5px; padding: 12px; font-size: 15.5px; }
+  .ix-ord-empty { height: 38px; }
+  .ix-pw-meter { gap: 3px; }
+}

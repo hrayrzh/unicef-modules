@@ -7,6 +7,7 @@ import { LinkIcon, PhoneIcon } from './HelpButton';
 import ContactCard from './ContactCard';
 import { interactiveFor } from './ix';
 import { Icon } from './ix/icons';
+import { Frame } from './ix/shared';
 
 // ((term||explanation)) marks a term that is emphasised and explained on
 // hover/focus. §5 — the tooltip is CSS-only and inline, so it survives an
@@ -373,7 +374,7 @@ export default function Block({ block: b, mod, scope, step, index, state, update
   }
 
   if (b.k === 'check') {
-    return wrap(
+    const list = (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {(b.items || []).map((t, i) => {
           const ck = `${key}:${i}`;
@@ -396,8 +397,23 @@ export default function Block({ block: b, mod, scope, step, index, state, update
             </div>
           );
         })}
-      </div>,
+      </div>
     );
+    // С заголовком или подсказкой — в общей рамке, как интерактивные блоки
+    // (модуль 3, «Սեղմեք յուրաքանչյուր… այն նշելու համար»): счётчик отметок,
+    // голубая рамка, когда отмечено всё. `text` — абзац над списком.
+    if (b.title || b.hint) {
+      const items = b.items || [];
+      const ticked = items.filter((_, i) => state.checks[`${key}:${i}`]).length;
+      const all = items.length > 0 && ticked === items.length;
+      return wrap(
+        <Frame icon={<Icon name="check" />} title={b.title} hint={b.hint} progress={`${ticked} / ${items.length}`} done={all}>
+          {b.text && <p className="ix-text">{R(b.text)}</p>}
+          {list}
+        </Frame>,
+      );
+    }
+    return wrap(list);
   }
 
   // Collapsible panels: guide, table and pair — opening is enough (OQ5).

@@ -43,6 +43,13 @@ const PATHS = {
   iceberg: <><path d="M2.5 10.5h19" /><path d="M8 10.5l3-5.5 1.8 2.4 1.4-1.2 2.8 4.3" /><path d="M7.5 10.5L5 15l3.5 4.5h7l3-4.5-2-4.5" strokeDasharray="2 1.7" /></>,
   safe: <><rect x="3.5" y="4" width="17" height="15" rx="2" /><circle cx="12" cy="11.5" r="3.2" /><path d="M12 8.3v1M12 13.7v1M8.8 11.5h1M14.2 11.5h1M6.5 19v1.5M17.5 19v1.5" /></>,
   idtag: <><circle cx="10" cy="7" r="3" /><path d="M4.5 20.5V16a5.5 5.5 0 018.6-4.5" /><path d="M14 14.5h6.5v5H14l-1.8-2.5z" /></>,
+  // Module 3: a sentence with a gap, words to put in line, memory cards,
+  // an unknown file, public Wi-Fi.
+  blank: <><path d="M3 9h5M16 9h5M3 15h18" /><rect x="9.5" y="6.5" width="5" height="5" rx="1" strokeDasharray="1.8 1.4" /></>,
+  words: <><rect x="3" y="5" width="7.5" height="5" rx="1.6" /><rect x="13.5" y="5" width="7.5" height="5" rx="1.6" /><rect x="7" y="14" width="10" height="5" rx="1.6" /><path d="M6.8 10v1.8a2.2 2.2 0 002.2 2.2M17.2 10v1.8A2.2 2.2 0 0115 14" /></>,
+  memory: <><rect x="3.5" y="3.5" width="7" height="7" rx="1.6" /><rect x="13.5" y="3.5" width="7" height="7" rx="1.6" /><rect x="3.5" y="13.5" width="7" height="7" rx="1.6" /><rect x="13.5" y="13.5" width="7" height="7" rx="1.6" /><path d="M6 8.2c0-1.6 2-1.6 2-.2 0 .8-1 .9-1 1.6" /></>,
+  file: <><path d="M6 3h8l4.5 4.5V21H6z" /><path d="M14 3v4.5h4.5" /><path d="M10.6 12.2a1.6 1.6 0 113 .8c-.5.5-1.1.7-1.1 1.6" /><circle cx="12.5" cy="17.3" r=".6" fill="currentColor" /></>,
+  wifi: <><path d="M3 9.5a13 13 0 0118 0M6 12.8a8.6 8.6 0 0112 0M9 16a4.2 4.2 0 016 0" /><circle cx="12" cy="19" r="1" fill="currentColor" /></>,
 
   // People and places.
   family: <><circle cx="7.5" cy="6" r="2.2" /><circle cx="16.5" cy="6" r="2.2" /><circle cx="12" cy="12.6" r="1.8" /><path d="M4 20v-5.5A3.5 3.5 0 017.5 11M20 20v-5.5a3.5 3.5 0 00-3.5-3.5" /><path d="M9.2 20v-2.6a2.8 2.8 0 015.6 0V20" /></>,

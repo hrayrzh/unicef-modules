@@ -18,6 +18,10 @@ import { Rings } from './Rings';
 import { Iceberg } from './Iceberg';
 import { Vault } from './Vault';
 import { Identity } from './Identity';
+import { Order } from './Order';
+import { Cloze, Scramble } from './Words';
+import { Memory } from './Memory';
+import { PassLen } from './Password';
 
 // Интерактивные блоки (модуль 2, по предложениям из «Մոդուլ 2 _որոշ
 // առաջարկություններ.html»). Тексты в них — те же абзацы документа, блок
@@ -54,6 +58,12 @@ const KINDS = {
   toggles: Toggles,
   vault: Vault,
   identity: Identity,
+  // Модуль 3 — по файлу предложений Module_3.html.
+  order: Order,
+  cloze: Cloze,
+  scramble: Scramble,
+  memory: Memory,
+  passlen: PassLen,
 };
 
 /** The component for an interactive block, or null for an ordinary one. */
