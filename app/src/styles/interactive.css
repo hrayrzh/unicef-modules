@@ -1179,7 +1179,6 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
   transition: background .2s, color .2s;
 }
 .ix-mx-pl .ix-app { transition: transform .25s cubic-bezier(.2,.85,.2,1); }
-.ix-mx-pl:hover .ix-app { transform: translateY(-2px); }
 .ix-mx-pl.is-on { background: rgba(28,171,226,.16); color: #0F7FA8; }
 .ix-mx-pl:focus-visible, .ix-mx-risk:focus-visible { outline: 2px solid #1CABE2; outline-offset: -2px; }
 .ix-mx-pl-name { max-width: 100%; font-size: 10px; font-weight: 600; line-height: 1.2; letter-spacing: -.2px; }
@@ -1188,13 +1187,12 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
   font: inherit; font-size: 13.5px; font-weight: 600; line-height: 1.35; color: #2B313A;
   border: none; border-top: 1px solid rgba(21,26,33,.07); background: transparent; transition: background .2s;
 }
-.ix-mx-risk:hover { background: rgba(245,182,42,.08); }
 .ix-mx-risk.is-on { background: rgba(245,182,42,.16); color: #151A21; }
 .ix-mx-mark {
   flex-shrink: 0; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%;
   border: 1.5px solid rgba(21,26,33,.2); color: #fff; transition: background .25s, border-color .25s;
 }
-.ix-mx-risk.is-open .ix-mx-mark, .ix-mx-pl-risk.is-open .ix-mx-mark { background: #1CABE2; border-color: #1CABE2; }
+.ix-mx-risk.is-open .ix-mx-mark { background: #1CABE2; border-color: #1CABE2; }
 /* Выбрана платформа — риски, где она названа, окрашены её цветом выбора. */
 .ix-mx-risk.is-hit { color: #0F7FA8; }
 .ix-mx-cell { display: grid; place-items: center; min-height: 46px; border-top: 1px solid rgba(21,26,33,.07); transition: background .2s; }
@@ -1207,6 +1205,7 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
 .ix-mx-cell.in-row { background: rgba(245,182,42,.16); }
 .ix-mx-cell.in-col { background: rgba(28,171,226,.12); }
 .ix-mx-cell.in-col.is-hit i { background: #1CABE2; box-shadow: 0 0 0 3px rgba(28,171,226,.24); }
+.ix-mx-mini { display: none; }
 .ix-mx-panel {
   margin-top: 14px; padding: 16px 18px; border-radius: 14px;
   background: #FFFBF1; border: 1px solid rgba(227,162,20,.28); animation: ixRise .45s cubic-bezier(.2,.85,.2,1) both;
@@ -1216,20 +1215,16 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
 .ix-mx-panel p { margin: 6px 0 0; font-size: 14.5px; line-height: 1.68; color: #2B313A; }
 /* Выбрана платформа: её риски кнопками. */
 .ix-mx-panel.is-pl { background: #F2FAFD; border-color: rgba(28,171,226,.28); }
-.ix-mx-pl-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.ix-mx-pl-head .ix-app { width: 32px; height: 32px; }
-.ix-mx-pl-head .ix-mx-panel-h { margin: 0; }
-.ix-mx-pl-risks { display: flex; flex-wrap: wrap; gap: 8px; }
+.ix-mx-pl-line { margin: 0; font-size: 15px; line-height: 1.9; color: #2B313A; }
+.ix-mx-pl-line .ix-app { display: inline-grid; vertical-align: -9px; width: 30px; height: 30px; margin-right: 9px; }
+.ix-mx-pl-line b { color: #151A21; }
 .ix-mx-pl-risk {
-  display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px 8px 9px; border-radius: 100px; cursor: pointer;
-  font: inherit; font-size: 13.5px; font-weight: 600; line-height: 1.3; text-align: start; color: #2B313A;
-  background: #fff; border: 1px solid rgba(21,26,33,.14);
-  transition: border-color .2s, transform .22s cubic-bezier(.2,.85,.2,1);
-  animation: ixRise .4s cubic-bezier(.2,.85,.2,1) backwards; animation-delay: calc(var(--i) * 60ms);
+  display: inline; padding: 0; border: none; background: none; cursor: pointer;
+  font: inherit; font-weight: 600; color: #0F7FA8;
+  text-decoration: underline dotted; text-underline-offset: 4px; text-decoration-thickness: 1.5px;
 }
-.ix-mx-pl-risk:hover { border-color: #1CABE2; transform: translateY(-1px); }
-.ix-mx-pl-risk:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
-.ix-mx-pl-risk > svg:last-child { flex-shrink: 0; color: #0F7FA8; }
+.ix-mx-pl-risk.is-open { text-decoration-style: solid; }
+.ix-mx-pl-risk:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; border-radius: 3px; }
 
 /* Rings: защитные кольца вокруг ребёнка (Rings.jsx). Кольцо обводится
    штрихом от верхней точки по часовой; подпись — по верхней дуге. */
@@ -1237,17 +1232,19 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
 .ix-rg-svg { display: block; width: 100%; height: auto; overflow: visible; -webkit-tap-highlight-color: transparent; }
 .ix-ring { cursor: pointer; }
 .ix-ring-base { fill: none; stroke: #EDF5FA; stroke-width: 20; transition: stroke .25s; }
-.ix-ring:hover .ix-ring-base { stroke: #D9EEF8; }
 .ix-ring-fill {
   fill: none; stroke: #1CABE2; stroke-width: 20; stroke-dasharray: 1; stroke-dashoffset: 1;
   transition: stroke-dashoffset 1s cubic-bezier(.45,.05,.3,1), stroke .3s;
 }
 .ix-ring.is-lit .ix-ring-fill { stroke-dashoffset: 0; }
+/* Без этого у незажжённого кольца сверху виден волосок — начало штриха. */
+.ix-ring:not(.is-lit) .ix-ring-fill { visibility: hidden; }
 .ix-ring.is-cur .ix-ring-fill { stroke: #0F7FA8; }
 .ix-ring-hit { fill: none; stroke: transparent; stroke-width: 24; pointer-events: stroke; }
 .ix-ring-label { font-size: 10.5px; font-weight: 700; letter-spacing: .02em; fill: #6E7787; pointer-events: none; transition: fill .3s ease .45s; }
 .ix-ring.is-lit .ix-ring-label { fill: #fff; }
 .ix-rg-child circle, .ix-rg-child path { fill: rgba(245,182,42,.34); stroke: #2B313A; stroke-width: 2.5; stroke-linejoin: round; }
+.ix-rg-side { display: flex; flex-direction: column; }
 .ix-rg-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .ix-rg-chip {
   display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px 7px 8px; border-radius: 100px; cursor: pointer;
@@ -1255,7 +1252,6 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
   background: #fff; border: 1px solid rgba(21,26,33,.16);
   transition: background .25s, color .25s, border-color .25s, transform .22s cubic-bezier(.2,.85,.2,1);
 }
-.ix-rg-chip:hover { border-color: #1CABE2; transform: translateY(-1px); }
 .ix-rg-dot {
   flex-shrink: 0; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%;
   border: 1.5px solid rgba(21,26,33,.2); color: #fff; transition: background .25s, border-color .25s, color .25s;
@@ -1336,7 +1332,6 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
 .ix-tg-app:focus-visible { outline: 2px solid #1CABE2; outline-offset: 0; }
 .ix-tg-app-ico { position: relative; display: block; border-radius: 30%; transition: transform .25s cubic-bezier(.2,.85,.2,1), box-shadow .25s; }
 .ix-tg-app-ico .ix-app { width: 46px; height: 46px; box-shadow: 0 8px 16px -12px rgba(21,26,33,.7), inset 0 0 0 1px rgba(21,26,33,.08); }
-.ix-tg-app:hover .ix-tg-app-ico { transform: translateY(-2px); }
 .ix-tg-app.is-on .ix-tg-app-ico { box-shadow: 0 0 0 3px #fff, 0 0 0 5px #1CABE2; }
 .ix-tg-app-name { max-width: 100%; font-size: 11px; font-weight: 600; line-height: 1.25; text-align: center; color: #2B313A; }
 .ix-tg-badge {
@@ -1355,7 +1350,6 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
   font: inherit; font-size: 14.5px; line-height: 1.55; text-align: start; color: #2B313A; border: none; background: transparent;
   transition: background .2s; animation: ixRise .4s cubic-bezier(.2,.85,.2,1) backwards; animation-delay: calc(var(--i) * 50ms);
 }
-.ix-tg-row:hover { background: rgba(28,171,226,.05); }
 .ix-tg-row:focus-visible { outline: 2px solid #1CABE2; outline-offset: -2px; }
 .ix-tg-text { flex: 1; min-width: 0; }
 .ix-sw { flex-shrink: 0; position: relative; width: 44px; height: 26px; border-radius: 100px; background: #D5DAE1; transition: background .3s cubic-bezier(.2,.85,.2,1); }
@@ -1380,19 +1374,20 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
 .ix-vault-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .ix-safe { flex-shrink: 0; width: 40px; height: 40px; overflow: visible; }
 .ix-safe-body { fill: #fff; stroke: #2B313A; stroke-width: 2.2; }
-.ix-safe-hole { fill: #2B313A; opacity: .16; }
-.ix-safe-door { transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(-.42) skewY(-10deg); transition: transform .6s cubic-bezier(.3,1.3,.5,1); }
+.ix-safe-hole { fill: #24323F; opacity: .82; }
+.ix-safe-door { transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(.14); transition: transform .6s cubic-bezier(.3,1.3,.5,1); }
 .ix-safe-door rect { fill: #fff; stroke: #2B313A; stroke-width: 2.2; transition: fill .4s ease .2s; }
 .ix-safe-door circle, .ix-safe-door path { fill: none; stroke: #2B313A; stroke-width: 1.8; stroke-linecap: round; transition: stroke .4s ease .2s; }
 .ix-safe.is-shut .ix-safe-door { transform: none; }
 .ix-safe.is-shut .ix-safe-door rect { fill: #1CABE2; }
 .ix-safe.is-shut .ix-safe-door circle, .ix-safe.is-shut .ix-safe-door path { stroke: #fff; }
 .ix-safe-feet { fill: none; stroke: #2B313A; stroke-width: 2.2; stroke-linecap: round; }
+.ix-vault-mark { position: relative; flex-shrink: 0; line-height: 0; }
 .ix-vault-n {
-  flex-shrink: 0; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
-  background: rgba(21,26,33,.08); color: #5A6270; font-size: 12px; font-weight: 800; transition: background .4s, color .4s;
+  position: absolute; right: -7px; bottom: -3px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; box-shadow: 0 0 0 2px #F7F8FA;
+  background: #E4E8EE; color: #5A6270; font-size: 11px; font-weight: 800; line-height: 1; transition: background .4s, color .4s;
 }
-.ix-vault-g.is-shut .ix-vault-n { background: #1CABE2; color: #fff; }
+.ix-vault-g.is-shut .ix-vault-n { background: #1CABE2; color: #fff; box-shadow: 0 0 0 2px #F1F8FC; }
 .ix-vault-title { flex: 1; min-width: 0; font-size: 15px; font-weight: 700; line-height: 1.4; color: #151A21; }
 .ix-vault-pre { margin: 0 0 12px; font-size: 14.5px; line-height: 1.65; color: #2B313A; }
 .ix-vault-items { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
@@ -1403,7 +1398,6 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
   background: #fff; border: 1px dashed rgba(21,26,33,.28);
   transition: background .35s, color .35s, border-color .35s, transform .25s cubic-bezier(.2,.85,.2,1);
 }
-.ix-vault-item:hover:not(.is-locked) { border-color: #1CABE2; transform: translateY(-2px); }
 .ix-vault-item:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
 .ix-vault-ico {
   flex-shrink: 0; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px;
@@ -1417,6 +1411,7 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
   animation: ixRise .45s cubic-bezier(.2,.85,.2,1) both;
 }
 .ix-vault-why.is-item { margin: 0 0 6px; }
+.ix-vault-why > span:last-child { flex: 1; min-width: 0; }
 .ix-vault-why b { color: #0F7FA8; }
 .ix-vault-why-ico { flex-shrink: 0; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: #1CABE2; color: #fff; }
 
@@ -1427,7 +1422,6 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
   background: rgba(28,171,226,.08); box-shadow: inset 0 -2px 0 rgba(28,171,226,.5);
   -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background .3s, color .3s, box-shadow .3s;
 }
-.ix-id-word:hover { background: rgba(28,171,226,.18); }
 .ix-id-word:focus-visible { outline: 2px solid #1CABE2; outline-offset: 1px; }
 .ix-id-word.is-on { cursor: default; background: #1CABE2; color: #fff; box-shadow: none; }
 .ix-id {
@@ -1456,7 +1450,23 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
 }
 .ix-id-label.is-l { text-align: end; }
 
+@media (hover: hover) {
+  .ix-mx-pl:hover .ix-app { transform: translateY(-2px); }
+  .ix-mx-risk:hover { background: rgba(245,182,42,.08); }
+  .ix-mx-pl-risk:hover { color: #0B5F80; }
+  .ix-ring:hover .ix-ring-base { stroke: #D9EEF8; }
+  .ix-rg-chip:hover { border-color: #1CABE2; transform: translateY(-1px); }
+  .ix-tg-app:hover .ix-tg-app-ico { transform: translateY(-2px); }
+  .ix-tg-row:hover { background: rgba(28,171,226,.05); }
+  .ix-vault-item:hover:not(.is-locked) { border-color: #1CABE2; transform: translateY(-2px); }
+  .ix-id-word:hover { background: rgba(28,171,226,.18); }
+}
 @media (max-width: 720px) {
+  /* Кольца: текст сразу под кольцами, названия — ниже, компактно. */
+  .ix-rg-card { order: -1; margin: 0 0 14px; }
+  .ix-rg-chips { gap: 6px; }
+  .ix-rg-chip { padding: 6px 11px 6px 7px; font-size: 12.5px; }
+  .ix-rg-dot { width: 16px; height: 16px; }
   .ix-mx-panel-cols { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .ix-rg { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .ix-rg-stage { width: 100%; max-width: 300px; margin: 0 auto; }
@@ -1471,7 +1481,18 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
   .ix-mx-pl { padding: 9px 0 7px; }
   .ix-mx-pl .ix-app { width: 24px; height: 24px; }
   .ix-mx-risk { grid-column: 1 / -1; padding: 10px 10px 4px; }
-  .ix-mx-cell { min-height: 32px; border-top: none; }
+  .ix-mx-cell { min-height: 34px; border-top: none; }
+  .ix-mx-cell.is-hit i { display: none; }
+  .ix-mx-cell.is-hit .ix-mx-mini {
+    display: grid; width: 24px; height: 24px; border-radius: 7px;
+    animation: ixPopIn .45s cubic-bezier(.3,1.4,.5,1) backwards; animation-delay: calc(var(--j) * 35ms);
+  }
+  .ix-mx-cell.in-col.is-hit .ix-mx-mini { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #1CABE2; }
+  .ix-mx-pl-line { font-size: 14.5px; }
+  .ix-safe { width: 34px; height: 34px; }
+  .ix-vault-title { font-size: 14.5px; }
+  .ix-vault-why { gap: 8px; padding: 10px 12px; font-size: 14px; }
+  .ix-vault-why-ico { width: 22px; height: 22px; border-radius: 7px; }
   .ix-ice-tag { padding: 5px 9px; }
   .ix-ice-tag-h { font-size: 12px; }
   .ix-ice-tag-t { font-size: 11.5px; line-height: 1.35; }

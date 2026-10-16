@@ -58,8 +58,10 @@ export function Vault({ block: b, done, onDone, R }) {
         {groups.map((g, gi) => (
           <section key={gi} className={`ix-vault-g${shut[gi] ? ' is-shut' : ''}`} style={{ '--i': gi }}>
             <header className="ix-vault-head">
-              <Safe shut={shut[gi]} />
-              <span className="ix-vault-n">{gi + 1}</span>
+              <span className="ix-vault-mark">
+                <Safe shut={shut[gi]} />
+                <span className="ix-vault-n">{gi + 1}</span>
+              </span>
               <span className="ix-vault-title">{g.title}</span>
             </header>
             {g.text && <p className="ix-vault-pre">{R(g.text)}</p>}

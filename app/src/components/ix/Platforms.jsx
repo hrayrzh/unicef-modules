@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { logoFor } from '../PlatformLogo';
 import { Icon } from './icons';
 import { Frame, plain, useDone } from './shared';
@@ -96,6 +96,9 @@ export function Matrix({ block: b, done, onDone, R }) {
                   aria-hidden
                 >
                   <i />
+                  {/* На телефоне вместо точки — маленький логотип: шапка с
+                      логотипами далеко, и по точке не понять, чья она. */}
+                  {shown && has[i][j] && <AppTile name={p} className="ix-mx-mini" />}
                 </span>
               );
             })}
@@ -103,29 +106,23 @@ export function Matrix({ block: b, done, onDone, R }) {
         ))}
       </div>
 
-      {/* Платформа выбрана — её риски, как строка «Instagram — …» в 5_1.html,
-          только кнопками: нажатие открывает риск. */}
+      {/* Платформа выбрана — её риски строкой, как «Instagram — …» в 5_1.html;
+          название риска — кнопка, нажатие открывает риск. */}
       {col != null ? (
         <div className="ix-mx-panel is-pl" key={`p${col}`} aria-live="polite">
-          <span className="ix-mx-pl-head">
+          <p className="ix-mx-pl-line">
             <AppTile name={pls[col]} />
-            <span className="ix-mx-panel-h">{pls[col]}</span>
-          </span>
-          <div className="ix-mx-pl-risks">
-            {rows.map((r, i) => (has[i][col] ? (
-              <button
-                key={i}
-                type="button"
-                className={`ix-mx-pl-risk${opened[i] ? ' is-open' : ''}`}
-                style={{ '--i': i }}
-                onClick={() => pickRow(i)}
-              >
-                <span className="ix-mx-mark" aria-hidden>{opened[i] && <Icon name="check" size={11} strokeWidth={3.2} />}</span>
-                {r[0]}
-                <Icon name="next" size={13} strokeWidth={2.4} />
-              </button>
-            ) : null))}
-          </div>
+            <b>{pls[col]}</b>
+            {' — '}
+            {rows.map((r, i) => i).filter((i) => has[i][col]).map((i, k) => (
+              <Fragment key={i}>
+                {k > 0 && ', '}
+                <button type="button" className={`ix-mx-pl-risk${opened[i] ? ' is-open' : ''}`} onClick={() => pickRow(i)}>
+                  {rows[i][0]}
+                </button>
+              </Fragment>
+            ))}
+          </p>
         </div>
       ) : row != null && (
         <div className="ix-mx-panel" key={row} aria-live="polite">
