@@ -19,6 +19,10 @@ import { EASE, Frame, plain, reducedMotion, useDone, useInView } from './shared'
  * в облачке над местом (дословно из текста признака).
  */
 const HINT = 'Լույսով անցեք նկարի վրայով՝ նշանները գտնելու համար։';
+// На телефоне главное действие — нажать на искру: вести луч пальцем можно,
+// но вертикальный свайп листает страницу.
+const HINT_TOUCH = 'Սեղմեք նկարի լուսավոր կետերի վրա՝ նշանները գտնելու համար։';
+const coarse = () => typeof window !== 'undefined' && !!window.matchMedia?.('(pointer: coarse)').matches;
 const W = 1000;     // ширина холста маски; высота — по пропорции картинки
 const DWELL = 480;  // сколько держать луч на месте, мс
 
@@ -102,11 +106,18 @@ export function Spot({ block: b, done, onDone, R }) {
     setAwake(true);
     const p = at(e);
     put(p.x, p.y);
-    // Нажатие рядом с местом — найдено сразу, держать не нужно.
-    const near = items.findIndex((it, i) => {
-      if (live.current.found.has(i)) return false;
+    // Попали в саму искру — её найдёт её же click. Иначе одно касание
+    // засчитывало бы два места: искру и ближайшее к пальцу.
+    if (e.target.closest?.('.ix-torch-spot')) return;
+    // Нажатие рядом с местом — найдено сразу, держать не нужно. Берём
+    // ближайшее: на телефоне места стоят в 25–30px друг от друга.
+    let near = -1;
+    let nearD = rad * 0.5;
+    items.forEach((it, i) => {
+      if (live.current.found.has(i)) return;
       const q = px(it);
-      return Math.hypot(q.x - p.x, q.y - p.y) < rad * 0.5;
+      const d = Math.hypot(q.x - p.x, q.y - p.y);
+      if (d < nearD) { near = i; nearD = d; }
     });
     if (near >= 0) find(near);
   };
@@ -169,7 +180,7 @@ export function Spot({ block: b, done, onDone, R }) {
   const lit = complete;
 
   return (
-    <Frame icon={<Icon name="eye" />} title={b.title} hint={complete ? null : HINT} progress={`${found.length} / ${n}`} done={complete}>
+    <Frame icon={<Icon name="eye" />} title={b.title} hint={complete ? null : coarse() ? HINT_TOUCH : HINT} progress={`${found.length} / ${n}`} done={complete}>
       <div
         ref={stageRef}
         className={`ix-torch${lit ? ' is-lit' : ''}${awake ? ' is-awake' : ''}`}

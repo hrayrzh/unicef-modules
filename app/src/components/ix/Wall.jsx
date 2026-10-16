@@ -67,7 +67,9 @@ export function Wall({ block: b, done, onDone, R }) {
     <Frame icon={<Icon name="wall" />} title={b.title} hint={complete ? null : HINT} progress={`${count} / ${n}`} done={complete}>
       {b.lead && <p className="ix-text">{R(b.lead)}</p>}
       <div ref={stageRef} className={`ix-wall${complete ? ' is-open' : ''}`} style={{ '--p': n ? count / n : 1 }}>
-        <svg className="ix-wall-scene" viewBox="0 0 600 260" preserveAspectRatio="xMidYMax meet" aria-hidden focusable="false">
+        {/* Холст обрезан по рисунку (фигуры, облачко, пол): на телефоне
+            сцена была мелкой полосой внизу высокой стены. */}
+        <svg className="ix-wall-scene" viewBox="110 24 390 222" preserveAspectRatio="xMidYMax meet" aria-hidden focusable="false">
           <S d={`M40 ${FLOOR}h520`} className="is-soft" />
           <Person x={150} y={FLOOR} s={0.8} tone="amber" />
           <Person x={452} y={FLOOR} tone="cyan" />

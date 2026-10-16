@@ -385,11 +385,21 @@ button { font-family: inherit; }
 .ms-src-link:hover .ms-src-tip, .ms-src-link:focus .ms-src-tip, .ms-src-link:focus-visible .ms-src-tip { opacity: 1; visibility: visible; }
 
 @media (max-width: 560px) {
-  /* На телефоне наведения нет — описание источника прячем целиком, чтобы
-     тултип не выпадал за экран от случайного тапа. Ссылка остаётся. */
-  .ms-src-tip { display: none; }
   .ms-src-host { display: none; }
   .ms-aside-body { padding-left: 18px; }
+}
+/* Без наведения (телефон, планшет) описание источника — строкой под
+   заголовком: нажатие сразу открывает ссылку, и тултип никто бы не увидел,
+   а у многих источников заголовок — голый адрес, и смысл только в описании. */
+@media (max-width: 560px), (hover: none) {
+  .ms-src-link { flex-wrap: wrap; row-gap: 2px; }
+  .ms-src-title { overflow-wrap: anywhere; }
+  .ms-src-tip {
+    position: static; flex-basis: 100%; width: auto; max-width: none; margin: 0 0 0 33px; padding: 0;
+    opacity: 1; visibility: visible; transform: none; background: none; box-shadow: none;
+    color: #6E7787; font-size: 12.5px; line-height: 1.55;
+  }
+  .ms-src-tip::after { display: none; }
 }
 
 /* Кнопка «Օգնություն» — требования рецензента №36 и №37.
