@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import ContactCard, { PhoneIcon } from './ContactCard';
+import { LinkIcon, PhoneIcon } from './ContactCard';
 
 
 /**
@@ -23,8 +23,22 @@ import ContactCard, { PhoneIcon } from './ContactCard';
  * в тексте. Поэтому состояние можно поднять наружу — `openSignal` растёт на
  * каждый такой запрос из контента.
  */
+// Телефоны контакта: `phones[]` или один `tel` + `label` (как в ContactCard).
+const phonesOf = (c) => c.phones || (c.tel ? [{ tel: c.tel, label: c.label }] : []);
+
+/**
+ * Окно (редизайн 2026-10-20, просьба Армана: «слишком явно сделано ИИ»):
+ * красная шапка с заголовком засечным шрифтом; сразу под ней — экстренные
+ * номера (`urgent`) крупными цифрами, вся плитка звонит; «Ե՞րբ դիմել» —
+ * спокойный список; остальные организации — справочником: строка «кто и чем
+ * помогает», номер справа. Длинное вступление (модуль 4) уходит из шапки в тело,
+ * под экстренные номера, чтобы они оставались на первом экране.
+ */
 export default function HelpButton({ help: HELP, openSignal = 0 }) {
   const [open, setOpen] = useState(false);
+  const urgent = (HELP.contacts || []).filter((c) => c.urgent && phonesOf(c).length);
+  const rest = (HELP.contacts || []).filter((c) => !urgent.includes(c));
+  const shortLead = (HELP.lead || '').length <= 180;
   const btnRef = useRef(null);
   const panelRef = useRef(null);
 
@@ -79,26 +93,75 @@ export default function HelpButton({ help: HELP, openSignal = 0 }) {
             aria-label={HELP.title}
             tabIndex={-1}
           >
-            <div className="ms-help-head">
-              <div>
-                <div className="ms-help-kicker">{HELP.title}</div>
-                <p className="ms-help-lead">{HELP.lead}</p>
+            <span className="ms-hp-grab" aria-hidden />
+            <header className="ms-hp-head">
+              <div className="ms-hp-head-text">
+                <h2 className="ms-hp-title">{HELP.title}</h2>
+                {shortLead && <p className="ms-hp-lead">{HELP.lead}</p>}
               </div>
-              <button className="ms-close ms-help-close" onClick={close} aria-label="Փակել">✕</button>
-            </div>
+              <button className="ms-hp-close" onClick={close} aria-label="Փակել">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+                  <path d="M6.5 6.5l11 11M17.5 6.5l-11 11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+                </svg>
+              </button>
+            </header>
 
-            <div className="ms-help-body">
+            <div className="ms-hp-body">
+              {/* Экстренные номера — первыми и крупно: вся плитка звонит. */}
+              {urgent.length > 0 && (
+                <div className="ms-hp-sos">
+                  {urgent.map((c, i) => {
+                    const p = phonesOf(c)[0];
+                    return (
+                      <a key={c.name} className="ms-hp-sos-tile" href={`tel:${p.tel}`} style={{ '--i': i }}>
+                        <span className="ms-hp-sos-name">{c.name}</span>
+                        <span className="ms-hp-sos-num">{p.label}</span>
+                        {c.role && <span className="ms-hp-sos-role">{c.role}</span>}
+                        <span className="ms-hp-sos-call" aria-hidden><PhoneIcon size={17} /></span>
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
+              {!shortLead && <p className="ms-hp-intro">{HELP.lead}</p>}
+
               {/* №37 — «написано, в каких случаях обращаться». */}
-              <h3 className="ms-help-h">{HELP.whenTitle}</h3>
-              <ul className="ms-help-when">
-                {HELP.when.map((t) => <li key={t}>{t}</li>)}
-              </ul>
+              <section className="ms-hp-sec">
+                <h3 className="ms-hp-h">{HELP.whenTitle}</h3>
+                <ul className="ms-hp-when">
+                  {HELP.when.map((t, i) => <li key={t} style={{ '--i': i }}>{t}</li>)}
+                </ul>
+              </section>
 
-              <h3 className="ms-help-h">Որտեղ դիմել</h3>
-              <div className="ms-help-contacts">
-                {HELP.contacts.map((c) => <ContactCard key={c.name} c={c} />)}
-              </div>
-              {HELP.note && <p className="ms-help-note">{HELP.note}</p>}
+              {/* Остальные — справочником: кто и чем помогает, номер справа. */}
+              <section className="ms-hp-sec">
+                <h3 className="ms-hp-h">Որտեղ դիմել</h3>
+                <ul className="ms-hp-dir">
+                  {rest.map((c, i) => (
+                    <li key={c.name} className="ms-hp-row" style={{ '--i': i }}>
+                      <div className="ms-hp-row-main">
+                        <span className="ms-hp-name">{c.name}</span>
+                        {c.role && <span className="ms-hp-role">{c.role}</span>}
+                      </div>
+                      <div className="ms-hp-row-act">
+                        {phonesOf(c).map((p) => (
+                          <a key={p.tel} className="ms-hp-num" href={`tel:${p.tel}`}>
+                            <PhoneIcon size={14} />
+                            <span>{p.label}</span>
+                          </a>
+                        ))}
+                        {c.url && (
+                          <a className="ms-hp-web" href={c.url} target="_blank" rel="noreferrer noopener">
+                            <span>{c.urlLabel}</span>
+                            <LinkIcon size={12} />
+                          </a>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+              {HELP.note && <p className="ms-hp-note">{HELP.note}</p>}
             </div>
           </div>
         </div>

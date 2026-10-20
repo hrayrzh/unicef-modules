@@ -420,36 +420,116 @@ button { font-family: inherit; }
 .ms-help-overlay {
   position: fixed; inset: 0; z-index: 200;
   display: flex; align-items: center; justify-content: center;
-  padding: 24px; background: rgba(14,18,24,.62);
-  animation: msFadeIn .18s ease both;
+  padding: 24px; background: rgba(14,18,24,.55);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  animation: msFadeIn .2s ease both;
 }
+/* Окно помощи (HelpButton.jsx): красная шапка, экстренные номера плитками,
+   «когда обращаться» списком, остальные организации — справочником. */
+@keyframes msHelpIn { from { opacity: 0; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes msSheetUp { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes msRowIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes msRing { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-14deg); } 40% { transform: rotate(12deg); } 60% { transform: rotate(-8deg); } 80% { transform: rotate(5deg); } }
 .ms-help-panel {
-  width: min(560px, 100%); max-height: min(86vh, 760px);
+  position: relative; width: min(620px, 100%); max-height: min(88vh, 820px);
   display: flex; flex-direction: column; overflow: hidden;
-  border-radius: 18px; background: #FFFDFA; color: #151A21;
-  box-shadow: 0 30px 70px -20px rgba(14,18,24,.6);
-  animation: msPop .22s cubic-bezier(.2,.85,.2,1) both;
+  border-radius: 22px; background: #fff; color: #151A21;
+  box-shadow: 0 40px 90px -30px rgba(14,18,24,.75), 0 0 0 1px rgba(21,26,33,.06);
+  animation: msHelpIn .42s cubic-bezier(.2,.9,.25,1) both;
 }
 .ms-help-panel:focus { outline: none; }
-.ms-help-head {
-  flex-shrink: 0; display: flex; align-items: flex-start; gap: 16px;
-  padding: 22px 22px 18px; border-bottom: 1px solid rgba(21,26,33,.1);
-  /* Тонкая красная линия сверху — та же метка цвета, что и на кнопке. */
-  box-shadow: inset 0 3px 0 #D93A3A;
+.ms-hp-grab { display: none; }
+.ms-hp-head {
+  flex-shrink: 0; display: flex; align-items: flex-start; gap: 16px; padding: 24px 24px 22px; color: #fff;
+  background-color: #D93A3A;
+  background-image: radial-gradient(120% 160% at 100% 0%, rgba(255,255,255,.16), transparent 55%), linear-gradient(160deg, #DF4642, #C22F2D);
 }
-.ms-help-kicker {
-  font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
-  font-weight: 700; color: #D93A3A;
+.ms-hp-head-text { flex: 1; min-width: 0; }
+.ms-hp-title { margin: 0; font-family: 'Noto Serif Armenian', 'Spectral', serif; font-size: 25px; line-height: 1.25; font-weight: 700; letter-spacing: -.3px; }
+.ms-hp-lead { margin: 8px 0 0; font-size: 14px; line-height: 1.65; color: rgba(255,255,255,.92); }
+.ms-hp-close {
+  flex-shrink: 0; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%;
+  border: none; cursor: pointer; color: #fff; background: rgba(255,255,255,.18);
+  transition: background .2s ease, transform .3s cubic-bezier(.2,.85,.2,1);
 }
-.ms-help-lead { margin: 9px 0 0; font-size: 14px; line-height: 1.65; color: #39415C; }
-.ms-help-close { flex-shrink: 0; width: 32px; height: 32px; border-radius: 9px; background: rgba(21,26,33,.06); border: 1px solid rgba(21,26,33,.14); color: #151A21; font-size: 16px; line-height: 1; cursor: pointer; transition: background .22s ease, transform .22s cubic-bezier(.2,.85,.2,1); }
-.ms-help-body { overflow-y: auto; padding: 20px 22px 24px; }
-.ms-help-h { margin: 0 0 12px; font-size: 12px; letter-spacing: .13em; text-transform: uppercase; color: #6E7787; font-weight: 700; }
-.ms-help-when { margin: 0 0 24px; padding-left: 20px; display: flex; flex-direction: column; gap: 9px; }
-.ms-help-when li { font-size: 13.5px; line-height: 1.62; color: #2B313A; }
-.ms-help-when li::marker { color: #D93A3A; }
+.ms-hp-close:hover { background: rgba(255,255,255,.3); transform: rotate(90deg); }
+.ms-hp-close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.ms-hp-body { overflow-y: auto; overscroll-behavior: contain; padding: 20px 24px 26px; }
 
-.ms-help-contacts { display: flex; flex-direction: column; gap: 12px; }
+.ms-hp-sos { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.ms-hp-sos-tile {
+  position: relative; display: flex; flex-direction: column; gap: 2px; padding: 14px 58px 15px 16px; border-radius: 16px;
+  text-decoration: none !important; color: #151A21 !important; background: #FFF5F4; border: 1.5px solid rgba(217,58,58,.26);
+  transition: border-color .2s ease, background .2s ease, transform .25s cubic-bezier(.2,.85,.2,1);
+  animation: msRowIn .45s cubic-bezier(.2,.85,.2,1) calc(.1s + var(--i) * 70ms) both;
+}
+.ms-hp-sos-tile:focus-visible { outline: 2px solid #D93A3A; outline-offset: 2px; }
+.ms-hp-sos-name { font-size: 12px; font-weight: 700; line-height: 1.4; color: #B32B2B; }
+.ms-hp-sos-num { font-size: 27px; font-weight: 800; line-height: 1.2; letter-spacing: -.5px; font-variant-numeric: tabular-nums; white-space: nowrap; color: #151A21; }
+.ms-hp-sos-role { margin-top: 3px; font-size: 12px; line-height: 1.5; color: #75605E; }
+.ms-hp-sos-call {
+  position: absolute; top: 14px; right: 14px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%;
+  color: #fff; background: #D93A3A; box-shadow: 0 8px 16px -8px rgba(217,58,58,.95);
+}
+.ms-hp-intro { margin: 0 0 22px; font-size: 14px; line-height: 1.72; color: #39415C; }
+.ms-hp-sec + .ms-hp-sec { margin-top: 24px; }
+.ms-hp-h { display: flex; align-items: center; gap: 12px; margin: 0 0 6px; font-size: 14.5px; font-weight: 700; color: #151A21; }
+.ms-hp-h::after { content: ''; flex: 1; height: 1px; background: rgba(21,26,33,.1); }
+.ms-hp-when { list-style: none; margin: 0; padding: 0; }
+.ms-hp-when li {
+  position: relative; padding: 9px 0 9px 22px; font-size: 14px; line-height: 1.6; color: #2B313A;
+  border-bottom: 1px dashed rgba(21,26,33,.1); animation: msRowIn .4s cubic-bezier(.2,.85,.2,1) calc(.16s + var(--i) * 40ms) both;
+}
+.ms-hp-when li:last-child { border-bottom: none; }
+.ms-hp-when li::before { content: ''; position: absolute; left: 2px; top: 20px; width: 10px; height: 2px; border-radius: 1px; background: #D93A3A; }
+.ms-hp-dir { list-style: none; margin: 0; padding: 0; }
+.ms-hp-row {
+  display: flex; align-items: center; gap: 18px; padding: 14px 0; border-bottom: 1px solid rgba(21,26,33,.08);
+  animation: msRowIn .4s cubic-bezier(.2,.85,.2,1) calc(.24s + var(--i) * 50ms) both;
+}
+.ms-hp-row:last-child { border-bottom: none; padding-bottom: 2px; }
+.ms-hp-row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.ms-hp-name { font-size: 14.5px; font-weight: 700; line-height: 1.35; color: #151A21; }
+.ms-hp-role { font-size: 12.5px; line-height: 1.55; color: #5A6270; }
+.ms-hp-row-act { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.ms-hp-num {
+  display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border-radius: 10px; white-space: nowrap;
+  font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; text-decoration: none !important;
+  color: #B32B2B !important; background: #fff; border: 1.5px solid rgba(217,58,58,.3);
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.ms-hp-num:focus-visible, .ms-hp-web:focus-visible { outline: 2px solid #D93A3A; outline-offset: 2px; }
+.ms-hp-web {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 1px; white-space: nowrap;
+  font-size: 12.5px; font-weight: 600; text-decoration: none !important; color: #0F7FA8 !important;
+  border-bottom: 1px solid rgba(15,127,168,.3); transition: border-color .2s ease;
+}
+.ms-hp-note {
+  margin: 22px 0 0; padding: 12px 14px; border-radius: 12px; font-size: 13px; line-height: 1.62;
+  color: #6B2A27; background: #FFF5F4; border-left: 3px solid #D93A3A;
+}
+@media (hover: hover) {
+  .ms-hp-sos-tile:hover { border-color: #D93A3A; background: #FFEDEB; transform: translateY(-1px); }
+  .ms-hp-sos-tile:hover .ms-hp-sos-call { animation: msRing .6s ease; }
+  .ms-hp-num:hover { color: #fff !important; background: #D93A3A; border-color: #D93A3A; }
+  .ms-hp-web:hover { border-bottom-color: #0F7FA8; }
+}
+@media (max-width: 560px) {
+  .ms-help-panel { animation: msSheetUp .45s cubic-bezier(.2,.9,.25,1) both; }
+  .ms-hp-grab { display: block; position: absolute; z-index: 1; top: 8px; left: 50%; width: 40px; height: 4px; margin-left: -20px; border-radius: 2px; background: rgba(255,255,255,.6); }
+  .ms-hp-head { padding: 26px 18px 18px; }
+  .ms-hp-title { font-size: 22px; }
+  .ms-hp-body { padding: 16px 18px 24px; }
+  .ms-hp-sos-num { font-size: 24px; }
+  .ms-hp-row { flex-direction: column; align-items: stretch; gap: 10px; }
+  .ms-hp-row-act { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ms-hp-sos-tile, .ms-hp-when li, .ms-hp-row { animation: none; }
+  .ms-hp-sos-tile:hover, .ms-hp-close:hover { transform: none; }
+  .ms-hp-sos-tile:hover .ms-hp-sos-call { animation: none; }
+}
+
 .ms-help-card { padding: 15px 16px; border-radius: 13px; background: #F5F3EE; border: 1px solid rgba(21,26,33,.09); }
 /* Полиция — единственный по-настоящему экстренный номер, отмечен цветом. */
 .ms-help-card.is-urgent { background: rgba(217,58,58,.07); border-color: rgba(217,58,58,.28); }
@@ -562,7 +642,6 @@ button { font-family: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .ms-role-card:hover { transform: none; }
 }
-.ms-help-note { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid rgba(21,26,33,.1); font-size: 12.5px; line-height: 1.65; color: #6E7787; }
 
 /* Ссылка «Օգնության կետեր» внутри текста — открывает ту же панель, что
    кнопка в шапке. Выглядит как ссылка, не как кнопка: она в потоке абзаца. */
