@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Icon } from './icons';
-import { EASE, Frame, leadOf, reducedMotion, useDone } from './shared';
+import { Frame, leadOf, reducedMotion, useDone } from './shared';
 
 /**
  * `floorplan` — план школы (файл «Նոր ինտերակտիվ տարբերակներ», модуль 2,
@@ -20,20 +20,38 @@ export function FloorPlan({ block: b, done, onDone, R }) {
   const half = Math.ceil(items.length / 2);
   const [seen, setSeen] = useState(() => items.map(() => !!done));
   const [cur, setCur] = useState(null);
-  const planRef = useRef(null);
   const hallRef = useRef(null);
   const roomRefs = useRef([]);
   const meRef = useRef(null);
   const prev = useRef(null);
-  const [pos, setPos] = useState(null);
   const n = seen.filter(Boolean).length;
   const complete = items.length > 0 && n === items.length;
   useDone(complete, onDone);
 
-  // Учитель встаёт в верхний левый угол комнаты — посередине значок и подпись.
-  const centerOf = (i) => {
+  // Точки маршрута для комнаты: где учитель стоит (левый верхний угол —
+  // посередине значок и подпись), проём двери изнутри и точка в коридоре
+  // напротив двери. Коридор горизонтальный на широком экране, вертикальный
+  // на телефоне — сторона двери берётся из того, где комната относительно него.
+  const geo = (i) => {
     const r = roomRefs.current[i];
-    return r ? { x: r.offsetLeft + 24, y: r.offsetTop + 24, cx: r.offsetLeft + r.offsetWidth / 2, cy: r.offsetTop + r.offsetHeight / 2 } : null;
+    const h = hallRef.current;
+    if (!r || !h) return null;
+    const L = r.offsetLeft;
+    const T = r.offsetTop;
+    const W = r.offsetWidth;
+    const H = r.offsetHeight;
+    const rest = { x: L + 24, y: T + 24 };
+    if (h.offsetWidth > h.offsetHeight) {
+      const above = T + H / 2 < h.offsetTop;
+      return { rest, inside: { x: L + W / 2, y: above ? T + H - 18 : T + 18 }, hall: { x: L + W / 2, y: h.offsetTop + h.offsetHeight / 2 } };
+    }
+    const left = L + W / 2 < h.offsetLeft;
+    return { rest, inside: { x: left ? L + W - 18 : L + 18, y: T + H / 2 }, hall: { x: h.offsetLeft + h.offsetWidth / 2, y: T + H / 2 } };
+  };
+
+  const place = (el, p) => {
+    el.style.left = `${p.x}px`;
+    el.style.top = `${p.y}px`;
   };
 
   const go = (i) => {
@@ -41,38 +59,47 @@ export function FloorPlan({ block: b, done, onDone, R }) {
     setSeen((s) => (s[i] ? s : s.map((v, k) => v || k === i)));
   };
 
-  // Учитель стоит в выбранной комнате; путь — через коридор: из своей двери в
-  // коридор, по коридору, в новую дверь.
+  // Учитель ходит только через двери и коридор: из угла своей комнаты к
+  // проёму, в коридор, по коридору к другой двери, в проём, в угол. Место
+  // ставится сразу (до анимации), анимация ведёт к нему от старого места —
+  // поэтому ничего не прыгает. Скорость одна на всех отрезках.
   useLayoutEffect(() => {
     if (cur == null) return;
-    const to = centerOf(cur);
-    setPos(to);
+    const el = meRef.current;
+    const b = geo(cur);
     const from = prev.current;
     prev.current = cur;
-    const el = meRef.current;
-    const hall = hallRef.current;
-    if (!el || !to || reducedMotion()) return;
-    const a = from == null ? null : centerOf(from);
-    const wide = hall.offsetWidth > hall.offsetHeight;
-    const line = wide ? hall.offsetTop + hall.offsetHeight / 2 : hall.offsetLeft + hall.offsetWidth / 2;
-    const door = (p) => (wide ? { x: p.cx, y: line } : { x: line, y: p.cy });
-    const pts = a ? [a, door(a), door(to), to] : [door(to), to];
-    el.animate(
-      pts.map((p) => ({ transform: `translate(${p.x - to.x}px, ${p.y - to.y}px)` })),
-      { duration: a ? 900 : 450, easing: EASE },
-    );
+    if (!el || !b || from === cur) return;
+    place(el, b.rest);
+    el.style.visibility = 'visible';
+    if (reducedMotion()) return;
+    const a = from == null ? null : geo(from);
+    const pts = a ? [a.rest, a.inside, a.hall, b.hall, b.inside, b.rest] : [b.hall, b.inside, b.rest];
+    const lens = pts.slice(1).map((p, k) => Math.hypot(p.x - pts[k].x, p.y - pts[k].y));
+    const total = lens.reduce((x, y) => x + y, 0) || 1;
+    let run = 0;
+    const frames = pts.map((p, k) => {
+      if (k > 0) run += lens[k - 1];
+      return { transform: `translate(${p.x - b.rest.x}px, ${p.y - b.rest.y}px)`, offset: run / total };
+    });
+    el.getAnimations().forEach((x) => x.cancel());
+    el.animate(frames, { duration: Math.min(1700, Math.max(420, total / 0.42)), easing: 'cubic-bezier(.45,.05,.55,.95)' });
   }, [cur]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Перестроилась сетка (поворот телефона) — учитель остаётся в своей комнате.
   useEffect(() => {
-    const on = () => { if (prev.current != null) setPos(centerOf(prev.current)); };
+    const on = () => {
+      const el = meRef.current;
+      const b = prev.current == null ? null : geo(prev.current);
+      if (el && b) place(el, b.rest);
+    };
     window.addEventListener('resize', on);
     return () => window.removeEventListener('resize', on);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Frame icon={<Icon name="plan" />} hint={PLAN_HINT} progress={`${n} / ${items.length}`} done={complete}>
-      <div className="ix-plan" ref={planRef}>
+      <div className="ix-plan">
         {items.map((t, i) => {
           const [lead] = leadOf(t);
           const top = i < half;
@@ -93,21 +120,22 @@ export function FloorPlan({ block: b, done, onDone, R }) {
           );
         })}
         <span className="ix-plan-hall" ref={hallRef} style={{ gridArea: 'hall' }} aria-hidden />
-        {pos && (
-          <span className="ix-plan-me" ref={meRef} style={{ left: pos.x, top: pos.y }} aria-hidden>
-            <Icon name="teacher" size={16} />
-          </span>
-        )}
+        <span className="ix-plan-me" ref={meRef} aria-hidden>
+          <Icon name="teacher" size={16} />
+        </span>
       </div>
 
-      {cur != null ? (
-        <div className="ix-plan-card" key={cur} aria-live="polite">
-          <span className="ix-plan-card-ico" aria-hidden><Icon name={icons[cur] || 'school'} size={20} /></span>
-          <p>{R(items[cur])}</p>
-        </div>
-      ) : (
-        <div className="ix-plan-card is-ghost" aria-hidden><span className="ix-tl-ghost"><span /><span /></span></div>
-      )}
+      {/* Карточка одна и та же — меняется только содержимое, мягко. */}
+      <div className={`ix-plan-card${cur == null ? ' is-ghost' : ''}`} aria-live="polite">
+        {cur != null ? (
+          <>
+            <span className="ix-plan-card-ico" key={`i${cur}`} aria-hidden><Icon name={icons[cur] || 'school'} size={20} /></span>
+            <p key={`t${cur}`}>{R(items[cur])}</p>
+          </>
+        ) : (
+          <span className="ix-tl-ghost" aria-hidden><span /><span /></span>
+        )}
+      </div>
     </Frame>
   );
 }

@@ -1973,14 +1973,15 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
 .ix-room-ok { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; color: #fff; background: #1CABE2; animation: ixPopIn .4s cubic-bezier(.3,1.4,.5,1) both; }
 .ix-plan-hall { background: repeating-linear-gradient(90deg, #E9EDF2 0 20px, #E1E6EC 20px 40px); }
 .ix-plan-me {
-  position: absolute; z-index: 2; display: grid; place-items: center; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%;
+  position: absolute; z-index: 2; visibility: hidden; left: 0; top: 0; display: grid; place-items: center; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%;
   color: #fff; background: #1CABE2; border: 3px solid #fff; box-shadow: 0 6px 14px -6px rgba(15,127,168,.9); pointer-events: none;
 }
 .ix-plan-card {
-  display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 14px;
-  background: rgba(28,171,226,.06); border: 1px solid rgba(28,171,226,.3); animation: ixRise .45s cubic-bezier(.2,.85,.2,1) both;
+  display: flex; gap: 12px; align-items: flex-start; min-height: 74px; padding: 14px 16px; border-radius: 14px;
+  background: rgba(28,171,226,.06); border: 1px solid rgba(28,171,226,.3); transition: background .3s ease, border-color .3s ease;
 }
-.ix-plan-card.is-ghost { min-height: 74px; background: #FAFBFC; border: 1.5px dashed rgba(21,26,33,.12); animation: none; }
+.ix-plan-card > p, .ix-plan-card > .ix-plan-card-ico { animation: ixFadeIn .35s ease both; }
+.ix-plan-card.is-ghost { background: #FAFBFC; border: 1px dashed rgba(21,26,33,.18); }
 .ix-plan-card.is-ghost .ix-tl-ghost { flex: 1; }
 .ix-plan-card-ico { flex-shrink: 0; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; color: #fff; background: #1CABE2; }
 .ix-plan-card p { margin: 0; font-size: 15px; line-height: 1.72; color: #2B313A; }
