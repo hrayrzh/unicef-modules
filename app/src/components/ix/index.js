@@ -22,6 +22,13 @@ import { Order } from './Order';
 import { Cloze, Scramble } from './Words';
 import { Memory } from './Memory';
 import { PassLen } from './Password';
+import { Seesaw } from './Balance';
+import { Grow } from './Grow';
+import { CaseFile, Combo } from './Evidence';
+import { Elevator, FloorPlan } from './Building';
+import { Copies, Maturity, Merge } from './Footprint';
+import { Audience, Drawers, NameCard, Pipeline } from './DataLaw';
+import { Composer, Fork } from './Skills';
 
 // Интерактивные блоки (модуль 2, по предложениям из «Մոդուլ 2 _որոշ
 // առաջարկություններ.html»). Тексты в них — те же абзацы документа, блок
@@ -64,6 +71,22 @@ const KINDS = {
   scramble: Scramble,
   memory: Memory,
   passlen: PassLen,
+  // Файл «Նոր ինտերակտիվ տարբերակներ (ձեր բաժինների համար).html».
+  seesaw: Seesaw,
+  grow: Grow,
+  casefile: CaseFile,
+  combo: Combo,
+  floorplan: FloorPlan,
+  elevator: Elevator,
+  merge: Merge,
+  maturity: Maturity,
+  copies: Copies,
+  namecard: NameCard,
+  pipeline: Pipeline,
+  drawers: Drawers,
+  audience: Audience,
+  fork: Fork,
+  composer: Composer,
 };
 
 /** The component for an interactive block, or null for an ordinary one. */

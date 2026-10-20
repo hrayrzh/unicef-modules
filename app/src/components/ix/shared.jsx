@@ -43,6 +43,35 @@ export function plain(text) {
     .replace(/\*\*(.+?)\*\*/g, '$1');
 }
 
+/** Абзац на предложения по «։» и «:» — пробелы между ними те же, что в тексте. */
+export const sentences = (text = '') => text.split(/(?<=[։:])\s+/).filter((s) => s.trim());
+
+/**
+ * Абзац на куски по дословным фразам (по порядку): `{ t, i }`, где `i` — номер
+ * фразы, у обычного текста `i` нет. Фраза, которой в тексте нет, пропускается.
+ */
+export function markParts(text = '', phrases = []) {
+  const out = [];
+  let at = 0;
+  phrases.forEach((p, i) => {
+    const k = text.indexOf(p, at);
+    if (k < 0) return;
+    if (k > at) out.push({ t: text.slice(at, k) });
+    out.push({ t: p, i });
+    at = k + p.length;
+  });
+  if (at < text.length) out.push({ t: text.slice(at) });
+  return out;
+}
+
+/** Зачин пункта: `**жирный**` или всё до первой точки — и остальное дословно. */
+export function leadOf(t = '') {
+  const b = /^\*\*(.+?)\*\*/.exec(t);
+  if (b) return [b[1], t.slice(b[0].length)];
+  const m = /^(.+?)(?=[.։:](\s|$))/.exec(t);
+  return m ? [m[1], t.slice(m[1].length)] : [t, ''];
+}
+
 export const longest = (list) => list.reduce((a, b) => (plain(b).length > plain(a).length ? b : a), '');
 
 export const onKey = (fn) => (e) => {

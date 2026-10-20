@@ -35,7 +35,7 @@ export function panelKeys(mod, scope, step) {
 // `sort` и `match` заменили в модуле 2 пары и таблицу, `curtain`, `trust` и
 // `ripple` — таблицы в модуле 4, `matrix`, `rings` и `toggles` — таблицы в
 // модуле 5: при включённом гейте они, как и те, должны быть пройдены.
-const OPEN_KINDS = new Set(['table', 'pair', 'cards', 'sort', 'match', 'curtain', 'trust', 'ripple', 'matrix', 'rings', 'toggles']);
+const OPEN_KINDS = new Set(['table', 'pair', 'cards', 'sort', 'match', 'curtain', 'trust', 'ripple', 'matrix', 'rings', 'toggles', 'drawers']);
 
 export function openKeys(mod, scope, step) {
   return mod.steps[step].blocks
