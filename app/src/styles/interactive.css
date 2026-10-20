@@ -1991,7 +1991,13 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
 .ix-lift-roof { display: block; width: calc(100% + 16px); height: 30px; margin: 0 -8px -3px; overflow: visible; }
 .ix-lift-roof path { fill: #fff; stroke: #2B313A; stroke-width: 3; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
 .ix-lift-body { position: relative; display: grid; grid-template-columns: 62px minmax(0, 1fr); background: #fff; border: 3px solid #2B313A; }
-.ix-lift-shaft { position: relative; border-right: 3px solid #2B313A; background: repeating-linear-gradient(180deg, #F1F3F6 0 calc(var(--fh) - 3px), #2B313A calc(var(--fh) - 3px) var(--fh)); }
+/* Шахта — сплошной канал без перекрытий: кабина едет по направляющим, а не сквозь этажи. */
+.ix-lift-shaft {
+  position: relative; border-right: 3px solid #2B313A;
+  background:
+    linear-gradient(90deg, transparent 9px, rgba(21,26,33,.12) 9px 11px, transparent 11px calc(100% - 11px), rgba(21,26,33,.12) calc(100% - 11px) calc(100% - 9px), transparent calc(100% - 9px)),
+    #F1F3F6;
+}
 .ix-lift-cable { position: absolute; left: 50%; top: 0; width: 2px; margin-left: -1px; height: calc(var(--at) * var(--fh) + 10px); background: #6E7787; transition: height var(--ride, .6s) cubic-bezier(.45,.05,.3,1); }
 .ix-lift-car {
   position: absolute; left: 7px; right: 7px; top: calc(var(--at) * var(--fh) + 10px); height: calc(var(--fh) - 23px); overflow: hidden;
