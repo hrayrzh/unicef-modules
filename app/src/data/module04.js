@@ -433,7 +433,7 @@ export const M4 = {
           { title: "NCMEC", note: "CyberTipline (international reporting)", host: "report.cybertip.org", url: "https://report.cybertip.org/" },
           { title: "RAINN / NCMEC", note: "How to report tech-enabled sexual abuse; correct terminology", host: "rainn.org", url: "https://rainn.org/reporting-sexual-assault-to-law-enforcement/how-to-report-tech-enabled-sexual-abuse/" },
           { title: "Council of Europe", note: "Armenia ratifies the Lanzarote Convention", host: "coe.int", url: "https://www.coe.int/en/web/children/-/armenia-ratifies-the-lanzarote-convention" },
-          { title: "CyberHUB-AM", note: "CyberChat launch (Armenia's first online support platform for children)", host: "cyberhub.am", url: "https://cyberhub.am/en/blog/2025/08/28/cyberchat_launch_eng/" },
+          { title: "CyberHUB-AM", note: "CyberChat launch (Armenia's first online support platform for children)", host: "cyberhub.am", url: "https://cyberhub.am" },
           { title: "UN Armenia", note: "First online cybersecurity platform for children and adolescents launched in Armenia", host: "armenia.un.org", url: "https://armenia.un.org/en/300934-first-online-cybersecurity-platform-children-and-adolescents-launched-armenia" },
           { title: "UNICEF Armenia", note: "Empowering children in Armenia through mental health support", host: "unicef.org/armenia", url: "https://www.unicef.org/armenia/en/stories/empowering-children-armenia-through-mental-health-support" },
           { title: "ՀՀ Ոստիկանություն", note: "Թեժ գիծ / hotline", host: "police.am", url: "https://www.police.am/hotline" },

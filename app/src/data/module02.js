@@ -516,7 +516,7 @@ export const M2 = {
           { title: "📚 2. Ինչ է կիբեռբուլինգը և ինչպես պաշտպանվել", meta: "Կարդալ բլոգը", url: "https://cyberhub.am/hy/blog/" },
           { title: "📚 3. Ապացույցների հավաքագրումը կիբեռմիջադեպերի ժամանակ", meta: "Կարդալ բլոգը", url: "https://cyberhub.am/hy/blog/" }
         ] },
-        { k: "p", text: "Մոդուլի յուրաքանչյուր հիմնական պնդում և կարգավորման քայլ հիմնված է ստորև բերված աղբյուրների վրա։" },
+        { k: "p", text: "Մոդուլի յուրաքանչյուր հիմնական պնդում և կարգավորման քայլ հիմնված են ստորև բերված աղբյուրների վրա։" },
         { k: "sources", items: [
           { title: "UNICEF (Europe & Central Asia)", note: "Cyberbullying: what is it and how to stop it", host: "unicef.org/eca", url: "https://www.unicef.org/eca/cyberbullying-what-it-and-how-stop-it" },
           { title: "Cyberbullying Research Center", note: "2025 Cyberbullying Data & definitions (Hinduja & Patchin)", host: "cyberbullying.org/2025-cyberbullying-data", url: "https://cyberbullying.org/2025-cyberbullying-data" },
