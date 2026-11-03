@@ -607,7 +607,9 @@ button { font-family: inherit; }
 }
 .ms-role-sub { margin: 12px 0 0; font-size: 16px; line-height: 1.75; color: #5A6270; }
 .ms-role-q { margin: 34px 0 14px; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: #6E7787; }
-.ms-role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+/* Воздух перед карточками: его давал заголовок «Ո՞ր դերում եք…», который
+   убрали 05.10 — карточки прижались к подзаголовку (замечание ревью). */
+.ms-role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 34px; }
 .ms-role-card {
   display: flex; flex-direction: column; gap: 7px; text-align: start;
   padding: 22px 22px 18px; border-radius: 16px; cursor: pointer;
