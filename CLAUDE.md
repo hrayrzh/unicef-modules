@@ -957,15 +957,18 @@ Escape в панели перехвачен на **фазе погружения
 
 ### Документы и как их читать
 
-| Модуль | ID документа Google Docs |
-|--------|--------------------------|
-| 1 | `1H9smiWu71eiMNp8ZyVFPqaTQ4UL9SO8kzeaBHd32NLc` |
-| 2 | `1GhCNElZyTY5EebEFUSC_tunbB72miqJpgxVCqnfxRmI` |
-| 3 | `1fpx25d4Qwpg6X-Ue9XRBtiFINQrWdoEijqmES2pGNCw` |
-| 4 | `1t76cD2Lc4tit9HPjtgAU762zUiw5rpOmzGxh4GaOaG0` |
-| 5 | `1N8qyZyyTq7lt7LYAZRAF3lQDB5ATcw8Ct7EV_IZWG-Y` |
-| FINAL-текст модуля 1 (Misha) | `190DWXojXNMrVgBXi1C4U5Sr7ZcZjqgQmnGXAyO65Z_o` |
-| **копия ревью 1 с разметкой статусов** | `1Pzj4M46DywZOnachCS44Yi1UfHBHNfgUQQpMlqqBmQQ` |
+| Название в Drive | ID | Объём | Скринов | Статус |
+|------------------|----|----|---------|--------|
+| `Module 1 review` | `1H9smiWu71eiMNp8ZyVFPqaTQ4UL9SO8kzeaBHd32NLc` | 81 абз. | 18 | ✅ разобран |
+| `Module 2 review` | `1GhCNElZyTY5EebEFUSC_tunbB72miqJpgxVCqnfxRmI` | 183 абз. | 49 | ⬜ не разбирался |
+| `Module 3 review` | `1fpx25d4Qwpg6X-Ue9XRBtiFINQrWdoEijqmES2pGNCw` | 77 абз. | 44 | ⬜ не разбирался |
+| `Module 4 review` | `1t76cD2Lc4tit9HPjtgAU762zUiw5rpOmzGxh4GaOaG0` | 160 абз. | 84 | ⬜ не разбирался |
+| `Module 5 review` | `1N8qyZyyTq7lt7LYAZRAF3lQDB5ATcw8Ct7EV_IZWG-Y` | 120 абз. | 57 | ⬜ не разбирался |
+| `FINAL_Մոդուլ 1. Ծնողական վերահսկողություն` | `190DWXojXNMrVgBXi1C4U5Sr7ZcZjqgQmnGXAyO65Z_o` | 252 абз. | — | владелец `mishavtadevosyan@gmail.com`, правлен 28.10 |
+| `Module 1 review — статус правок (копия)` | `1Pzj4M46DywZOnachCS44Yi1UfHBHNfgUQQpMlqqBmQQ` | — | — | наша копия с пометками ✅⬜⚠️❔ |
+
+Владелец всех пяти ревью — `anahit.mart@gmail.com`, у Грайра роль writer.
+Все пять лежат у Грайра в браузере группой вкладок «unisef».
 
 ⚠ **Только через gcloud, аккаунт `hr.zohrabyan@gmail.com`.** Коннекторы
 Google Drive/Docs в этой среде привязаны к чужому аккаунту — ими не
@@ -1021,6 +1024,13 @@ curl -s -H "Authorization: Bearer $tok" \
   "https://www.googleapis.com/drive/v3/files/<ID>?fields=modifiedTime,lastModifyingUser(displayName)"
 ```
 
+### Отправная точка
+
+Работа Армана закончилась коммитом `32a945c` (23.10). Наши правки по ревью
+идут поверх него. Экран выбора роли модулей 2–4 озаглавлен «Ընտրեք դերը»
+(переименован 05.10 по просьбе Грайра, вместе с ним убран подзаголовок-вопрос
+— из-за чего и пропал воздух перед карточками).
+
 ### Модуль 1 — СДЕЛАНО (коммиты 276997e, 7cce6e2, 73381c5)
 
 Все **22 пронумерованных пункта** армянской редактуры + общие:
@@ -1041,6 +1051,11 @@ curl -s -H "Authorization: Bearer $tok" \
 | «Կիբեր» → «Կիբեռ» (2 места) | весь модуль |
 | «Ստուգեք պարբերաբար» отделено точкой | Գործնական ուղեցույց |
 | воздух перед карточками ролей (`.ms-role-grid { margin-top: 34px }`) | global.css |
+
+**Две правки `review-status.py` показывает как «не нашёл»** — обе в порядке,
+искать заново не нужно: пункт 1 (`Սովորել՝ ինչպես…`) уже внесён, скрипт не
+видит его из-за многоточия в цитате; пункт 21 (`…ճկուն աշխատանքային…`) внесён
+заменой хвоста фразы.
 
 **Проверено, правка не нужна:** «սքրինշոթը ապացույց է.» уже без բութ;
 «հետո՝ ջնջում» уже с ним; пунктуация карточек закрыта правками 5 и 7;
