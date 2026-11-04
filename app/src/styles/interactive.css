@@ -37,7 +37,8 @@
 .ix-head-text { flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .ix-title { font-size: 16.5px; font-weight: 600; letter-spacing: -.3px; line-height: 1.35; color: #151A21; }
 .ix-hint { font-size: 12.5px; line-height: 1.5; color: #6E7787; animation: ixFadeIn .4s ease both; }
-.ix-hint.is-solo { font-size: 14px; color: #2B313A; font-weight: 500; }
+/* Вариант .is-solo (крупнее и темнее, когда у блока нет заголовка) убран
+   2026-11-04 по ревью: подсказка «что делать» везде выглядит одинаково. */
 .ix-head-side { flex-shrink: 0; margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .ix-progress {
   display: flex; align-items: center; gap: 5px;
@@ -344,8 +345,10 @@
 }
 .ix-scratch:focus-visible { outline: 2px solid #1CABE2; outline-offset: 2px; }
 .ix-scratch.is-open { border-color: rgba(28,171,226,.38); }
+/* Текст подсказки уехал в шапку блока (ревью 2026-11-04) — в строке остались
+   монетка и галочка, поэтому она стала узкой. */
 .ix-scratch-label {
-  display: flex; align-items: center; gap: 9px; padding: 12px 16px;
+  display: flex; align-items: center; gap: 9px; padding: 8px 16px;
   border-bottom: 1px solid rgba(21,26,33,.08);
   font-size: 13.5px; line-height: 1.4; font-weight: 700; color: #0F7FA8;
 }

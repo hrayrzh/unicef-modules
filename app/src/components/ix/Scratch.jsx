@@ -36,6 +36,7 @@ export function Scratch({ block: b, done, onDone, R }) {
       icon={<Icon name={b.tone === 'danger' ? 'warn' : 'scratch'} />}
       className={b.tone === 'danger' ? 'is-danger' : ''}
       title={b.title}
+      hint={complete ? null : HINT}
       progress={`${count} / ${n}`}
       done={complete}
     >
@@ -188,10 +189,12 @@ function ScratchCard({ index, open, onReveal, children }) {
       aria-label={open ? undefined : 'Բացել'}
       onKeyDown={open ? undefined : onKey(onReveal)}
     >
-      {/* Подпись видна всегда, как в файле предложений: что делать с карточкой. */}
+      {/* Подсказка «что делать» ушла в шапку блока, к общему виду остальных
+          компонентов (ревью Анаит: «հուշումները… տարբեր տեսքով է գրված»).
+          На карточке остаётся монетка — знак, что её скребут, — и галочка,
+          когда абзац открыт. */}
       <div className="ix-scratch-label">
         <span className="ix-scratch-coin" aria-hidden>🪙</span>
-        <span>{HINT}</span>
         {open && <span className="ix-scratch-ok" aria-hidden><Icon name="check" size={12} strokeWidth={3} /></span>}
       </div>
       <div className="ix-scratch-area" ref={areaRef}>

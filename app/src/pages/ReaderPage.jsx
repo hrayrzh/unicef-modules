@@ -10,6 +10,7 @@ import {
 import { useProgressStore } from '../store/progress';
 import Block from '../components/Block';
 import HelpButton from '../components/HelpButton';
+import ReaderMenu from '../components/ReaderMenu';
 
 /**
  * Reads the module/section straight out of the URL, so a section is linkable
@@ -204,24 +205,18 @@ export default function ReaderPage() {
             </div>
           )}
         </div>
-        {/* Роль видна всё время и меняется в один тап: читатель может быть и
-            родителем, и учителем, а половина модуля адресована не ему. */}
-        {needsRole && role && (
-          <button
-            className="ms-role-swap"
-            onClick={() => pickRole(role === 'parent' ? 'teacher' : 'parent')}
-            title="Փոխել դերը"
-          >
-            <span className="ms-role-swap-now">{ROLES.find((r) => r.id === role)?.label}</span>
-            <span aria-hidden>⇄</span>
-          </button>
-        )}
-        {/* №36 — помощь доступна с любого экрана модуля. Шапка не скроллится,
-            поэтому кнопка видна и в начале раздела, и в конце квиза. */}
-        <HelpButton help={helpFor(moduleIndex)} openSignal={helpSignal} />
-        <button className="ms-close" onClick={closeReader} aria-label="Փակել" style={{ flexShrink: 0, display: 'grid', placeItems: 'center', width: 34, height: 34, borderRadius: 10, background: 'rgba(21,26,33,.06)', border: '1px solid rgba(21,26,33,.14)', color: '#151A21', fontSize: 18, lineHeight: 1, cursor: 'pointer', transition: 'background .22s ease, transform .22s cubic-bezier(.2,.85,.2,1)' }}>
-          ✕
-        </button>
+        {/* Ревью Анаит: три иконки без подписей (⇄ роль, телефон, ✕) собраны
+            под одну кнопку-меню — видно, что каждая делает, и видно, как
+            вернуться к списку модулей. Помощь (№36) по-прежнему доступна с
+            любого экрана: шапка не скроллится. */}
+        <ReaderMenu
+          role={needsRole && role ? role : null}
+          roleLabel={ROLES.find((r) => r.id === role)?.label}
+          onSwapRole={() => pickRole(role === 'parent' ? 'teacher' : 'parent')}
+          onHelp={() => setHelpSignal((n) => n + 1)}
+          onClose={closeReader}
+        />
+        <HelpButton help={helpFor(moduleIndex)} openSignal={helpSignal} hideTrigger />
       </div>
 
       <div className="ms-reader-body" style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'stretch' }}>

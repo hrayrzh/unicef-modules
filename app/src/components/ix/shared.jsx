@@ -173,7 +173,9 @@ export function Frame({ icon, title, hint, progress, done, tools, children, clas
         {icon && <span className="ix-head-icon" aria-hidden>{icon}</span>}
         <span className="ix-head-text">
           {title && <span className="ix-title">{title}</span>}
-          {hint && <span className={title ? 'ix-hint' : 'ix-hint is-solo'}>{hint}</span>}
+          {/* Один вид подсказки на всё приложение — замечание ревью Анаит
+              (2026-11-04): раньше без заголовка она шла крупнее и темнее. */}
+          {hint && <span className="ix-hint">{hint}</span>}
         </span>
         {(progress != null || tools) && (
           <span className="ix-head-side">
