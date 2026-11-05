@@ -453,15 +453,12 @@
 }
 .ix-pop { opacity: 0; transform-box: fill-box; transform-origin: 30% 100%; animation: ixPopG .55s cubic-bezier(.3,1.4,.5,1) var(--d, 0s) forwards; }
 .ix-beat { transform-box: fill-box; transform-origin: 50% 60%; animation: ixBeat 1.6s ease-in-out calc(var(--d, 0s) + .6s) 3; }
-.ix-story-play {
-  position: absolute; inset: 0; margin: auto; width: 72px; height: 72px; border-radius: 50%; cursor: pointer;
-  display: grid; place-items: center; padding-left: 4px;
-  background: #1CABE2; border: none; color: #fff;
-  box-shadow: 0 16px 34px -14px rgba(15,127,168,.9);
-  animation: ixRing 1.8s ease-out infinite;
-  transition: transform .25s cubic-bezier(.2,.85,.2,1);
+/* Кнопка play убрана по ревью (2026-11-05): сцены листают стрелками, а не
+   запускают прокруткой. Вместо неё между стрелками стоит счётчик сцен. */
+.ix-story-count {
+  min-width: 56px; text-align: center;
+  font-size: 13px; font-weight: 600; color: #6E7787; font-variant-numeric: tabular-nums;
 }
-.ix-story-play:hover { transform: scale(1.07); }
 .ix-story-cap { margin-top: 16px; min-height: 7.5em; animation: ixRise .5s cubic-bezier(.2,.85,.2,1) both; }
 .ix-story-kicker { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: #0F7FA8; }
 .ix-story-cap p { margin: 8px 0 0; font-size: 15.5px; line-height: 1.75; color: #2B313A; }

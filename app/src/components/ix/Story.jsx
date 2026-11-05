@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Icon } from './icons';
 import { Frame, plain, useDone, useInView } from './shared';
 import { F, Person, S } from './art';
@@ -202,61 +202,29 @@ const ART = {
   ),
 };
 
+/**
+ * Ревью Анаит (ноябрь 2026): «Էս անիմացիայի կոնցեպտը առհասարակ անհարմար ա,
+ * միացնում ես, մինչև նայում ես, փոխվում ա, տեքստը չես հասցնում կարդալ։
+ * Թող ուղղակի գիֆ լինի առանց փլեյի կոճակի, սլաքներով թերթվի».
+ *
+ * Поэтому: ни автопрокрутки, ни кнопки play. Сцена рисуется сама, как гиф,
+ * и стоит столько, сколько нужно читателю; листают стрелками. Полоски сверху
+ * больше не таймер — они показывают, сколько сцен пройдено.
+ */
 export function Story({ block: b, done, onDone, R }) {
   const scenes = b.scenes || [];
   const n = scenes.length;
   const [at, setAt] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const [started, setStarted] = useState(false);
   const [seen, setSeen] = useState(() => new Set(done ? scenes.map((_, i) => i) : [0]));
   const stageRef = useRef(null);
   const inView = useInView(stageRef);
-  const bars = useRef([]);
-  const t = useRef(0);
   const complete = seen.size === n;
   useDone(complete, onDone);
 
   const goTo = (i) => {
     const k = Math.max(0, Math.min(n - 1, i));
     setAt(k);
-    setStarted(true);
     setSeen((s) => (s.has(k) ? s : new Set(s).add(k)));
-  };
-
-  // Scene change: its own bar starts from zero, earlier bars are full. The
-  // bars are written directly — the frame loop below moves them 60 times a
-  // second, and React's diff would not notice those writes.
-  useEffect(() => {
-    t.current = 0;
-    bars.current.forEach((el, i) => { if (el) el.style.transform = `scaleX(${i < at ? 1 : 0})`; });
-  }, [at]);
-
-  useEffect(() => {
-    if (!playing) return undefined;
-    let raf;
-    let last = performance.now();
-    // Time to read the caption: ~65 ms a character, never under 7 s.
-    const dur = Math.max(7000, plain(scenes[at].text).length * 65);
-    const tick = (now) => {
-      t.current += (now - last) / dur;
-      last = now;
-      const el = bars.current[at];
-      if (el) el.style.transform = `scaleX(${Math.min(1, t.current)})`;
-      if (t.current >= 1) {
-        if (at < n - 1) goTo(at + 1);
-        else setPlaying(false);
-        return;
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [playing, at]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const toggle = () => {
-    setStarted(true);
-    if (!playing && at === n - 1 && t.current >= 1) { goTo(0); setPlaying(true); return; }
-    setPlaying((p) => !p);
   };
 
   const sc = scenes[at];
@@ -265,7 +233,9 @@ export function Story({ block: b, done, onDone, R }) {
       <div className="ix-story">
         <div className="ix-story-bars" aria-hidden>
           {scenes.map((_, i) => (
-            <span key={i} className="ix-story-bar"><i ref={(el) => { bars.current[i] = el; }} /></span>
+            <span key={i} className="ix-story-bar">
+              <i style={{ transform: `scaleX(${i <= at ? 1 : 0})` }} />
+            </span>
           ))}
         </div>
         <div className="ix-story-stage" ref={stageRef}>
@@ -273,11 +243,6 @@ export function Story({ block: b, done, onDone, R }) {
             <svg key={at} viewBox="0 0 600 250" className="ix-wb" {...(sc.group ? { role: 'img', 'aria-label': plain(sc.group) } : { 'aria-hidden': true })}>
               {ART[sc.art]}
             </svg>
-          )}
-          {!started && (
-            <button type="button" className="ix-story-play" onClick={toggle} aria-label="Դիտել">
-              <Icon name="play" size={28} />
-            </button>
           )}
         </div>
         <div className="ix-story-cap" key={at} aria-live="polite">
@@ -288,10 +253,8 @@ export function Story({ block: b, done, onDone, R }) {
           <button type="button" className="ix-round" onClick={() => goTo(at - 1)} disabled={at === 0} aria-label="Նախորդ">
             <Icon name="prev" size={16} />
           </button>
-          <button type="button" className="ix-round is-primary is-lg" onClick={toggle} aria-label={playing ? 'Դադար' : 'Դիտել'}>
-            <Icon name={playing ? 'pause' : 'play'} size={18} />
-          </button>
-          <button type="button" className="ix-round" onClick={() => goTo(at + 1)} disabled={at === n - 1} aria-label="Հաջորդ">
+          <span className="ix-story-count">{`${at + 1} / ${n}`}</span>
+          <button type="button" className="ix-round is-primary" onClick={() => goTo(at + 1)} disabled={at === n - 1} aria-label="Հաջորդ">
             <Icon name="next" size={16} />
           </button>
         </div>
