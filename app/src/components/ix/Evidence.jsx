@@ -10,7 +10,7 @@ import { Frame, flyTo, useDone } from './shared';
  *
  * Поля: `items[]` — абзацы по порядку.
  */
-const CASE_HINT = 'Սեղմեք փաստաթղթերին՝ դրանք թղթապանակում հավաքելու համար։';
+const CASE_HINT = 'Սեղմեք փաստաթղթերին դրանք թղթապանակում հավաքելու համար։';
 
 export function CaseFile({ block: b, done, onDone, R }) {
   const items = b.items || [];

@@ -12,7 +12,7 @@ import { Frame, leadOf, reducedMotion, useDone } from './shared';
  *
  * Поля: `items[]` — пункты с `**зачином**`; `icons[]` — значки комнат.
  */
-const PLAN_HINT = 'Սեղմեք դպրոցի սենյակներին՝ յուրաքանչյուր քայլը տեսնելու համար։';
+const PLAN_HINT = 'Սեղմեք դպրոցի սենյակներին յուրաքանչյուր քայլը տեսնելու համար։';
 
 export function FloorPlan({ block: b, done, onDone, R }) {
   const items = b.items || [];

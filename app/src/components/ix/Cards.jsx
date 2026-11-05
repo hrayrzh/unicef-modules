@@ -21,7 +21,7 @@ export function Reveal({ block: b, done, onDone, R }) {
     <Frame
       icon={<Icon name={b.icon || 'eye'} />}
       title={b.title}
-      hint={complete ? null : 'Հպեք՝ բացելու համար'}
+      hint={complete ? null : 'Հպեք բացելու համար'}
       progress={`${count} / ${n}`}
       done={complete}
     >

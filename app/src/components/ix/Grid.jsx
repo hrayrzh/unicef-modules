@@ -72,7 +72,9 @@ export function TableGame({ block: b, done, onDone, R }) {
     <Frame
       icon={<Icon name="grid" />}
       title={b.title}
-      hint={complete ? null : 'Քարտը սահում է դեպի ձեզ. կարդացեք այն և նետեք այն խմբի մեջ, որին պատկանում է՝ սեղմելով գույնով տուփը։'}
+      // Ревью: «Քարտը սահում է դեպի ձեզ» убрано («շատ էրոտիկ է հնչում ու
+      // անտեղին»), подсказка начинается прямо с действия.
+      hint={complete ? null : 'Կարդացեք քարտը և նետեք այն խմբի մեջ, որին պատկանում է՝ սեղմելով գույնով տուփը։'}
       progress={`${cards.length - queue.length} / ${cards.length}`}
       done={complete}
       tools={complete ? <Restart onClick={() => setQueue(fresh())} /> : null}
