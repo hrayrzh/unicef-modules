@@ -233,8 +233,20 @@ export default function Block({ block: b, mod, scope, step, index, state, update
     return wrap(<Interactive block={b} done={seen} onDone={credit} R={R} />);
   }
 
+  // `small: true` — сноска под абзацем: мельче и светлее (ревью модуля 3,
+  // «աստղանիշով, տակից ավելի փոքր շրիֆտով»).
   if (b.k === 'p') {
-    return wrap(<p style={{ margin: 0, fontSize: 16, lineHeight: 1.8, color: '#2B313A' }}>{R(b.text)}</p>);
+    const small = !!b.small;
+    return wrap(
+      <p style={{
+        margin: 0,
+        fontSize: small ? 13.5 : 16,
+        lineHeight: small ? 1.65 : 1.8,
+        color: small ? '#6E7787' : '#2B313A',
+      }}>
+        {R(b.text)}
+      </p>,
+    );
   }
 
   if (b.k === 'h') {

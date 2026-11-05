@@ -316,7 +316,7 @@ export const M1 = {
       { label: "Օգնություն", title: "Լրացուցիչ ընթերցանություն", blocks: [
         { k: "h", text: "Օգտակար նյութեր՝ հայերեն և ռուսերեն" },
         { k: "links", items: [
-          { title: "UNICEF Հայաստան — «Երեխաները և թվային աշխարհը»", meta: "Ծնողահեն հանգույց՝ բաց երկխոսության, սահմանների և առցանց անվտանգության շուրջ։ unicef.org/armenia", url: "https://www.unicef.org/armenia/%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%A8-%D6%87-%D5%A9%D5%BE%D5%A1%D5%B5%D5%AB%D5%B6-%D5%A1%D5%B7%D5%AD%D5%A1%D6%80%D5%B0%D5%A8" },
+          { title: "UNICEF Հայաստան — «Երեխաները և թվային աշխարհը»", meta: "Ծնողների համար նախատեսված բաժին՝ բաց երկխոսության, սահմանների և առցանց անվտանգության շուրջ։ unicef.org/armenia", url: "https://www.unicef.org/armenia/%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%A8-%D6%87-%D5%A9%D5%BE%D5%A1%D5%B5%D5%AB%D5%B6-%D5%A1%D5%B7%D5%AD%D5%A1%D6%80%D5%B0%D5%A8" },
           { title: "CyberChat / CyberHUB-AM", meta: "Հայաստանյան հարթակ՝ տեխնիկական, իրավական և հոգեբանական աջակցությամբ։ chat.cyberhub.am", url: "https://chat.cyberhub.am" },
           { title: "ЮНИСЕФ (ECA) — «Защита детей в интернете»", meta: "О балансе доверия и контроля, рисках и онлайн-безопасности. unicef.org/eca/ru", url: "https://www.unicef.org/eca/ru/%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B0-%D0%B4%D0%B5%D1%82%D0%B5%D0%B9-%D0%B2-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%D0%B5" },
           { title: "Kaspersky — «Руководство по родительскому контролю»", meta: "Пошаговая настройка для iPhone, Android, Windows и YouTube. kaspersky.ru", url: "https://www.kaspersky.ru/resource-center/preemptive-safety/family-guide-to-parental-controls" },

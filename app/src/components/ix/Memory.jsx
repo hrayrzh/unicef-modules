@@ -53,6 +53,9 @@ export function Memory({ block: b, done, onDone }) {
     <Frame
       icon={<Icon name="memory" />}
       title={b.title}
+      // Ревью модуля 3: «Գրված չէ՝ ինչի համար է» — у игры не было сказано,
+      // что с чем сопоставляют. Подсказка приходит из данных.
+      hint={complete ? null : b.hint}
       progress={`${found.length} / ${pairs.length}`}
       done={complete}
       tools={complete ? <Restart onClick={() => { setOrder(fresh()); setFound([]); setOpen([]); }} /> : null}

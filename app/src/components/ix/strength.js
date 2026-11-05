@@ -133,7 +133,12 @@ export function passStrength(pw) {
   }
   if (run >= 2) warn.add('pattern');
 
-  const level = !pw ? -1 : bits < 28 ? 0 : bits < 40 ? 1 : bits < 60 ? 2 : bits < 80 ? 3 : 4;
+  // Ревью модуля 3 («մի քիչ սխալ է աշխատում»): «գաղտնաբառ7.Ab8*267ghs»
+  // показывал красное предупреждение и одновременно «Ուժեղ» — читается как
+  // противоречие. Пароль, в основе которого словарное слово, выше «Միջին» не
+  // поднимаем: модуль учит брать уникальные, а не «украшенные» словарные.
+  let level = !pw ? -1 : bits < 28 ? 0 : bits < 40 ? 1 : bits < 60 ? 2 : bits < 80 ? 3 : 4;
+  if (warn.has('common') && level > 2) level = 2;
   const seconds = pw ? 2 ** Math.max(0, bits - 1) / RATE : 0;
   return { bits, level, seconds, has, words: words.length, warn: [...warn] };
 }
