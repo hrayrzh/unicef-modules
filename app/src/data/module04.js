@@ -43,9 +43,8 @@ export const M4 = {
           "71% դեպքերը կատարվել են ամբողջությամբ առցանց՝ սոցիալական ցանցերում։",
           "57% դեպքերում չարագործը երեխային ծանոթ անձ է եղել, ոչ թե անծանոթ մեկը։",
           "53% դեպքերում տուժածները ոչ ոքի չեն պատմել կատարվածի մասին։",
-          "Աղբյուրը՝ «Disrupting Harm» զեկույց, 2025։"
+          "Աղբյուրը՝ «Disrupting Harm» զեկույց, 2025 (ECPAT International, INTERPOL, UNICEF Innocenti)։"
         ] },
-        { k: "p", text: "Աղբյուր՝ ECPAT International, INTERPOL, UNICEF Innocenti։  (UNICEF · DH Armenia)" },
         { k: "note", title: "Տերմինաբանությունը նշանակություն ունի", text: "Անչափահասին պատկերող սեռական նյութը ճիշտ է անվանել «երեխայի սեռական բռնության նյութ» (((CSAM)||Child Sexual Abuse Material)), ոչ թե «մանկական պոռնոգրաֆիա». վերջինս թաքցնում է հանցագործության բռնի բնույթը։ Խոսքի ընթացքում խուսափեք պիտակավորումից և խարանից. հենց ամոթն ու լռությունն են մեծացնում վնասը։", tone: "danger" }
       ] },
     { label: "Ի՞նչ է սա", title: "Սպառնալիքի ըմբռնում", role: "parent", blocks: [
@@ -448,7 +447,7 @@ export const M4 = {
           { title: "https://www.esafety.gov.au/key-topics/cyberbullying", note: "eSafetyCommissioner - Cyberbullying", host: "esafety.gov.au", url: "https://www.esafety.gov.au/key-topics/cyberbullying" },
           { title: "https://www.unicef.org/stories/how-to-stop-cyberbullying", note: "UNICEF-Cyberbullying: What is it and how to stop it", host: "unicef.org", url: "https://www.unicef.org/stories/how-to-stop-cyberbullying" },
           { title: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7864530/", note: "M.A Goldstein-National Library of Medicine", host: "pmc.ncbi.nlm.nih.gov", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7864530/" },
-          { title: "https://www.commonsensemedia.org/articles/what-is cyberbullying", note: "Common Sence Media-Parenting, Media and Everything in Between-Cyberbullying cyberbullying", host: "commonsensemedia.org", url: "https://www.commonsensemedia.org/articles/what-is%20cyberbullying" },
+          { title: "https://www.commonsensemedia.org/articles/what-is cyberbullying", note: "Common Sence Media-Parenting, Media and Everything in Between-Cyberbullying cyberbullying", host: "commonsensemedia.org", url: "https://www.commonsensemedia.org/articles/what-is-cyberbullying" },
           { title: "https://www.ungei.org/sites/default/files/Violence-prevention-in-educational-institutions-A-guide-for-trainee-", note: "Профилактика насилия в образовательных организациях-Л.А. Глазырина.", host: "ungei.org", url: "https://www.ungei.org/sites/default/files/Violence-prevention-in-educational-institutions-A-guide-for-trainee-teachers-rus-2016-rus.pdf" },
           { title: "https://cppmsp59.ru/upload/iblock/47f/47f79d8176272215a94687b02fb104a7.pdf", note: "Ш.Ю. Сергеевна, К.О. Петровна, О. Д. Григорьевна- Профилактика насилия в школьной среде", host: "cppmsp59.ru", url: "https://cppmsp59.ru/upload/iblock/47f/47f79d8176272215a94687b02fb104a7.pdf" },
           { title: "https://elar.urfu.ru/bitstream/10995/132244/1/978-5-7996-3773-6_031.pdf", note: "С.Д. Ходырев", host: "elar.urfu.ru", url: "https://elar.urfu.ru/bitstream/10995/132244/1/978-5-7996-3773-6_031.pdf" },
