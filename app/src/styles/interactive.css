@@ -1919,7 +1919,9 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
 }
 
 /* Combo — кодовый замок. */
-.ix-cl-lock { position: relative; width: 284px; max-width: 100%; margin: 6px auto 20px; padding-top: 60px; }
+/* Ревью модуля 4: «կողպեքը կպնում ա տեքստին» — дужка замка упиралась в
+   подсказку над ней. Сверху добавлен воздух. */
+.ix-cl-lock { position: relative; width: 284px; max-width: 100%; margin: 22px auto 20px; padding-top: 60px; }
 .ix-cl-shackle { position: absolute; left: 50%; top: 0; width: 200px; transform: translateX(-50%); overflow: visible; transition: transform .7s cubic-bezier(.3,1.5,.5,1) .25s; }
 .ix-cl-shackle path { fill: none; stroke: #6E7787; stroke-width: 15; stroke-linecap: round; transition: stroke .5s; }
 .ix-cl.is-open .ix-cl-shackle { transform: translateX(-50%) translateY(-24px); }
