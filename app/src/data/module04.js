@@ -89,10 +89,10 @@ export const M4 = {
           { x: 52.4, y: 45.4, text: "Գաղտնիություն է պահում սարքի կամ առցանց շփման շուրջ. թաքցնում է էկրանը, երբ մեծահասակը մոտենում է։" },
           { x: 80.4, y: 44.4, text: "Չբացատրվող նվերներ, գումար կամ նոր սարք։" },
           { x: 38.1, y: 42, text: "Մեկուսանում է ընկերներից ու ընտանիքից, նկատվում է տրամադրության կամ վարքի կտրուկ փոփոխություն։" },
-          { x: 70.6, y: 38.1, text: "Հայտնվում է նոր «մտերիմ» մեծահասակ կամ ավագ ընկեր, հատկապես՝ առցանց։" },
-          { x: 47.2, y: 36.1, text: "Զրույցի ընթացքում ֆիզիկապես մեկուսանում է, կծկվում՝ գլուխը կախելով։" },
-          { x: 55.3, y: 58.6, text: "Ցուցաբերում է արտասովոր վարքագիծ, օրինակ՝ առօրյա խոսակցության ընթացքում խուսափում է աչքերի մեջ նայելուց, սեղմում է բռունցքները։" },
-          { x: 58.9, y: 27.8, say: "չգիտեմ", text: "Հաճախակի տրվող հարցերին պատասխանում է կարճ («չգիտեմ», «նորմալ է») կամ ընդհանրապես դադարում է արձագանքել՝ համարելով, որ ինքն է մեղավոր և այլևս պետք չէ ոչինչ պատմել։" }
+          { x: 70.6, y: 38.1, text: "Նոր «մտերիմ» մեծահասակի կամ ավագ ընկերոջ հայտնվելը, հատկապես՝ առցանց ծանոթ։" },
+          { x: 47.2, y: 36.1, text: "Զրույցի ընթացքում կծկվում է, գլուխն իջեցնում։" },
+          { x: 55.3, y: 58.6, text: "Խուսափում է աչքերի կոնտակտից, սեղմում է ձեռքերը։" },
+          { x: 58.9, y: 27.8, say: "չգիտեմ", text: "Հարցերին պատասխանում է մեկ բառով («չգիտեմ», «նորմալ է») կամ ընդհանրապես դադարում է արձագանքել։" }
         ] },
         { k: "note", title: "Նշանները միշտ ակնհայտ չեն", text: "Երեխան հաճախ ինքն էլ չի գիտակցում, որ իրեն գայթակղում են. նրա զգացմունքները կարող են խառը լինել՝ մի կողմից հավատարմություն ու սեր, մյուս կողմից՝ վախ ու շփոթմունք։" },
         { k: "note", title: "Զգուշացում նշանները մեկնաբանելիս", items: [
@@ -146,7 +146,7 @@ export const M4 = {
           ["Ինչու՞ միանգամից չպատմեցիր, արժե՞ր այսքան սպասել։", "Ուրախ եմ, որ որքան էլ վախենալու էր, դու կարողացար ինձ վստահել ու պատմել պատահածը։ Ափսոսում եմ, որ մենակ ես եղել այս ամենի մեջ, հիմա արդեն երկուսով ամեն բան կկարգավորենք։"]
         ] },
         { k: "did", title: "Խորհուրդներ ծնողներին", items: [
-          "Պետք է հստակ արձանագրել՝ բռնության, շանտաժի, կիբերհարձակման մեջ միշտ մեղավոր է բռնարարը։ Տուժողի վարքը (միամտություն, վստահություն, սխալ քայլ) երբեք արդարացում չէ հանցագործության համար։",
+          "Պետք է հստակ արձանագրել՝ բռնության, շանտաժի, կիբեռհարձակման մեջ միշտ մեղավոր է բռնարարը։ Տուժողի վարքը (միամտություն, վստահություն, սխալ քայլ) երբեք արդարացում չէ հանցագործության համար։",
           "Հոգեբանական պատնեշը հաղթահարելու ուժը այն պահին է, երբ երեխան հասկանում է, որ բարձրաձայնումը ոչ թե իր «խայտառակությունն» է, այլ իր անհրաժեշտ արարքը նման իրավիճակներում։ Հալածողի իշխանության մի մասն է նաև երեխայի գաղտնիքի տիրապետումը, և նա «կորցնում» է իր ուժը, հենց որ երեխան որոշում է խոսել։",
           "Կատարվածի մասին լսելիս ծնողը հաճախ ինքն է զգում ամոթ («ես վատ ծնող եմ», «ընտանիքս խայտառակվեց»)։ Որպեսզի երեխան էլ ավելի չմեկուսանա, կարևոր է նախ կարգավորել ծնողի արձագանքման դրսևորումը։ Եթե երեխան ծնողի աչքերում տեսնի սարսափ ու ամոթ, կհավատա, որ ինքն ընտանիքի կործանողն է։",
           "Հոգեբանական պատնեշը քանդվում է այն ժամանակ, երբ երեխայից վերցնում ենք գաղտնիքի ծանրությունը։ Լավ ծնող լինելը երեխային անդադար վերահսկելը չէ, այլ այնպիսի հարաբերությունների կառուցումն է, որտեղ երեխան գիտի՝ սխալվելու դեպքում ծնողն իր սիրո և վերաբերմունքի մեջ մնում է կայուն։",
@@ -210,8 +210,8 @@ export const M4 = {
           "**Գաղտնիության կարգավորում**. միասին դարձրեք սոցցանցային և օնլայն խաղերի հաշիվները մասնավոր, անջատեք անծանոթներից հաղորդագրությունները, ստուգեք, թե ով կարող է գրել։",
           "**Մարմնի և սահմանների լեզու**. վաղ տարիքից սովորեցրեք, որ մարմինը երեխայինն է, և որ ոչ մի մեծահասակ չպետք է գաղտնիք պահանջի։",
           "**«Օգնության» քարտեզ**. համոզվեք, որ երեխան գիտի առնվազն մեկ վստահելի մեծահասակ և մեկ մասնագիտացված ծառայություն (օր.՝ [CyberChat](https://chat.cyberhub.am)), ում կարող է դիմել։",
-          "**Մեկ ժամ առանց էկրանների՝ ընտանիքի բոլոր անդամներով**. օրական մեկ ժամ անցկացրեք առանց էկրանների։ Սա օգնում է ստեղծել ռեալ ֆիզիկական ներկայության սովորույթ, որտեղ երեխան կզգա իր կարևորությունը։",
-          "**Լսելու սովորույթ**. երբ երեխան պատմում է իր հերթական սխալի մասին, թույլ տվեք նրան հանգիստ արտահայտվել՝ առանց ընդհատելու կամ քննադատելու։",
+          "**Օրական մեկ ժամ անցկացրեք առանց էկրանների՝ ընտանիքի բոլոր անդամներով**։ Սա օգնում է ստեղծել ռեալ ֆիզիկական ներկայության սովորույթ, որտեղ երեխան կզգա իր կարևորությունը։",
+          "Երբ երեխան գալիս և պատմում է իր հերթական սխալի մասին, սովորույթ դարձրեք նրան հանգիստ լսելը։",
           "**Սխալը՝ որպես փորձ**. դիտարկեք սխալը որպես սովորելու հնարավորություն՝ «Արդեն եղել է, արի հասկանանք՝ ոնց ենք ուղղում»։"
         ] },
         { k: "note", title: "Ծնողի դերը՝ հավասարակշռություն", text: "Հավասարակշռեք երեխայի գաղտնիության հանդեպ հարգանքն ու հսկողությունը։ Բացահայտումից հետո խուսափեք պատժից կամ սարքի անմիջական բռնագրավումից. երեխաների համար հենց դա է հաճախ դառնում չպատմելու պատճառ։ Ձեր դերը պետք է մնա անփոփոխ՝ լինել այն վստահելի մեծահասակը, ում երեխան կարող է դիմել ցանկացած պահի։" },
@@ -417,8 +417,8 @@ export const M4 = {
         ] },
         { k: "p", text: "Մոդուլի յուրաքանչյուր հիմնական պնդում հիմնված է ստորև բերված աղբյուրների վրա։" },
         { k: "sources", items: [
-          { title: "https://www.unicef.org/armenia/en/press-releases/armenia-launches-first-ever-national-study-technology-facilit", note: "UNICEF — Armenia launches first-ever national study on technology-facilitated child sexual exploitation and abuse («Disrupting Harm»).", host: "unicef.org", url: "https://www.unicef.org/armenia/en/press-releases/armenia-launches-first-ever-national-study-technology-facilitated-child-sexual" },
-          { title: "unicef.org/armenia (PDF)", note: "UNICEF Armenia — «Disrupting Harm in Armenia» հաշվետվությունը (հայերեն, PDF). unicef.org/armenia (PDF)", host: "unicef.org", url: "https://www.unicef.org/armenia/media/19766/file/DH%20Armenia%20Report_%D5%B0%D5%A1%D5%B5.pdf.pdf" },
+          { title: "UNICEF — Armenia launches first-ever national study on technology-facilitated child sexual exploitation and abuse («Disrupting Harm»).", note: "UNICEF — Armenia launches first-ever national study on technology-facilitated child sexual exploitation and abuse («Disrupting Harm»).", host: "unicef.org", url: "https://www.unicef.org/armenia/en/press-releases/armenia-launches-first-ever-national-study-technology-facilitated-child-sexual" },
+          { title: "UNICEF Armenia — «Disrupting Harm in Armenia» հաշվետվությունը (հայերեն, PDF)", note: "UNICEF Armenia — «Disrupting Harm in Armenia» հաշվետվությունը (հայերեն, PDF)", host: "unicef.org", url: "https://www.unicef.org/armenia/media/19766/file/DH%20Armenia%20Report_%D5%B0%D5%A1%D5%B5.pdf.pdf" },
           { title: "NSPCC", note: "Grooming: signs, effects and how to protect children", host: "nspcc.org.uk", url: "https://www.nspcc.org.uk/keeping-children-safe/types-of-abuse/grooming/" },
           { title: "NSPCC Learning", note: "Protecting children from grooming (safeguarding)", host: "learning.nspcc.org.uk", url: "https://learning.nspcc.org.uk/safeguarding-child-protection/grooming" },
           { title: "eSafety Commissioner (Australia)", note: "Protecting children from sexual abuse online", host: "esafety.gov.au", url: "https://www.esafety.gov.au/parents/issues-and-advice/protecting-children-from-sexual-abuse-online" },
@@ -442,16 +442,16 @@ export const M4 = {
           { title: "UNICEF (ECA, рус.)", note: "«Защита детей в интернете»", host: "unicef.org/eca/ru", url: "https://www.unicef.org/eca/ru/%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B0-%D0%B4%D0%B5%D1%82%D0%B5%D0%B9-%D0%B2-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%D0%B5" },
           { title: "Новости ООН (рус.)", note: "«Честно и открыто разговаривать с детьми» (УНП ООН)", host: "news.un.org/ru", url: "https://news.un.org/ru/story/2020/02/1372341" },
           { title: "Линия помощи «Дети онлайн» / Фонд Развития Интернет (рус.)", note: "материалы для родителей и педагогов", host: "detionline.com", url: "https://www.detionline.com" },
-          { title: "https://cyberbullying.org/", note: "Cyberbullying: Identification, Prevention & Response", host: "cyberbullying.org", url: "https://cyberbullying.org/" },
-          { title: "https://www.esafety.gov.au/", note: "eSafety Commissioner - Talking with young people", host: "esafety.gov.au", url: "https://www.esafety.gov.au/" },
-          { title: "https://www.esafety.gov.au/key-topics/cyberbullying", note: "eSafetyCommissioner - Cyberbullying", host: "esafety.gov.au", url: "https://www.esafety.gov.au/key-topics/cyberbullying" },
-          { title: "https://www.unicef.org/stories/how-to-stop-cyberbullying", note: "UNICEF-Cyberbullying: What is it and how to stop it", host: "unicef.org", url: "https://www.unicef.org/stories/how-to-stop-cyberbullying" },
-          { title: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7864530/", note: "M.A Goldstein-National Library of Medicine", host: "pmc.ncbi.nlm.nih.gov", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7864530/" },
-          { title: "https://www.commonsensemedia.org/articles/what-is cyberbullying", note: "Common Sence Media-Parenting, Media and Everything in Between-Cyberbullying cyberbullying", host: "commonsensemedia.org", url: "https://www.commonsensemedia.org/articles/what-is-cyberbullying" },
-          { title: "https://www.ungei.org/sites/default/files/Violence-prevention-in-educational-institutions-A-guide-for-trainee-", note: "Профилактика насилия в образовательных организациях-Л.А. Глазырина.", host: "ungei.org", url: "https://www.ungei.org/sites/default/files/Violence-prevention-in-educational-institutions-A-guide-for-trainee-teachers-rus-2016-rus.pdf" },
-          { title: "https://cppmsp59.ru/upload/iblock/47f/47f79d8176272215a94687b02fb104a7.pdf", note: "Ш.Ю. Сергеевна, К.О. Петровна, О. Д. Григорьевна- Профилактика насилия в школьной среде", host: "cppmsp59.ru", url: "https://cppmsp59.ru/upload/iblock/47f/47f79d8176272215a94687b02fb104a7.pdf" },
-          { title: "https://elar.urfu.ru/bitstream/10995/132244/1/978-5-7996-3773-6_031.pdf", note: "С.Д. Ходырев", host: "elar.urfu.ru", url: "https://elar.urfu.ru/bitstream/10995/132244/1/978-5-7996-3773-6_031.pdf" },
-          { title: "https://school157samara.ucoz.ru/11/kompleksnaja_programma_po_profilaktike.pdf", note: "Малышева О.- «Безопасная образовательная среда»", host: "school157samara.ucoz.ru", url: "https://school157samara.ucoz.ru/11/kompleksnaja_programma_po_profilaktike.pdf" }
+          { title: "Cyberbullying: Identification, Prevention & Response", note: "Cyberbullying: Identification, Prevention & Response", host: "cyberbullying.org", url: "https://cyberbullying.org/" },
+          { title: "eSafety Commissioner - Talking with young people", note: "eSafety Commissioner - Talking with young people", host: "esafety.gov.au", url: "https://www.esafety.gov.au/" },
+          { title: "eSafetyCommissioner - Cyberbullying", note: "eSafetyCommissioner - Cyberbullying", host: "esafety.gov.au", url: "https://www.esafety.gov.au/key-topics/cyberbullying" },
+          { title: "UNICEF-Cyberbullying: What is it and how to stop it", note: "UNICEF-Cyberbullying: What is it and how to stop it", host: "unicef.org", url: "https://www.unicef.org/stories/how-to-stop-cyberbullying" },
+          { title: "M.A Goldstein-National Library of Medicine", note: "M.A Goldstein-National Library of Medicine", host: "pmc.ncbi.nlm.nih.gov", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7864530/" },
+          { title: "Common Sence Media-Parenting, Media and Everything in Between-Cyberbullying", note: "Common Sence Media-Parenting, Media and Everything in Between-Cyberbullying", host: "commonsensemedia.org", url: "https://www.commonsensemedia.org/articles/what-is-cyberbullying" },
+          { title: "Профилактика насилия в образовательных организациях-Л.А. Глазырина.", note: "Профилактика насилия в образовательных организациях-Л.А. Глазырина.", host: "ungei.org", url: "https://www.ungei.org/sites/default/files/Violence-prevention-in-educational-institutions-A-guide-for-trainee-teachers-rus-2016-rus.pdf" },
+          { title: "Ш.Ю. Сергеевна, К.О. Петровна, О. Д. Григорьевна- Профилактика насилия в школьной среде", note: "Ш.Ю. Сергеевна, К.О. Петровна, О. Д. Григорьевна- Профилактика насилия в школьной среде", host: "cppmsp59.ru", url: "https://cppmsp59.ru/upload/iblock/47f/47f79d8176272215a94687b02fb104a7.pdf" },
+          { title: "С.Д. Ходырев", note: "С.Д. Ходырев", host: "elar.urfu.ru", url: "https://elar.urfu.ru/bitstream/10995/132244/1/978-5-7996-3773-6_031.pdf" },
+          { title: "Малышева О.- «Безопасная образовательная среда»", note: "Малышева О.- «Безопасная образовательная среда»", host: "school157samara.ucoz.ru", url: "https://school157samara.ucoz.ru/11/kompleksnaja_programma_po_profilaktike.pdf" }
         ] },
         { k: "did", title: "Գրականություն՝ առանց հղման", items: [
           "Sameer Hinduja & Justin W. Patchin - Bullying Beyond the Schoolyard: Preventing and Responding to Cyberbullying",
