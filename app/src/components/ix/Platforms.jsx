@@ -215,8 +215,11 @@ export function Toggles({ block: b, done, onDone, R }) {
   const it = items[cur] || {};
   const st = on[cur] || [];
 
+  // Ревью модуля 5: «չկա գրված հուշումը՝ ինչ է պետք անել» — подсказка
+  // пропадала, как только блок засчитан, и на скриншоте её уже не было.
+  // Теперь видна всегда, как у матрицы рядом.
   return (
-    <Frame icon={<Icon name="toggle" />} title={b.title} hint={complete ? null : TOGGLES_HINT} done={complete}>
+    <Frame icon={<Icon name="toggle" />} title={b.title} hint={TOGGLES_HINT} done={complete}>
       <div className="ix-tg">
         <div className="ix-tg-apps" role="tablist">
           {items.map((x, i) => (

@@ -1317,6 +1317,26 @@ button.ix-brick:hover { transform: translateY(-2px); filter: brightness(1.04); }
 }
 .ix-ice-bit.is-up { background: #fff; color: #1CABE2; box-shadow: 0 6px 14px -8px rgba(0,0,0,.45); }
 .ix-ice-bit.is-down { background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.45); }
+
+/* Ревью модуля 5: «էս կլորակների վրա hover անելուց թուլթիփանմնան բան
+   փող բերի՝ որը ինչ է». Подпись всплывает над значком — по наведению
+   мышью, по фокусу с клавиатуры и по нажатию на телефоне (:focus).
+   Значки становятся доступны курсору только когда проявились. */
+.ix-ice.has-top .ix-ice-bit.is-up,
+.ix-ice.has-deep .ix-ice-bit.is-down { pointer-events: auto; cursor: help; }
+.ix-ice-bit::after {
+  content: attr(data-label);
+  position: absolute; bottom: calc(100% + 7px); left: 50%; translate: -50% 0;
+  padding: 5px 9px; border-radius: 8px; white-space: nowrap;
+  background: #151A21; color: #fff; font-size: 11.5px; line-height: 1.2;
+  box-shadow: 0 10px 22px -12px rgba(21,26,33,.8);
+  opacity: 0; pointer-events: none; transition: opacity .16s ease;
+}
+.ix-ice-bit:focus::after,
+.ix-ice-bit:focus-visible::after { opacity: 1; }
+@media (hover: hover) {
+  .ix-ice-bit:hover::after { opacity: 1; }
+}
 .ix-ice.has-top .ix-ice-bit.is-up, .ix-ice.has-deep .ix-ice-bit.is-down { opacity: 1; scale: 1; }
 
 /* Toggles: экран приложений и экран настроек (Platforms.jsx). */

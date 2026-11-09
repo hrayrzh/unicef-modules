@@ -14,7 +14,7 @@ import { Frame, useDone } from './shared';
  * Поля: `title`, `groups[]` из `{title, text?, items[], why?}`; пункт —
  * строка или `{text, why}`.
  */
-const HINT = 'Սեղմեք յուրաքանչյուր տվյալի վրա՝ այն կողպելու համար։';
+const HINT = 'Սեղմեք յուրաքանչյուր տվյալի վրա այն կողպելու համար։';
 const WHY = /^(Ինչու՞\.)\s*/;
 
 function Why({ text, R, className = '' }) {

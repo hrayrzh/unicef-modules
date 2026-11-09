@@ -11,7 +11,8 @@ import { Frame, markParts, reducedMotion, sentences, useDone } from './shared';
  * Поля: `title`, `a` / `b` — `{word, gloss}`, у `b` ещё `cut` — сколько букв
  * выпадает в начале; `result` — слово абзаца («Շերենթինգ»); `text`.
  */
-const MERGE_HINT = 'Սեղմեք՝ երկու բառերը միացնելու համար։';
+// Ревью модуля 5: «առանց բութ».
+const MERGE_HINT = 'Սեղմեք երկու բառերը միացնելու համար։';
 
 export function Merge({ block: b, done, onDone, R }) {
   const a = b.a || {};
@@ -72,7 +73,8 @@ export function Merge({ block: b, done, onDone, R }) {
  *
  * Поля: `text`.
  */
-const MAT_HINT = 'Շարժեք սահիչը՝ երեխայի տարիքի աճին հետևելու համար։';
+// Ревью модуля 5: «Շարժեք սահիչը երեխայի… (առանց բութ)».
+const MAT_HINT = 'Շարժեք սահիչը երեխայի տարիքի աճին հետևելու համար։';
 
 export function Maturity({ block: b, done, onDone, R }) {
   const ss = sentences(b.text);

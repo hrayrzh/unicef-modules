@@ -32,16 +32,22 @@ function split(text = '', marks) {
 const whole = (x) => (x.label && x.text ? `${x.label} (${x.text})` : x.text);
 
 // Значки-примеры: над водой — то, что публикуют; в воде — то, что собирают.
+//
+// Ревью модуля 5: «էս կլորակների վրա hover անելուց թուլթիփանմնան բան փող
+// բերի՝ որը ինչ է» — без подписи непонятно, что значит каждый значок.
+// Подписи не придуманы: это слова из того же абзаца модуля («հրապարակում,
+// մեկնաբանություն, հավանում, տեսանյութի դիտում, գրանցում կամ առցանց շփում»)
+// и «տեղորոշման տվյալներ» из раздела «Ի՞նչ չհրապարակել».
 const UP = [
-  { icon: 'heart', x: 30, y: 9 },
-  { icon: 'msg', x: 19, y: 21 },
-  { icon: 'photo', x: 31, y: 29 },
+  { icon: 'heart', x: 30, y: 9, label: 'հավանում' },
+  { icon: 'msg', x: 19, y: 21, label: 'մեկնաբանություն' },
+  { icon: 'photo', x: 31, y: 29, label: 'հրապարակում' },
 ];
 const DOWN = [
-  { icon: 'pin', x: 11, y: 56 },
-  { icon: 'eye', x: 9, y: 80 },
-  { icon: 'link', x: 89, y: 56 },
-  { icon: 'phone', x: 91, y: 80 },
+  { icon: 'pin', x: 11, y: 56, label: 'տեղորոշման տվյալներ' },
+  { icon: 'eye', x: 9, y: 80, label: 'տեսանյութի դիտում' },
+  { icon: 'link', x: 89, y: 56, label: 'գրանցում' },
+  { icon: 'phone', x: 91, y: 80, label: 'առցանց շփում' },
 ];
 
 export function Iceberg({ block: b, done, onDone, R }) {
@@ -103,12 +109,14 @@ export function Iceberg({ block: b, done, onDone, R }) {
         </svg>
 
         {UP.map((s, i) => (
-          <span key={s.icon} className="ix-ice-bit is-up" style={{ left: `${s.x}%`, top: `${s.y}%`, '--i': i }} aria-hidden>
+          <span key={s.icon} className="ix-ice-bit is-up" style={{ left: `${s.x}%`, top: `${s.y}%`, '--i': i }}
+                data-label={s.label} tabIndex={0} role="img" aria-label={s.label}>
             <Icon name={s.icon} size={16} />
           </span>
         ))}
         {DOWN.map((s, i) => (
-          <span key={s.icon} className="ix-ice-bit is-down" style={{ left: `${s.x}%`, top: `${s.y}%`, '--i': i }} aria-hidden>
+          <span key={s.icon} className="ix-ice-bit is-down" style={{ left: `${s.x}%`, top: `${s.y}%`, '--i': i }}
+                data-label={s.label} tabIndex={0} role="img" aria-label={s.label}>
             <Icon name={s.icon} size={16} />
           </span>
         ))}
