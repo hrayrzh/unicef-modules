@@ -175,7 +175,7 @@ export function Drawers({ block: b, done, onDone, R }) {
  *
  * Поля: `few`, `many` — абзацы дословно; `gauge` — подпись полоски.
  */
-const AUD_HINT = 'Շարժեք սահիչը՝ լսարանը մեծացնելու համար։';
+const AUD_HINT = 'Շարժեք սահիչը լսարանը մեծացնելու համար։';
 const RINGS = [[58, 8], [92, 14], [126, 18], [158, 22]];
 const SPOTS = RINGS.flatMap(([r, c], ring) => Array.from({ length: c }, (_, k) => {
   const a = (k / c) * Math.PI * 2 + ring * 0.4;

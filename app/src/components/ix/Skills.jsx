@@ -94,7 +94,7 @@ export function Fork({ block: b, done, onDone, R }) {
  * "time"}`; `answers[]` из `{text, off[]}` — предложение абзаца и номера
  * переключателей, которые надо выключить, чтобы оно открылось.
  */
-const COMP_HINT = 'Անջատեք ավելորդը՝ հրապարակումը համաչափ դարձնելու համար։';
+const COMP_HINT = 'Անջատեք ավելորդը հրապարակումը համաչափ դարձնելու համար։';
 
 export function Composer({ block: b, done, onDone, R }) {
   const fields = b.fields || [];
