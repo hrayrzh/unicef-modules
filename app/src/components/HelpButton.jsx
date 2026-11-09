@@ -34,11 +34,13 @@ const phonesOf = (c) => c.phones || (c.tel ? [{ tel: c.tel, label: c.label }] : 
  * помогает», номер справа. Длинное вступление (модуль 4) уходит из шапки в тело,
  * под экстренные номера, чтобы они оставались на первом экране.
  */
-// `hideTrigger` — кнопка не рисуется, панель открывается только по
-// `openSignal`: с 2026-11-04 помощь вызывается из меню читалки (ревью Анаит),
-// а не собственной иконкой в шапке. Ссылки `[подпись](#help)` внутри текста
-// работают через тот же сигнал.
-export default function HelpButton({ help: HELP, openSignal = 0, hideTrigger = false }) {
+// Кнопка стоит в шапке своим, ярко-красным пятном (требование №36). С
+// 04.11 по 08.11 она была спрятана в меню читалки `ReaderMenu` — Анаит
+// попросила вернуть как было: «աջում վառ կարմիր, աչք ծակող… Դա վերջնական
+// տարբերակ համարիր». Не прятать снова.
+// `openSignal` растёт, когда помощь вызывают ссылкой `[подпись](#help)`
+// из текста модуля.
+export default function HelpButton({ help: HELP, openSignal = 0 }) {
   const [open, setOpen] = useState(false);
   const urgent = (HELP.contacts || []).filter((c) => c.urgent && phonesOf(c).length);
   const rest = (HELP.contacts || []).filter((c) => !urgent.includes(c));
@@ -73,18 +75,16 @@ export default function HelpButton({ help: HELP, openSignal = 0, hideTrigger = f
 
   return (
     <>
-      {!hideTrigger && (
-        <button
-          ref={btnRef}
-          className="ms-help-btn"
-          onClick={() => setOpen(true)}
-          aria-haspopup="dialog"
-          aria-expanded={open}
-        >
-          <PhoneIcon size={15} />
-          <span className="ms-help-btn-label">{'Օգնություն'}</span>
-        </button>
-      )}
+      <button
+        ref={btnRef}
+        className="ms-help-btn"
+        onClick={() => setOpen(true)}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+      >
+        <PhoneIcon size={15} />
+        <span className="ms-help-btn-label">{'Օգնություն'}</span>
+      </button>
 
       {open && (
         <div

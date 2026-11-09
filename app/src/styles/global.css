@@ -417,51 +417,6 @@ button { font-family: inherit; }
 .ms-help-btn:hover { background: #C22F2F; transform: translateY(-1px); }
 .ms-help-btn-label { white-space: nowrap; }
 
-/* Меню читалки (ревью Анаит 2026-11-04): три иконки без подписей собраны
-   под одну кнопку, выпадающий список — под шапкой.
-   Красное пятно помощи (№36) не потерялось: цвет перешёл на её строку
-   в меню, по нему пункт находят глазами, не читая. */
-.ms-menu { position: relative; flex-shrink: 0; }
-.ms-menu-btn {
-  display: flex; align-items: center; gap: 8px;
-  padding: 8px 13px; border-radius: 10px; cursor: pointer;
-  background: rgba(21,26,33,.06); border: 1px solid rgba(21,26,33,.14);
-  color: #151A21; font: inherit; font-size: 12.5px; font-weight: 600; line-height: 1;
-  transition: background .2s ease, border-color .2s ease;
-}
-.ms-menu-btn:hover,
-.ms-menu-btn.is-open { background: rgba(21,26,33,.1); border-color: rgba(21,26,33,.26); }
-.ms-menu-btn-label { white-space: nowrap; }
-
-.ms-menu-pop {
-  position: absolute; top: calc(100% + 10px); right: 0; z-index: 120;
-  min-width: 262px; padding: 6px; border-radius: 14px;
-  background: #fff; border: 1px solid rgba(21,26,33,.12);
-  box-shadow: 0 18px 44px -20px rgba(21,26,33,.5), 0 2px 8px -4px rgba(21,26,33,.25);
-  animation: msMenuIn .16s cubic-bezier(.2,.85,.2,1) both;
-}
-@keyframes msMenuIn { from { opacity: 0; transform: translateY(-6px); } }
-
-.ms-menu-item {
-  width: 100%; display: flex; align-items: center; gap: 11px;
-  padding: 10px 11px; border-radius: 10px; cursor: pointer;
-  background: none; border: none; color: #151A21; font: inherit;
-  font-size: 13.5px; line-height: 1.3; text-align: left;
-  transition: background .16s ease;
-}
-.ms-menu-item:hover { background: rgba(28,171,226,.1); }
-.ms-menu-ico {
-  flex-shrink: 0; display: grid; place-items: center; width: 30px; height: 30px;
-  border-radius: 9px; background: rgba(28,171,226,.12); color: #0F7FA8;
-}
-.ms-menu-ico.is-help { background: rgba(217,58,58,.12); color: #D93A3A; }
-.ms-menu-text { flex: 1; min-width: 0; }
-.ms-menu-now {
-  flex-shrink: 0; padding: 3px 8px; border-radius: 999px;
-  background: rgba(28,171,226,.14); color: #0F7FA8;
-  font-size: 11.5px; font-weight: 600; white-space: nowrap;
-}
-
 .ms-help-overlay {
   position: fixed; inset: 0; z-index: 200;
   display: flex; align-items: center; justify-content: center;
@@ -606,15 +561,12 @@ button { font-family: inherit; }
   /* Подпись у кнопки меню остаётся: ради неё меню и сделано. Список
      раскрывается на ширину экрана, иначе длинный пункт «Վերադառնալ
      մոդուլների ցանկ» переносится в две строки у самого края. */
-  .ms-menu-btn { padding: 8px 11px; }
-  .ms-menu-pop { min-width: 0; width: calc(100vw - 32px); max-width: 300px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ms-reader-head, .ms-reader-nav { animation: none; }
   .ms-help-overlay, .ms-help-panel { animation: none; }
   .ms-help-btn:hover { transform: none; }
-  .ms-menu-pop { animation: none; }
 }
 
 /* Сравнительная таблица (модуль 2). Первая колонка — признак сравнения,
