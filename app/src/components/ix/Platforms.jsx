@@ -31,7 +31,8 @@ export function AppTile({ name, className = '' }) {
  * Поля — как у таблицы: `title`, `head[3]`, `rows[]`; плюс `platforms[]` —
  * названия так, как они написаны в тексте.
  */
-const MATRIX_HINT = 'Սեղմեք ռիսկի կամ հարթակի վրա։';
+// Ревью модуля 5: «պիտի գրված լինի «և/կամ»».
+const MATRIX_HINT = 'Սեղմեք ռիսկի և/կամ հարթակի վրա։';
 
 export function Matrix({ block: b, done, onDone, R }) {
   const head = b.head || [];
