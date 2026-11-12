@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { LinkIcon, PhoneIcon } from './ContactCard';
+import { renderInline } from './inline';
 
 
 /**
@@ -45,6 +46,7 @@ export default function HelpButton({ help: HELP, openSignal = 0 }) {
   const urgent = (HELP.contacts || []).filter((c) => c.urgent && phonesOf(c).length);
   const rest = (HELP.contacts || []).filter((c) => !urgent.includes(c));
   const shortLead = (HELP.lead || '').length <= 180;
+  const W = HELP.written;
   const btnRef = useRef(null);
   const panelRef = useRef(null);
 
@@ -120,7 +122,8 @@ export default function HelpButton({ help: HELP, openSignal = 0 }) {
                     const p = phonesOf(c)[0];
                     return (
                       <a key={c.name} className="ms-hp-sos-tile" href={`tel:${p.tel}`} style={{ '--i': i }}>
-                        <span className="ms-hp-sos-name">{c.name}</span>
+                        {/* У 112 имя и есть номер — не печатаем его дважды. */}
+                        {c.name !== p.label && <span className="ms-hp-sos-name">{c.name}</span>}
                         <span className="ms-hp-sos-num">{p.label}</span>
                         {c.role && <span className="ms-hp-sos-role">{c.role}</span>}
                         <span className="ms-hp-sos-call" aria-hidden><PhoneIcon size={17} /></span>
@@ -167,6 +170,23 @@ export default function HelpButton({ help: HELP, openSignal = 0 }) {
                   ))}
                 </ul>
               </section>
+              {/* Письменные обращения — после телефонов, как просила Анаит:
+                  «այս մասը դնենք օգնության մեջ, համարներից հետո». Переехало
+                  из раздела «Օգտակար աղբյուրներ» модуля 4, там его больше нет. */}
+              {W && (
+                <section className="ms-hp-sec">
+                  <h3 className="ms-hp-h">{W.title}</h3>
+                  <p className="ms-hp-written">{renderInline(W.text)}</p>
+                  {W.more && (
+                    <>
+                      <h4 className="ms-hp-h4">{W.moreTitle}</h4>
+                      <ul className="ms-hp-wlist">
+                        {W.more.map((t, i) => <li key={t} style={{ '--i': i }}>{renderInline(t)}</li>)}
+                      </ul>
+                    </>
+                  )}
+                </section>
+              )}
               {HELP.note && <p className="ms-hp-note">{HELP.note}</p>}
             </div>
           </div>

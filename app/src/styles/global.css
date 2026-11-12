@@ -512,6 +512,19 @@ button { font-family: inherit; }
   font-size: 12.5px; font-weight: 600; text-decoration: none !important; color: #0F7FA8 !important;
   border-bottom: 1px solid rgba(15,127,168,.3); transition: border-color .2s ease;
 }
+/* Письменные обращения: абзац про e-request и список органов. Текст
+   длинный, поэтому мельче справочника — его читают один раз, когда
+   дошли до «писать», а не выхватывают глазами, как телефон. */
+.ms-hp-written { margin: 0; font-size: 13px; line-height: 1.62; color: #2B313A; }
+.ms-hp-h4 { margin: 16px 0 4px; font-size: 13.5px; font-weight: 700; color: #151A21; }
+.ms-hp-wlist { list-style: none; margin: 0; padding: 0; }
+.ms-hp-wlist li {
+  position: relative; padding: 7px 0 7px 22px; font-size: 13px; line-height: 1.6; color: #2B313A;
+  border-bottom: 1px dashed rgba(21,26,33,.1);
+  animation: msRowIn .4s cubic-bezier(.2,.85,.2,1) calc(.2s + var(--i) * 40ms) both;
+}
+.ms-hp-wlist li:last-child { border-bottom: none; }
+.ms-hp-wlist li::before { content: ''; position: absolute; left: 2px; top: 17px; width: 10px; height: 2px; border-radius: 1px; background: rgba(21,26,33,.25); }
 .ms-hp-note {
   margin: 22px 0 0; padding: 12px 14px; border-radius: 12px; font-size: 13px; line-height: 1.62;
   color: #6B2A27; background: #FFF5F4; border-left: 3px solid #D93A3A;
@@ -533,7 +546,7 @@ button { font-family: inherit; }
   .ms-hp-row-act { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ms-hp-sos-tile, .ms-hp-when li, .ms-hp-row { animation: none; }
+  .ms-hp-sos-tile, .ms-hp-when li, .ms-hp-row, .ms-hp-wlist li { animation: none; }
   .ms-hp-sos-tile:hover, .ms-hp-close:hover { transform: none; }
   .ms-hp-sos-tile:hover .ms-hp-sos-call { animation: none; }
 }
