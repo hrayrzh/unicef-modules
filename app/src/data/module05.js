@@ -349,7 +349,7 @@ export const M5 = {
         { k: "note", title: "Կարևոր է հիշել", text: "Վերոնշյալ խորհուրդներին հետևելը չի երաշխավորում, որ երեխան երբևէ չի ենթարկվի առցանց որևէ վնասակար ազդեցության։ Սակայն այդ խորհուրդների միաժամանակյա կիրառումը էականորեն կարող է նվազեցնել առցանց վտանգների ռիսկերը։ Հմտությունները կիրառեք ոչ միայն ինքներդ, այլև սովորեցրեք երեխաներին դրանց հետևել համացանցում ինքնուրույն օգտվելիս։", big: true }
       ] },
     { label: "Օգտակար աղբյուրներ", title: "Օգտակար աղբյուրներ", blocks: [
-        { k: "p", text: "Մոդուլի յուրաքանչյուր հիմնական պնդում և քայլ հիմնված է ստորև բերված աղբյուրների վրա։" },
+        { k: "p", text: "Մոդուլի յուրաքանչյուր հիմնական պնդում հիմնված է ստորև բերված աղբյուրների վրա։" },
         { k: "sources", items: [
           { title: "EUR-Lex - 52022DC0212 - EN - EUR-Lex", note: "EUR-Lex - 52022DC0212 - EN - EUR-Lex", host: "eur-lex.europa.eu", url: "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=COM:2022:212:FIN" },
           { title: "UNICEF-Innocenti-Childhood-in-a-Digital World-report-2025.pdf", note: "UNICEF-Innocenti-Childhood-in-a-Digital World-report-2025.pdf", host: "unicef.org", url: "https://www.unicef.org/innocenti/media/11296/file/UNICEF-Innocenti-Childhood-in-a-Digital%20World-report-2025.pdf" },

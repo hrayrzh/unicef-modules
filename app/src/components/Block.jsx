@@ -264,8 +264,15 @@ export default function Block({ block: b, mod, scope, step, index, state, update
     return wrap(<Aside kind={b.k} title={b.title} text={b.text} items={b.items} onOpenHelp={onOpenHelp} />);
   }
 
-  // №39 — источники в конце модуля: свёрнуты в компактный список, полное
-  // описание раскрывается по наведению и по фокусу с клавиатуры.
+  // Источники в конце модуля. Требование №39 просило описание по наведению,
+  // и до 12.11 оно жило в тултипе. Анаит это сняла: «Թուլթիփերը հանենք, թող
+  // երևան անունները, ու պետք է տեղերով փոխել՝ հոդվածի անուն, տակից գրվի
+  // հեղինակ/աղբյուր ըստ իրավիճակի», «Վեբում էլ նույն ձև, առանց թուլթիփերի».
+  // Теперь оба уровня видны сразу: `title` — название материала, `note` —
+  // автор или источник. Значения в данных поменяны местами тем же числом.
+  // ⚠ `note` печатается, только если отличается от заголовка: у части
+  // источников модулей 4 и 5 они пока совпадают — названия для них Анаит
+  // дописывает, и дубля строки быть не должно.
   if (b.k === 'sources') {
     return wrap(
       <ol className="ms-src">
@@ -273,9 +280,11 @@ export default function Block({ block: b, mod, scope, step, index, state, update
           <li key={i} className="ms-src-item">
             <a className="ms-src-link" href={s.url} target="_blank" rel="noreferrer noopener">
               <span className="ms-src-n">{i + 1}</span>
-              <span className="ms-src-title">{s.title}</span>
+              <span className="ms-src-main">
+                <span className="ms-src-title">{s.title}</span>
+                {s.note && s.note !== s.title && <span className="ms-src-by">{s.note}</span>}
+              </span>
               <span className="ms-src-host">{s.host}</span>
-              <span className="ms-tip ms-src-tip" role="tooltip">{s.note}</span>
             </a>
           </li>
         ))}
