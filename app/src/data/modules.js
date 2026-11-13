@@ -3,7 +3,7 @@ import { M2, HELP2 } from './module02';
 import { M3, HELP3 } from './module03';
 import { M4, HELP4 } from './module04';
 import { M5, HELP5 } from './module05';
-import { CONTACTS, WRITTEN } from './help';
+import { CONTACTS, COMMON } from './help';
 
 /**
  * Реестр модулей. Приложение писалось под один модуль — `M1` был вшит в
@@ -29,12 +29,11 @@ const HELP_BY_INDEX = { 0: HELP, 1: HELP2, 2: HELP3, 3: HELP4, 4: HELP5 };
 
 export function helpFor(index) {
   const own = HELP_BY_INDEX[index] || HELP;
-  // `extra` — контакт, который нужен только одному модулю: у модуля 5 это
-  // агентство по защите персональных данных («Մոդուլ 5 … Link`
-  // dataprotection.moj.gov.am, աջից էլ հեռախոս մնացածների պես»). Общий
-  // список при этом остаётся общим — D20 не нарушается.
-  const contacts = [...CONTACTS, ...(own.extra || [])];
-  return { ...own, contacts, written: WRITTEN };
+  // ⚠ Порядок склейки важен: общее идёт ПОСЛЕ своего, то есть перекрывает
+  // его. Своим у модуля остаётся только `note` — строка внизу панели.
+  // Добавлять модулю свой контакт нельзя: «Կարմիր կոճակը բոլոր տեղերում
+  // նույնը պետք է պահենք» (Misha, 12.11).
+  return { ...own, ...COMMON, contacts: CONTACTS };
 }
 
 /**
