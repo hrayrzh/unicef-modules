@@ -330,59 +330,60 @@ export const M3 = {
         ] }
       ] },
     { label: "Օգտակար աղբյուրներ", title: "Օգտակար աղբյուրներ", blocks: [
+        // Карточки по документу «Լինկեր» (13.11). Первыми CyberChat и UNICEF
+        // («Բոլոր մոդուլներում օգտակար աղբյուրների սկզբում… Կիբեռչատը, որպես
+        // օգտակար նյութերի տեղ, ոչ որպես կոնտակտ, ու յունիսեֆ»). Списки
+        // «Հայերեն» / «Русский» подняты сюда же карточками — «Սրանք տանենք
+        // վերև օգտակար աղբյուրների հետ, նույն դիզայնով»; языковые подзаголовки
+        // и подводка «Աղբյուրներ ծնողների ու մանկավարժների համար…» убраны
+        // (решение Грайра 14.11). «Дети онлайн» — «Հանում ենք». Адреса из
+        // текстов описаний убраны: «(առանց լինկի)».
         { k: "links", items: [
-          { title: "Have I Been Pwned — արտահոսքի ստուգում", meta: "haveibeenpwned.com — Ստուգեք՝ արդյոք ձեր էլ. փոստը հայտնվել է հայտնի տվյալների արտահոսքերում։", url: "https://haveibeenpwned.com" },
-          { title: "Authenticator app — 2FA-ի համար", meta: "Google / Microsoft Authenticator — SMS-ից ավելի ապահով երկրորդ գործոն բոլոր հաշիվների համար։" }
+          { title: "CyberChat", meta: "Անվճար, անանուն տեխնիկական, իրավական և հոգեբանական աջակցություն երեխաների և դեռահասների հարցերով։", url: "https://chat.cyberhub.am" },
+          // «Առաջին Յունիսեֆը ճիշտ ա սաղ, վերնագրի վերջում կետն ա հանվում,
+          // նկարագրությունը՝ տակից».
+          { title: "UNICEF Հայաստան — «Երեխաները և թվային աշխարհը»", meta: "Ծնողների համար նախատեսված բաժին՝ առցանց անվտանգության շուրջ։", url: "https://www.unicef.org/armenia/%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%A8-%D6%87-%D5%A9%D5%BE%D5%A1%D5%B5%D5%AB%D5%B6-%D5%A1%D5%B7%D5%AD%D5%A1%D6%80%D5%B0%D5%A8" },
+          // Было ЮНИСЕФ (ECA), 404 — заменено её материалом.
+          { title: "ЮНИСЕФ (Узбекистан) — «Защита детей в интернете»", meta: "О безопасности детей в цифровом пространстве.", url: "https://www.unicef.org/uzbekistan/%D0%9D%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%BD%D1%8B%D0%B5-%D0%B7%D0%B0%D0%BC%D0%B5%D1%82%D0%BA%D0%B8/%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B0-%D0%B4%D0%B5%D1%82%D0%B5%D0%B9-%D0%B2-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%D0%B5" },
+          { title: "Kaspersky — «Советы по созданию уникальных надежных паролей»", meta: "О паролях, менеджерах паролей и двухфакторной аутентификации։", url: "https://www.kaspersky.ru/resource-center/threats/how-to-create-a-strong-password" },
+          { title: "Have I Been Pwned — արտահոսքի ստուգում", meta: "Ստուգեք, արդյոք Ձեր էլ. փոստը հայտնվել է որևէ հայտնի՝ տվյալների արտահոսքում։", url: "https://haveibeenpwned.com" },
+          // Адрес дала Анаит; «Տեքստից հանենք Google/Microsoft Authenticator —».
+          { title: "Authenticator app — 2FA-ի համար", meta: "SMS-ից ավելի ապահով երկրորդ գործոն բոլոր հաշիվների համար։", url: "https://zapier.com/blog/best-authenticator-apps/" }
         ] },
-        { k: "p", text: "Աղբյուրներ ծնողների ու մանկավարժների համար, ովքեր ցանկանում են ավելի խորանալ թեմայի մեջ։" },
-        // Ревью: у языков был тот же уровень заголовка, что и у раздела, а к
-        // адресам прилипли номера сносок («unicef.org/armenia20»). Теперь язык —
-        // подпись списка, название материала — ссылка, адрес из текста убран.
-        { k: "p", small: true, text: "Հայերեն" },
-        { k: "list", items: [
-          "[UNICEF Հայաստան — «Երեխաները և թվային աշխարհը»](https://www.unicef.org/armenia/%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%A8-%D6%87-%D5%A9%D5%BE%D5%A1%D5%B5%D5%AB%D5%B6-%D5%A1%D5%B7%D5%AD%D5%A1%D6%80%D5%B0%D5%A8). Ծնողների համար նախատեսված բաժին՝ առցանց անվտանգության շուրջ։"
-        ] },
-        { k: "p", small: true, text: "Русский" },
-        { k: "list", items: [
-          "ЮНИСЕФ (ECA) — «Защита детей в интернете». О безопасности, данных и онлайн-рисках։",
-          "[Kaspersky — «Как создать надёжный пароль»](https://www.kaspersky.ru/resource-center/threats/how-to-create-a-strong-password). О паролях, менеджерах паролей и двухфакторной аутентификации։",
-          "[Линия помощи «Дети онлайн» / Фонд Развития Интернет](https://www.detionline.com). Материалы для родителей и педагогов (телефон 8-800-25-000-15 — только для России)։"
-        ] },
-        { k: "h", text: "​​Աջակցող նյութեր ​" },
+        { k: "h", text: "Աջակցող նյութեր" },
         { k: "links", items: [
-          { title: "🎧 ​1. ԿիբեռՉատի փոդքաստ. Կիբեռանվտանգ քլիք | ԿիբեռՉատ (Արթուր Պապյան, Սամվել Մարտիրոսյան)​", meta: "Դիտել փոդքաստը", url: "https://www.youtube.com/@CyberChatAM" },
-          { title: "📚2. Խախտե՞լ են քո թվային իրավունքները", meta: "Կարդալ բլոգը", url: "https://cyberhub.am/hy/blog/" }
+          { title: "🎧 1. CyberChat (2026). Կիբեռանվտանգ քլիք (Արթուր Պապյան, Սամվել Մարտիրոսյան)", meta: "Դիտել փոդքաստը", url: "https://www.youtube.com/watch?v=FLJ3T1j1w1o&list=PLFA9PMsS4npfe8rxtfwm-18RR0M2OhEuy&index=5" },
+          { title: "📚 2. CyberChat (2025). Խախտե՞լ են քո թվային իրավունքները", meta: "Կարդալ բլոգը", url: "https://cyberhub.am/hy/blog/2025/06/25/leg1/" }
         ] },
         { k: "p", text: "Մոդուլի յուրաքանչյուր հիմնական պնդում հիմնված է ստորև բերված աղբյուրների վրա։" },
         { k: "sources", items: [
-          { title: "Three random words / password guidance", note: "NCSC (UK)", host: "ncsc.gov.uk", url: "https://www.ncsc.gov.uk/blog-post/three-random-words-or-thinkrandom-0" },
-          { title: "Digital Identity Guidelines SP 800-63B (length over complexity, no forced rotation, screen breached passwords)", note: "NIST", host: "pages.nist.gov", url: "https://pages.nist.gov/800-63-4/sp800-63b.html" },
-          { title: "Secure Our World: Turn On MFA", note: "CISA", host: "cisa.gov", url: "https://www.cisa.gov/secure-our-world/turn-mfa" },
-          { title: "Secure Our World: Use Strong Passwords (& a password manager)", note: "CISA", host: "cisa.gov", url: "https://www.cisa.gov/secure-our-world/use-strong-passwords" },
-          { title: "Consumer Advice — How To Recognize and Avoid Phishing Scams", note: "FTC", host: "consumer.ftc.gov", url: "https://consumer.ftc.gov/articles/how-recognize-avoid-phishing-scams" },
-          { title: "Consumer Advice — How To Recover Your Hacked Email or Social Media Account", note: "FTC", host: "consumer.ftc.gov", url: "https://consumer.ftc.gov/how-recover-your-hacked-email-or-social-media-account" },
-          { title: "Recognize and avoid social engineering schemes & phishing", note: "Apple Support", host: "support.apple.com", url: "https://support.apple.com/en-us/102568" },
+          { title: "Three random words / password guidance", note: "UK's National Cyber Security Centre (NCSC)", host: "ncsc.gov.uk", url: "https://www.ncsc.gov.uk/blog-post/three-random-words-or-thinkrandom-0" },
+          { title: "Digital Identity Guidelines SP 800-63B", note: "NIST", host: "pages.nist.gov", url: "https://pages.nist.gov/800-63-4/sp800-63b.html" },
+          { title: "Turn on multifactor authentication to protect online accounts.", note: "Cybersecurity and Infrastructure Security Agency (CISA)", host: "cisa.gov", url: "https://www.cisa.gov/secure-our-world/turn-mfa" },
+          { title: "An Easy Way to Protect Your Accounts", note: "Cybersecurity and Infrastructure Security Agency (CISA)", host: "cisa.gov", url: "https://www.cisa.gov/secure-our-world/use-strong-passwords" },
+          { title: "How To Recognize and Avoid Phishing Scams", note: "Federal Trade Commission (FTC)", host: "consumer.ftc.gov", url: "https://consumer.ftc.gov/articles/how-recognize-avoid-phishing-scams" },
+          { title: "How To Recover Your Hacked Email or Social Media Account", note: "Federal Trade Commission (FTC)", host: "consumer.ftc.gov", url: "https://consumer.ftc.gov/how-recover-your-hacked-email-or-social-media-account" },
+          { title: "Recognize and avoid social engineering schemes", note: "Apple Support", host: "support.apple.com", url: "https://support.apple.com/en-us/102568" },
           { title: "Check if your email is in a data breach", note: "Have I Been Pwned", host: "haveibeenpwned.com", url: "https://haveibeenpwned.com/" },
           { title: "Turn on 2-Step Verification", note: "Google", host: "support.google.com", url: "https://support.google.com/accounts/answer/185839" },
           { title: "Two-factor authentication for Apple ID", note: "Apple Support", host: "support.apple.com", url: "https://support.apple.com/en-us/102660" },
-          { title: "Account security & two-step verification", note: "Microsoft", host: "account.microsoft.com", url: "https://account.microsoft.com/security" },
-          { title: "Two-factor authentication", note: "Instagram Help", host: "help.instagram.com", url: "https://help.instagram.com/566810106808145" },
-          { title: "Two-factor authentication", note: "Facebook Help", host: "facebook.com", url: "https://www.facebook.com/help/148233965247823" },
-          { title: "Recognize and Report Phishing", note: "CISA", host: "cisa.gov", url: "https://www.cisa.gov/secure-our-world/recognize-and-report-phishing" },
-          { title: "How to set up 2FA on Instagram (authenticator app vs SMS)", note: "Malwarebytes", host: "malwarebytes.com", url: "https://www.malwarebytes.com/blog/how-to/2025/10/how-to-set-up-two-factor-authentication-2fa-on-your-instagram-account" },
-          { title: "Digital Citizenship (teaching online safety)", note: "Common Sense Education", host: "commonsense.org/education", url: "https://www.commonsense.org/education/digital-citizenship" },
-          { title: "HealthyChildren.org — Family Media Plan (modeling, security culture)", note: "AAP", host: "healthychildren.org", url: "https://www.healthychildren.org/English/family-life/Media/Pages/helping-kids-thrive-in-a-digital-world-AAP-policy-explained.aspx" },
-          { title: "Consumer Advice — Are public Wi-Fi networks safe? What you need to know", note: "FTC", host: "consumer.ftc.gov", url: "https://consumer.ftc.gov/articles/are-public-wi-fi-networks-safe-what-you-need-know" },
-          { title: "Consumer Alert — Email or social media hacked? Here's what to do", note: "FTC", host: "consumer.ftc.gov", url: "https://consumer.ftc.gov/consumer-alerts/2024/10/email-or-social-media-hacked-heres-what-do" },
-          { title: "«Երեխաները և թվային աշխարհը»", note: "UNICEF Armenia", host: "unicef.org/armenia", url: "https://www.unicef.org/armenia/%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%A8-%D6%87-%D5%A9%D5%BE%D5%A1%D5%B5%D5%AB%D5%B6-%D5%A1%D5%B7%D5%AD%D5%A1%D6%80%D5%B0%D5%A8" },
-          { title: "CyberChat launch (Armenia's first online support platform for children)", note: "CyberHUB-AM", host: "cyberhub.am", url: "https://cyberhub.am" },
-          { title: "«Защита детей в интернете»", note: "UNICEF (ECA, рус.)", host: "unicef.org/eca/ru", url: "https://www.unicef.org/eca/ru/%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B0-%D0%B4%D0%B5%D1%82%D0%B5%D0%B9-%D0%B2-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%D0%B5" },
-          { title: "Как создать надёжный пароль (пароли, менеджеры, 2FA)", note: "Kaspersky (рус.)", host: "kaspersky.ru", url: "https://www.kaspersky.ru/resource-center/threats/how-to-create-a-strong-password" },
-          { title: "материалы для родителей", note: "Линия помощи «Дети онлайн» / Фонд Развития Интернет (рус.)", host: "detionline.com", url: "https://www.detionline.com" },
-          { title: "Թեժ գիծ / hotline", note: "ՀՀ Ոստիկանություն", host: "police.am", url: "https://www.police.am/hotline" },
-          { title: "Parents hub: online safety advice & warning signs a child needs help", note: "eSafety Commissioner (Australia)", host: "esafety.gov.au", url: "https://www.esafety.gov.au/parents" },
-          { title: "Online safety for schools (responding to disclosures, whole-school approach)", note: "NSPCC Learning", host: "learning.nspcc.org.uk", url: "https://learning.nspcc.org.uk/online-safety/online-safety-for-schools" },
-          { title: "Teaching online safety in schools (disclosures, child-friendly reporting, whole-school)", note: "GOV.UK (Department for Education)", host: "gov.uk", url: "https://www.gov.uk/government/publications/teaching-online-safety-in-schools/teaching-online-safety-in-schools" }
+          { title: "How to use two-step verification with your Microsoft account", note: "Microsoft Support", host: "account.microsoft.com", url: "https://support.microsoft.com/en-us/accounts-billing/security/how-to-use-two-step-verification-with-your-microsoft-account" },
+          { title: "Securing your Meta Account with two-factor authentication", note: "Instagram Help", host: "help.instagram.com", url: "https://help.instagram.com/566810106808145" },
+          { title: "How two-factor authentication works on Facebook", note: "Facebook Help", host: "facebook.com", url: "https://www.facebook.com/help/148233965247823" },
+          { title: "Recognize and Report Phishing", note: "Cybersecurity and Infrastructure Security Agency (CISA)", host: "cisa.gov", url: "https://www.cisa.gov/secure-our-world/recognize-and-report-phishing" },
+          { title: "How to set up two factor authentication (2FA) on your Instagram account", note: "Malwarebytes", host: "malwarebytes.com", url: "https://www.malwarebytes.com/blog/how-to/2025/10/how-to-set-up-two-factor-authentication-2fa-on-your-instagram-account" },
+          { title: "Digital Citizenship Curriculum", note: "Common Sense Education", host: "commonsense.org/education", url: "https://www.commonsense.org/education/digital-citizenship" },
+          { title: "Helping Kids Thrive in a Digital World", note: "American Academy of Pediatrics", host: "healthychildren.org", url: "https://www.healthychildren.org/English/family-life/Media/Pages/helping-kids-thrive-in-a-digital-world-AAP-policy-explained.aspx" },
+          { title: "Are Public Wi-Fi Networks Safe? What You Need To Know", note: "Federal Trade Commission (FTC)", host: "consumer.ftc.gov", url: "https://consumer.ftc.gov/articles/are-public-wi-fi-networks-safe-what-you-need-know" },
+          { title: "Email or social media hacked? Here’s what to do", note: "Federal Trade Commission (FTC)", host: "consumer.ftc.gov", url: "https://consumer.ftc.gov/consumer-alerts/2024/10/email-or-social-media-hacked-heres-what-do" },
+          { title: "Երեխաները և թվային աշխարհը", note: "UNICEF Հայաստան", host: "unicef.org/armenia", url: "https://www.unicef.org/armenia/%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%A8-%D6%87-%D5%A9%D5%BE%D5%A1%D5%B5%D5%AB%D5%B6-%D5%A1%D5%B7%D5%AD%D5%A1%D6%80%D5%B0%D5%A8" },
+          { title: "Երեխաների և դեռահասների հարցերով աջակցության հարթակ", note: "CyberChat", host: "cyberhub.am", url: "https://chat.cyberhub.am/hy/" },
+          { title: "Защита детей в интернете", note: "ЮНИСЕФ (Узбекистан)", host: "unicef.org/eca/ru", url: "https://www.unicef.org/uzbekistan/%D0%9D%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%BD%D1%8B%D0%B5-%D0%B7%D0%B0%D0%BC%D0%B5%D1%82%D0%BA%D0%B8/%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B0-%D0%B4%D0%B5%D1%82%D0%B5%D0%B9-%D0%B2-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%D0%B5" },
+          { title: "Советы по созданию уникальных надежных паролей", note: "Kaspersky", host: "kaspersky.ru", url: "https://www.kaspersky.ru/resource-center/threats/how-to-create-a-strong-password" },
+          { title: "112 օպերատիվ կառավարման կենտրոն", note: "ՀՀ Ներքին գործերի նախարարություն", host: "police.am", url: "https://mia.gov.am/" },
+          { title: "Parents hub: Supporting your child online", note: "eSafety Commissioner (Australia)", host: "esafety.gov.au", url: "https://www.esafety.gov.au/parents" },
+          { title: "Online safety for schools", note: "NSPCC Learning", host: "learning.nspcc.org.uk", url: "https://learning.nspcc.org.uk/online-safety/online-safety-for-schools" },
+          { title: "Teaching online safety in schools", note: "GOV.UK (Department for Education)", host: "gov.uk", url: "https://www.gov.uk/government/publications/teaching-online-safety-in-schools/teaching-online-safety-in-schools" }
         ] }
       ] }
   ]
