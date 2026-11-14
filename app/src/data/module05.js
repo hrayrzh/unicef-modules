@@ -349,28 +349,41 @@ export const M5 = {
         { k: "note", title: "Կարևոր է հիշել", text: "Վերոնշյալ խորհուրդներին հետևելը չի երաշխավորում, որ երեխան երբևէ չի ենթարկվի առցանց որևէ վնասակար ազդեցության։ Սակայն այդ խորհուրդների միաժամանակյա կիրառումը էականորեն կարող է նվազեցնել առցանց վտանգների ռիսկերը։ Հմտությունները կիրառեք ոչ միայն ինքներդ, այլև սովորեցրեք երեխաներին դրանց հետևել համացանցում ինքնուրույն օգտվելիս։", big: true }
       ] },
     { label: "Օգտակար աղբյուրներ", title: "Օգտակար աղբյուրներ", blocks: [
+        // По документу «Լինկեր» (13.11): «Ավելացնենք ստեղ նախորդների պես» —
+        // CyberChat как источник материалов (не контакт, без телефона) и
+        // UNICEF, как в модулях 1–4; блок «Աջակցող նյութեր» у модуля 5
+        // отсутствовал, тексты и адреса даны в документе.
+        { k: "links", items: [
+          { title: "CyberChat", meta: "Հայաստանյան հարթակ՝ տեխնիկական, իրավական և հոգեբանական աջակցությամբ երեխաների և դեռահասների հարցերով։", url: "https://chat.cyberhub.am" },
+          { title: "UNICEF Հայաստան", meta: "Նյութեր ծնողների և մանկավարժների համար։", url: "https://www.unicef.org/armenia/" }
+        ] },
+        { k: "h", text: "Աջակցող նյութեր" },
+        { k: "links", items: [
+          { title: "🎧 1. CyberChat (2026). Ինչ գիտի համացանցն իմ մասին (Վիկտորիա Օհանյան, Գևորգ Հայրապետյան)", meta: "Դիտել փոդքաստը", url: "https://www.youtube.com/watch?v=Cy183yEoH6U&list=PLFA9PMsS4npfe8rxtfwm-18RR0M2OhEuy&index=4" },
+          { title: "📚 2. CyberChat (2026). Անձնական տվյալներ", meta: "Կարդալ բլոգը", url: "https://cyberhub.am/hy/blog/2026/02/19/leg2/" }
+        ] },
         { k: "p", text: "Մոդուլի յուրաքանչյուր հիմնական պնդում հիմնված է ստորև բերված աղբյուրների վրա։" },
         { k: "sources", items: [
-          { title: "EUR-Lex - 52022DC0212 - EN - EUR-Lex", note: "EUR-Lex - 52022DC0212 - EN - EUR-Lex", host: "eur-lex.europa.eu", url: "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=COM:2022:212:FIN" },
-          { title: "UNICEF-Innocenti-Childhood-in-a-Digital World-report-2025.pdf", note: "UNICEF-Innocenti-Childhood-in-a-Digital World-report-2025.pdf", host: "unicef.org", url: "https://www.unicef.org/innocenti/media/11296/file/UNICEF-Innocenti-Childhood-in-a-Digital%20World-report-2025.pdf" },
-          { title: "UNICEF-Investigating-Risks-Opportunities-Children-Digital-World-2021.pdf", note: "UNICEF-Investigating-Risks-Opportunities-Children-Digital-World-2021.pdf", host: "unicef.org", url: "https://www.unicef.org/innocenti/media/5621/file/UNICEF-Investigating-Risks-Opportunities-Children-Digital-World-2021.pdf" },
-          { title: "UNICEF-Innocenti-Children's-Best-Interests-Digital-Policy-Practice-report-2026.pdf", note: "UNICEF-Innocenti-Children's-Best-Interests-Digital-Policy-Practice-report-2026.pdf", host: "unicef.org", url: "https://www.unicef.org/innocenti/media/12841/file/UNICEF-Innocenti-Children's-Best-Interests-Digital-Policy-Practice-report-2026.pdf" },
-          { title: "Cyberbullying: What is it and how to stop it | UNICEF", note: "Cyberbullying: What is it and how to stop it | UNICEF", host: "unicef.org", url: "https://www.unicef.org/stories/how-to-stop-cyberbullying" },
-          { title: "Զգո՛ւյշ, երեխաներ են. ուղեցույց՝ երեխաների անձնական տվյալների վերաբերյալ", note: "Զգո՛ւյշ, երեխաներ են. ուղեցույց՝ երեխաների անձնական տվյալների վերաբերյալ", host: "unicef.org", url: "https://www.unicef.org/armenia/media/2761/file" },
-          { title: "Համացանցում երեխայի նկարները հրապարակելու մասին ուղեցույց", note: "Համացանցում երեխայի նկարները հրապարակելու մասին ուղեցույց", host: "dataprotection.moj.gov.am", url: "https://dataprotection.moj.gov.am/api/assets/17ca6f6e-21f2-443b-9260-64904bf07858" },
-          { title: "Policy note_age restrictions social media-new.pdf.pdf", note: "Policy note_age restrictions social media-new.pdf.pdf", host: "unicef.org", url: "https://www.unicef.org/media/170666/file/Policy%20note_age%20restrictions%20social%20media-new.pdf.pdf" },
-          { title: "Drawing-line-digital-spaces-Rapid-analysis-2026.pdf", note: "Drawing-line-digital-spaces-Rapid-analysis-2026.pdf", host: "unicef.org", url: "https://www.unicef.org/media/179716/file/Drawing-line-digital-spaces-Rapid-analysis-2026.pdf" },
-          { title: "Mapping age assurance typologies and requirements - Publications Office of the EU", note: "Mapping age assurance typologies and requirements - Publications Office of the EU", host: "op.europa.eu", url: "https://op.europa.eu/en/publication-detail/-/publication/215f6c72-fe04-11ee-a251-01aa75ed71a1/language-en" },
-          { title: "Age restrictions alone won't keep children safe online", note: "Age restrictions alone won't keep children safe online", host: "unicef.org", url: "https://www.unicef.org/press-releases/age-restrictions-alone-wont-keep-children-safe-online?utm_source=chatgpt.com" },
-          { title: "Instagram Expands Teen Accounts Inspired by 13+ Content Ratings", note: "Instagram Expands Teen Accounts Inspired by 13+ Content Ratings", host: "about.fb.com", url: "https://about.fb.com/news/2026/04/instagram-expands-teen-accounts-inspired-by-13-content-ratings/?utm_source=chatgpt.com" },
-          { title: "SOWC_2017_ENG.pdf", note: "SOWC_2017_ENG.pdf", host: "unicef.org", url: "https://www.unicef.org/media/48581/file/SOWC_2017_ENG.pdf" },
-          { title: "1680ab222c", note: "1680ab222c", host: "rm.coe.int", url: "https://rm.coe.int/1680ab222c" },
-          { title: "Children and young people’s mental health in the digital age (EN)", note: "Children and young people’s mental health in the digital age (EN)", host: "oecd.org", url: "https://www.oecd.org/content/dam/oecd/en/publications/reports/2018/10/children-and-young-people-s-mental-health-in-the-digital-age_4f68631a/488b25e0-en.pdf" },
-          { title: "Owning Your Privacy by Managing Your Digital Footprint - National Cybersecurity Alliance", note: "Owning Your Privacy by Managing Your Digital Footprint - National Cybersecurity Alliance", host: "staysafeonline.org", url: "https://www.staysafeonline.org/articles/owning-your-privacy-by-managing-your-digital-footprint?utm_source=chatgpt.com" },
-          { title: "Using children’s information: a guide | ICO", note: "Using children’s information: a guide | ICO", host: "ico.org.uk", url: "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/childrens-information/using-children-s-information-a-guide/" },
-          { title: "The digital environment - Children's Rights", note: "The digital environment - Children's Rights", host: "coe.int", url: "https://www.coe.int/en/web/children/the-digital-environment?utm_source=chatgpt.com" },
-          { title: "ՀՀ ՕՐԵՆՔԸ ԱՆՁՆԱԿԱՆ ՏՎՅԱԼՆԵՐԻ ՊԱՇՏՊԱՆՈՒԹՅԱՆ ՄԱՍԻՆ", note: "ՀՀ ՕՐԵՆՔԸ ԱՆՁՆԱԿԱՆ ՏՎՅԱԼՆԵՐԻ ՊԱՇՏՊԱՆՈՒԹՅԱՆ ՄԱՍԻՆ", host: "arlis.am", url: "https://www.arlis.am/hy/acts/218690/latest" },
-          { title: "Անձնական տվյալների պաշտպանության վերաբերյալ էլեկտրոնային դասընթաց", note: "Անձնական տվյալների պաշտպանության վերաբերյալ էլեկտրոնային դասընթաց", host: "personaldataprotect.notion.site", url: "https://personaldataprotect.notion.site/d3bbb1750abb4aa0ad6d7baa3d9e23e8" }
+          { title: "A Digital Decade for children and youth: the new European strategy for a better internet for kids (BIK+)", note: "European Commission (2022)", host: "eur-lex.europa.eu", url: "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=COM:2022:212:FIN" },
+          { title: "Childhood in a Digital World: screen time, digital skills and mental health", note: "UNICEF", host: "unicef.org", url: "https://www.unicef.org/innocenti/media/11296/file/UNICEF-Innocenti-Childhood-in-a-Digital%20World-report-2025.pdf" },
+          { title: "Investigating Risks and Opportunities for Children in a Digital World: A rapid review of the evidence on children’s internet use and outcomes", note: "UNICEF", host: "unicef.org", url: "https://www.unicef.org/innocenti/media/5621/file/UNICEF-Investigating-Risks-Opportunities-Children-Digital-World-2021.pdf" },
+          { title: "Children’s Best Interests in Digital Policy and Practice", note: "UNICEF", host: "unicef.org", url: "https://www.unicef.org/innocenti/media/12841/file/UNICEF-Innocenti-Children's-Best-Interests-Digital-Policy-Practice-report-2026.pdf" },
+          { title: "Cyberbullying: What is it and how to stop it", note: "UNICEF", host: "unicef.org", url: "https://www.unicef.org/stories/how-to-stop-cyberbullying" },
+          { title: "Զգու՛յշ, երեխաներ են. ուղեցույց երեխաների անձնական տվյալների պաշտպանության վերաբերյալ երեխաների եւ բոլորի համար", note: "ՀՀ արդարադատության նախարարություն / ՅՈՒՆԻՍԵՖ", host: "unicef.org", url: "https://www.unicef.org/armenia/media/2761/file" },
+          { title: "Երեխաների նկարները համացանցում. հրապարակել՝ առանց վնասելու (ուղեցույց)", note: "Անձնական տվյալների պաշտպանության գործակալության", host: "dataprotection.moj.gov.am", url: "https://dataprotection.moj.gov.am/api/assets/17ca6f6e-21f2-443b-9260-64904bf07858" },
+          { title: "Drawing a line in digital spaces: Age-based restriction of social media", note: "UNICEF", host: "unicef.org", url: "https://www.unicef.org/media/170666/file/Policy%20note_age%20restrictions%20social%20media-new.pdf.pdf" },
+          { title: "Drawing a line in digital spaces: Taking stock of current and proposed age-based restrictions for social media", note: "UNICEF", host: "unicef.org", url: "https://www.unicef.org/media/179716/file/Drawing-line-digital-spaces-Rapid-analysis-2026.pdf" },
+          { title: "Mapping age assurance typologies and requirements (research report)", note: "European Commission, Directorate-General for Communications Networks, Content and Technology", host: "op.europa.eu", url: "https://op.europa.eu/en/publication-detail/-/publication/215f6c72-fe04-11ee-a251-01aa75ed71a1/language-en" },
+          { title: "Age restrictions alone won't keep children safe online", note: "UNICEF", host: "unicef.org", url: "https://www.unicef.org/press-releases/age-restrictions-alone-wont-keep-children-safe-online?utm_source=chatgpt.com" },
+          { title: "Instagram Expands Teen Accounts Inspired by 13+ Content Ratings", note: "META", host: "about.fb.com", url: "https://about.fb.com/news/2026/04/instagram-expands-teen-accounts-inspired-by-13-content-ratings/?utm_source=chatgpt.com" },
+          { title: "Children in a Digital World", note: "UNICEF", host: "unicef.org", url: "https://www.unicef.org/media/48581/file/SOWC_2017_ENG.pdf" },
+          { title: "Digital Citizenship Education Handbook: Being Online, Well-Being Online, Rights Online", note: "Council of Europe", host: "rm.coe.int", url: "https://rm.coe.int/1680ab222c" },
+          { title: "Children and young people’s mental health in the digital age: Shaping the future", note: "Organisation for Economic Co-operation and Development (OECD)", host: "oecd.org", url: "https://www.oecd.org/content/dam/oecd/en/publications/reports/2018/10/children-and-young-people-s-mental-health-in-the-digital-age_4f68631a/488b25e0-en.pdf" },
+          { title: "Owning Your Privacy by Managing Your Digital Footprint", note: "National Cybersecurity Alliance", host: "staysafeonline.org", url: "https://www.staysafeonline.org/articles/owning-your-privacy-by-managing-your-digital-footprint?utm_source=chatgpt.com" },
+          { title: "Using children’s information: a guide", note: "Information Commissioner's Office", host: "ico.org.uk", url: "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/childrens-information/using-children-s-information-a-guide/" },
+          { title: "The digital environment", note: "Council of Europe", host: "coe.int", url: "https://www.coe.int/en/web/children/the-digital-environment?utm_source=chatgpt.com" },
+          { title: "Հայաստանի Հանրապետության օրենք «Անձնական տվյալների պաշտպանության մասին»", note: "ARLIS (Հայաստանի իրավական տեղեկատվական համակարգ)", host: "arlis.am", url: "https://www.arlis.am/hy/acts/218690/latest" },
+          { title: "Անձնական տվյալների պաշտպանության վերաբերյալ էլեկտրոնային դասընթաց", note: "Անձնական տվյալների պաշտպանության գործակալություն", host: "personaldataprotect.notion.site", url: "https://personaldataprotect.notion.site/d3bbb1750abb4aa0ad6d7baa3d9e23e8" }
         ] }
       ] }
   ]
