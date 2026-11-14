@@ -399,53 +399,56 @@ export const M4 = {
         ], tone: "danger" }
       ] },
     { label: "Օգտակար աղբյուրներ", title: "Օգտակար աղբյուրներ", blocks: [
-        // Блок «ՀՀ ՆԳՆ Ոստիկանություն» (112 и e-request) и «Իրավապահ
-        // մարմիններին դիմելու այլ տարբերակներ» переехали в панель помощи
-        // (data/help.js › WRITTEN): «Հանում ենք այդ մասից, քանի որ կարմիր
-        // կոճակի մեջ կա» и «այս մասը դնենք օգնության մեջ, համարներից հետո».
-        // В разделе источников остаются только материалы и литература.
-                { k: "h", text: "​​Աջակցող նյութեր​" },
+        // Блок «ՀՀ ՆԳՆ Ոստիկանություն» (112, e-request) и «Իրավապահ
+        // մարմիններին դիմելու այլ տարբերակներ» удалены — «Հանում ենք» (ревью
+        // модуля 4, 12.11). В красную кнопку они НЕ переехали: Misha,
+        // «Պետք չի ավելացնել կարմիր մեջ». Остались только материалы.
+        // Карточки по документу «Լինկեր» (13.11): «Ավելացնենք ստեղ նախորդների
+        // պես» — CyberChat как источник материалов (без телефона) и UNICEF,
+        // как в модулях 1–3.
         { k: "links", items: [
-          { title: "🎧 ​1. ԿիբեռՉատի փոդքաստ. Առցանց սեռական հետապնդում. երեխայի հոգեբանական արձագանքը | (Վիկտորիա Օհանյան, Տաթևիկ Աբրահամյան)​", meta: "Դիտել փոդքաստը", url: "https://www.youtube.com/@CyberChatAM" },
-          { title: "📚2. Առցանց սեռական բռնության ենթարկված երեխաների կրկնակի մեկուսացում", meta: "Կարդալ բլոգը", url: "https://cyberhub.am/hy/blog/" }
+          { title: "CyberChat", meta: "Հայաստանյան հարթակ՝ տեխնիկական, իրավական և հոգեբանական աջակցությամբ երեխաների և դեռահասների հարցերով։", url: "https://chat.cyberhub.am" },
+          { title: "UNICEF Հայաստան", meta: "Նյութեր ծնողների և մանկավարժների համար։", url: "https://www.unicef.org/armenia/" }
+        ] },
+        { k: "h", text: "Աջակցող նյութեր" },
+        { k: "links", items: [
+          { title: "🎧 1. CyberChat (2026). Առցանց սեռական հետապնդում. երեխայի հոգեբանական արձագանքը | (Վիկտորիա Օհանյան, Տաթևիկ Աբրահամյան)", meta: "Դիտել փոդքաստը", url: "https://www.youtube.com/watch?v=AR_Ch750mVA&list=PLFA9PMsS4npfe8rxtfwm-18RR0M2OhEuy&index=1" },
+          { title: "📚 2. CyberChat (2026). Առցանց սեռական բռնության ենթարկված երեխաների կրկնակի մեկուսացում", meta: "Կարդալ բլոգը", url: "https://cyberhub.am/hy/blog/2026/02/19/psy5/" }
         ] },
         { k: "p", text: "Մոդուլի յուրաքանչյուր հիմնական պնդում հիմնված է ստորև բերված աղբյուրների վրա։" },
         { k: "sources", items: [
-          { title: "UNICEF — Armenia launches first-ever national study on technology-facilitated child sexual exploitation and abuse («Disrupting Harm»).", note: "UNICEF — Armenia launches first-ever national study on technology-facilitated child sexual exploitation and abuse («Disrupting Harm»).", host: "unicef.org", url: "https://www.unicef.org/armenia/en/press-releases/armenia-launches-first-ever-national-study-technology-facilitated-child-sexual" },
-          { title: "UNICEF Armenia — «Disrupting Harm in Armenia» հաշվետվությունը (հայերեն, PDF)", note: "UNICEF Armenia — «Disrupting Harm in Armenia» հաշվետվությունը (հայերեն, PDF)", host: "unicef.org", url: "https://www.unicef.org/armenia/media/19766/file/DH%20Armenia%20Report_%D5%B0%D5%A1%D5%B5.pdf.pdf" },
-          { title: "Grooming: signs, effects and how to protect children", note: "NSPCC", host: "nspcc.org.uk", url: "https://www.nspcc.org.uk/keeping-children-safe/types-of-abuse/grooming/" },
-          { title: "Protecting children from grooming (safeguarding)", note: "NSPCC Learning", host: "learning.nspcc.org.uk", url: "https://learning.nspcc.org.uk/safeguarding-child-protection/grooming" },
+          { title: "Armenia Launches First-Ever National Study on Technology-Facilitated Child Sexual Exploitation and Abuse", note: "UNICEF Armenia", host: "unicef.org", url: "https://www.unicef.org/armenia/en/press-releases/armenia-launches-first-ever-national-study-technology-facilitated-child-sexual" },
+          { title: "Տեխնոլոգիաների կիրառմամբ երեխաների սեռական շահագործման և բռնության վերաբերյալ տվյալներ", note: "UNICEF - Disrupting Harm in Armenia", host: "unicef.org", url: "https://www.unicef.org/armenia/media/19766/file/DH%20Armenia%20Report_%D5%B0%D5%A1%D5%B5.pdf.pdf" },
+          { title: "Grooming: recognising the signs", note: "NSPCC Learning", host: "learning.nspcc.org.uk", url: "https://learning.nspcc.org.uk/safeguarding-child-protection/grooming" },
           { title: "Protecting children from sexual abuse online", note: "eSafety Commissioner (Australia)", host: "esafety.gov.au", url: "https://www.esafety.gov.au/parents/issues-and-advice/protecting-children-from-sexual-abuse-online" },
-          { title: "Talking with children 0–12 about online sexual abuse", note: "eSafety Commissioner", host: "esafety.gov.au", url: "https://www.esafety.gov.au/parents/issues-and-advice/protecting-children-from-sexual-abuse-online/talking-with-0-to-12" },
-          { title: "Talking with young people 13–18", note: "eSafety Commissioner", host: "esafety.gov.au", url: "https://www.esafety.gov.au/parents/issues-and-advice/protecting-children-from-sexual-abuse-online/talking-with-13-to-18" },
-          { title: "Child sexual abuse online (key topic)", note: "eSafety Commissioner", host: "esafety.gov.au", url: "https://www.esafety.gov.au/key-topics/illegal-restricted-content/child-sexual-abuse-online" },
-          { title: "How to report serious online abuse / illegal content (preserving evidence)", note: "eSafety Commissioner", host: "esafety.gov.au", url: "https://www.esafety.gov.au/report/how-to-report-serious-online-abuse-illegal-restricted-content" },
+          { title: "Talking about child sexual abuse online with 0 to 12 year olds", note: "eSafety Commissioner", host: "esafety.gov.au", url: "https://www.esafety.gov.au/parents/issues-and-advice/protecting-children-from-sexual-abuse-online/talking-with-0-to-12" },
+          { title: "Talking about online child sexual abuse with 13 to 18 year olds", note: "eSafety Commissioner", host: "esafety.gov.au", url: "https://www.esafety.gov.au/parents/issues-and-advice/protecting-children-from-sexual-abuse-online/talking-with-13-to-18" },
+          { title: "Child sexual abuse online", note: "eSafety Commissioner", host: "esafety.gov.au", url: "https://www.esafety.gov.au/key-topics/illegal-restricted-content/child-sexual-abuse-online" },
+          { title: "How to report abuse or content to eSafety", note: "eSafety Commissioner", host: "esafety.gov.au", url: "https://www.esafety.gov.au/report/how-to-report-serious-online-abuse-illegal-restricted-content" },
           { title: "Grooming", note: "Australian National Office for Child Safety", host: "childsafety.gov.au", url: "https://www.childsafety.gov.au/about-child-sexual-abuse/grooming" },
-          { title: "Perpetrator grooming behaviours", note: "Saprea", host: "saprea.org", url: "https://saprea.org/blog/6-perpetrator-grooming-behaviors/" },
-          { title: "Sextortion (what it is, what to do)", note: "NCMEC", host: "ncmec.org", url: "https://www.ncmec.org/theissues/sextortion" },
-          { title: "Take It Down (free image-removal tool)", note: "NCMEC", host: "takeitdown.ncmec.org", url: "https://takeitdown.ncmec.org/" },
-          { title: "CyberTipline (international reporting)", note: "NCMEC", host: "report.cybertip.org", url: "https://report.cybertip.org/" },
-          { title: "How to report tech-enabled sexual abuse; correct terminology", note: "RAINN / NCMEC", host: "rainn.org", url: "https://rainn.org/reporting-sexual-assault-to-law-enforcement/how-to-report-tech-enabled-sexual-abuse/" },
+          { title: "6 Perpetrator Grooming Behaviors Every Parent Needs to Know", note: "Saprea", host: "saprea.org", url: "https://saprea.org/blog/6-perpetrator-grooming-behaviors/" },
+          { title: "Sextortion (what it is, what to do)", note: "National Center for Missing & Exploited Children (NCMEC)", host: "ncmec.org", url: "https://www.ncmec.org/theissues/sextortion" },
+          { title: "Take It Down. Having nudes online is scary, but there is hope to get it taken down.", note: "National Center for Missing & Exploited Children (NCMEC)", host: "takeitdown.ncmec.org", url: "https://takeitdown.ncmec.org/" },
+          { title: "The CyberTipline is the place to report child sexual exploitation.", note: "National Center for Missing & Exploited Children (NCMEC)", host: "report.cybertip.org", url: "https://report.cybertip.org/" },
+          { title: "Report & Remove Intimate Images, Sexual Deepfakes, & Fake Nudes", note: "RAINN", host: "rainn.org", url: "https://rainn.org/reporting-sexual-assault-to-law-enforcement/how-to-report-tech-enabled-sexual-abuse/" },
           { title: "Armenia ratifies the Lanzarote Convention", note: "Council of Europe", host: "coe.int", url: "https://www.coe.int/en/web/children/-/armenia-ratifies-the-lanzarote-convention" },
-          { title: "CyberChat launch (Armenia's first online support platform for children)", note: "CyberHUB-AM", host: "cyberhub.am", url: "https://cyberhub.am" },
-          { title: "First online cybersecurity platform for children and adolescents launched in Armenia", note: "UN Armenia", host: "armenia.un.org", url: "https://armenia.un.org/en/300934-first-online-cybersecurity-platform-children-and-adolescents-launched-armenia" },
+          { title: "Երեխաների և դեռահասների հարցերով աջակցության հարթակ", note: "CyberChat", host: "cyberhub.am", url: "https://chat.cyberhub.am/hy/" },
           { title: "Empowering children in Armenia through mental health support", note: "UNICEF Armenia", host: "unicef.org/armenia", url: "https://www.unicef.org/armenia/en/stories/empowering-children-armenia-through-mental-health-support" },
-          { title: "Թեժ գիծ / hotline", note: "ՀՀ Ոստիկանություն", host: "police.am", url: "https://www.police.am/hotline" },
-          { title: "«Երեխաները և թվային աշխարհը» (ծնողահեն հանգույց)", note: "UNICEF Armenia", host: "unicef.org/armenia", url: "https://www.unicef.org/armenia/%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%A8-%D6%87-%D5%A9%D5%BE%D5%A1%D5%B5%D5%AB%D5%B6-%D5%A1%D5%B7%D5%AD%D5%A1%D6%80%D5%B0%D5%A8" },
-          { title: "«Բռնություն երեխաների հանդեպ» (թեմա)", note: "UNICEF Armenia", host: "unicef.org/armenia/topics", url: "https://www.unicef.org/armenia/topics/%D5%A2%D5%BC%D5%B6%D5%B8%D6%82%D5%A9%D5%B5%D5%B8%D6%82%D5%B6-%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%AB-%D5%B0%D5%A1%D5%B6%D5%A4%D5%A5%D5%BA" },
-          { title: "«Защита детей в интернете»", note: "UNICEF (ECA, рус.)", host: "unicef.org/eca/ru", url: "https://www.unicef.org/eca/ru/%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B0-%D0%B4%D0%B5%D1%82%D0%B5%D0%B9-%D0%B2-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%D0%B5" },
-          { title: "«Честно и открыто разговаривать с детьми» (УНП ООН)", note: "Новости ООН (рус.)", host: "news.un.org/ru", url: "https://news.un.org/ru/story/2020/02/1372341" },
-          { title: "материалы для родителей и педагогов", note: "Линия помощи «Дети онлайн» / Фонд Развития Интернет (рус.)", host: "detionline.com", url: "https://www.detionline.com" },
-          { title: "Cyberbullying: Identification, Prevention & Response", note: "Cyberbullying: Identification, Prevention & Response", host: "cyberbullying.org", url: "https://cyberbullying.org/" },
-          { title: "eSafety Commissioner - Talking with young people", note: "eSafety Commissioner - Talking with young people", host: "esafety.gov.au", url: "https://www.esafety.gov.au/" },
-          { title: "eSafetyCommissioner - Cyberbullying", note: "eSafetyCommissioner - Cyberbullying", host: "esafety.gov.au", url: "https://www.esafety.gov.au/key-topics/cyberbullying" },
-          { title: "UNICEF-Cyberbullying: What is it and how to stop it", note: "UNICEF-Cyberbullying: What is it and how to stop it", host: "unicef.org", url: "https://www.unicef.org/stories/how-to-stop-cyberbullying" },
-          { title: "M.A Goldstein-National Library of Medicine", note: "M.A Goldstein-National Library of Medicine", host: "pmc.ncbi.nlm.nih.gov", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7864530/" },
-          { title: "Common Sence Media-Parenting, Media and Everything in Between-Cyberbullying", note: "Common Sence Media-Parenting, Media and Everything in Between-Cyberbullying", host: "commonsensemedia.org", url: "https://www.commonsensemedia.org/articles/what-is-cyberbullying" },
-          { title: "Профилактика насилия в образовательных организациях-Л.А. Глазырина.", note: "Профилактика насилия в образовательных организациях-Л.А. Глазырина.", host: "ungei.org", url: "https://www.ungei.org/sites/default/files/Violence-prevention-in-educational-institutions-A-guide-for-trainee-teachers-rus-2016-rus.pdf" },
-          { title: "Ш.Ю. Сергеевна, К.О. Петровна, О. Д. Григорьевна- Профилактика насилия в школьной среде", note: "Ш.Ю. Сергеевна, К.О. Петровна, О. Д. Григорьевна- Профилактика насилия в школьной среде", host: "cppmsp59.ru", url: "https://cppmsp59.ru/upload/iblock/47f/47f79d8176272215a94687b02fb104a7.pdf" },
-          { title: "С.Д. Ходырев", note: "С.Д. Ходырев", host: "elar.urfu.ru", url: "https://elar.urfu.ru/bitstream/10995/132244/1/978-5-7996-3773-6_031.pdf" },
-          { title: "Малышева О.- «Безопасная образовательная среда»", note: "Малышева О.- «Безопасная образовательная среда»", host: "school157samara.ucoz.ru", url: "https://school157samara.ucoz.ru/11/kompleksnaja_programma_po_profilaktike.pdf" }
+          { title: "112 օպերատիվ կառավարման կենտրոն", note: "ՀՀ Ներքին գործերի նախարարություն", host: "police.am", url: "https://mia.gov.am/" },
+          { title: "«Երեխաները և թվային աշխարհը» (ծնողահեն հանգույց)", note: "UNICEF Հայաստան", host: "unicef.org/armenia", url: "https://www.unicef.org/armenia/%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%A8-%D6%87-%D5%A9%D5%BE%D5%A1%D5%B5%D5%AB%D5%B6-%D5%A1%D5%B7%D5%AD%D5%A1%D6%80%D5%B0%D5%A8" },
+          { title: "«Բռնություն երեխաների հանդեպ»", note: "UNICEF Հայաստան", host: "unicef.org/armenia/topics", url: "https://www.unicef.org/armenia/topics/%D5%A2%D5%BC%D5%B6%D5%B8%D6%82%D5%A9%D5%B5%D5%B8%D6%82%D5%B6-%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%AB-%D5%B0%D5%A1%D5%B6%D5%A4%D5%A5%D5%BA" },
+          { title: "Защита детей в интернете", note: "ЮНИСЕФ (Узбекистан)", host: "unicef.org/eca/ru", url: "https://www.unicef.org/uzbekistan/%D0%9D%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%BD%D1%8B%D0%B5-%D0%B7%D0%B0%D0%BC%D0%B5%D1%82%D0%BA%D0%B8/%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B0-%D0%B4%D0%B5%D1%82%D0%B5%D0%B9-%D0%B2-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%D0%B5" },
+          { title: "Честно и открыто разговаривать с детьми – только так можно защитить их от темных сторон интернета", note: "Новости ООН", host: "news.un.org/ru", url: "https://news.un.org/ru/story/2020/02/1372341" },
+          { title: "How to Identify, Prevent, and Respond to Cyberbullying", note: "Cyberbullying Research Center", host: "cyberbullying.org", url: "https://cyberbullying.org/" },
+          { title: "Australia’s independent regulator for online safety", note: "eSafety Commissioner", host: "esafety.gov.au", url: "https://www.esafety.gov.au/" },
+          { title: "Cyberbullying", note: "eSafety Commissioner", host: "esafety.gov.au", url: "https://www.esafety.gov.au/key-topics/cyberbullying" },
+          { title: "Cyberbullying: What is it and how to stop it", note: "UNICEF", host: "unicef.org", url: "https://www.unicef.org/stories/how-to-stop-cyberbullying" },
+          { title: "Cyberbullying and Adolescents", note: "Current Pediatrics Reports", host: "pmc.ncbi.nlm.nih.gov", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7864530/" },
+          { title: "What Is Cyberbullying?", note: "Common Sense Media", host: "commonsensemedia.org", url: "https://www.commonsensemedia.org/articles/what-is-cyberbullying" },
+          { title: "Профилактика насилия в образовательных организациях: учебное пособие для студентов педагогических вузов (Л. А. Глазырина)", note: "Южно-Уральский государственный гуманитарно-педагогический университет & Институт ЮНЕСКО по информационным технологиям в образовании / ИИТО", host: "ungei.org", url: "https://www.ungei.org/sites/default/files/Violence-prevention-in-educational-institutions-A-guide-for-trainee-teachers-rus-2016-rus.pdf" },
+          { title: "Профилактика насилия в школьной среде (методические рекомендации) (Ю. С. Шведчикова, О. П. Карманова, Д. Г. Орлова [и др.])", note: "Министерство образования и науки Пермского края, «Центр психолого-педагогической, медицинской и социальной помощи»", host: "cppmsp59.ru", url: "https://cppmsp59.ru/upload/iblock/47f/47f79d8176272215a94687b02fb104a7.pdf" },
+          { title: "Кибербуллинг: исследование последствий и пути защиты для жертв (С. Д. Ходырев)", note: "Уральский федеральный университет", host: "elar.urfu.ru", url: "https://elar.urfu.ru/bitstream/10995/132244/1/978-5-7996-3773-6_031.pdf" },
+          { title: "«Безопасная образовательная среда» (О.М. Малышева)", note: "МБОУ Школа № 157 г.о. Самара", host: "school157samara.ucoz.ru", url: "https://school157samara.ucoz.ru/11/kompleksnaja_programma_po_profilaktike.pdf" }
         ] },
         // Блок «Գրականություն՝ առանց հղման» убран целиком вместе с тремя
         // книгами: «Հանել բոլոր տեղերից այս արհայատությունը — Գրականություն՝
