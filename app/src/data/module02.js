@@ -514,48 +514,52 @@ export const M2 = {
         ] }
       ] },
     { label: "Օգտակար աղբյուրներ", title: "Օգտակար աղբյուրներ", blocks: [
+        // Карточки по документу «Լինկեր» (13.11): первыми CyberChat и UNICEF.
+        // CyberChat здесь — источник материалов, не контакт («սա թողնենք,
+        // որպես օգտակար նյութերի աղբյուր»); телефона в нём нет намеренно.
         { k: "links", items: [
+          { title: "CyberChat", meta: "Անվճար, անանուն տեխնիկական, իրավական և հոգեբանական աջակցություն երեխաների և դեռահասների հարցերով։", url: "https://chat.cyberhub.am" },
           { title: "UNICEF Հայաստան", meta: "Նյութեր ծնողների և մանկավարժների համար։", url: "https://www.unicef.org/armenia/" }
         ] },
         { k: "h", text: "Աջակցող նյութեր​" },
         { k: "links", items: [
-          { title: "🎧 ​1. ԿիբեռՉատի փոդքաստ. Դպրոցից համացանց, բուլինգից կիբեռբուլինգ | ԿիբեռՉատ (Սամվել Մարտիրոսյան, Սերոբ Խաչատրյան)​", meta: "Դիտել փոդքաստը", url: "https://www.youtube.com/@CyberChatAM" },
-          { title: "📚 2. Ինչ է կիբեռբուլինգը և ինչպես պաշտպանվել", meta: "Կարդալ բլոգը", url: "https://cyberhub.am/hy/blog/2025/07/02/psy2/" },
-          { title: "📚 3. Ապացույցների հավաքագրումը կիբեռմիջադեպերի ժամանակ", meta: "Կարդալ բլոգը", url: "https://cyberhub.am/hy/blog/2025/06/25/tec1/" }
+          { title: "🎧 1. CyberChat (2026). Դպրոցից համացանց, բուլինգից կիբեռբուլինգ (Սամվել Մարտիրոսյան, Սերոբ Խաչատրյան)", meta: "Դիտել փոդքաստը", url: "https://www.youtube.com/watch?v=JUHo99ihdDk&list=PLFA9PMsS4npfe8rxtfwm-18RR0M2OhEuy&index=4" },
+          { title: "📚 2. CyberChat (2025). Ինչ է կիբեռբուլինգը և ինչպես պաշտպանվել", meta: "Կարդալ բլոգը", url: "https://cyberhub.am/hy/blog/2025/07/02/psy2/" },
+          { title: "📚 3. CyberChat (2025). Ապացույցների հավաքագրումը կիբեռմիջադեպերի ժամանակ", meta: "Կարդալ բլոգը", url: "https://cyberhub.am/hy/blog/2025/06/25/tec1/" }
         ] },
         { k: "p", text: "Մոդուլի յուրաքանչյուր հիմնական պնդում հիմնված է ստորև բերված աղբյուրների վրա։" },
         { k: "sources", items: [
           { title: "Cyberbullying: what is it and how to stop it", note: "UNICEF (Europe & Central Asia)", host: "unicef.org/eca", url: "https://www.unicef.org/eca/cyberbullying-what-it-and-how-stop-it" },
-          { title: "2025 Cyberbullying Data & definitions (Hinduja & Patchin)", note: "Cyberbullying Research Center", host: "cyberbullying.org/2025-cyberbullying-data", url: "https://cyberbullying.org/2025-cyberbullying-data" },
+          { title: "2025 Cyberbullying Data", note: "Cyberbullying Research Center", host: "cyberbullying.org/2025-cyberbullying-data", url: "https://cyberbullying.org/2025-cyberbullying-data" },
           { title: "What Is Cyberbullying", note: "StopBullying.gov", host: "stopbullying.gov/cyberbullying/what-is-it", url: "https://www.stopbullying.gov/cyberbullying/what-is-it" },
-          { title: "Prevent Cyberbullying (warning signs; Notice–Talk–Document–Report)", note: "StopBullying.gov", host: "stopbullying.gov/cyberbullying/prevention", url: "https://www.stopbullying.gov/cyberbullying/prevention" },
+          { title: "Prevent Cyberbullying", note: "StopBullying.gov", host: "stopbullying.gov/cyberbullying/prevention", url: "https://www.stopbullying.gov/cyberbullying/prevention" },
           { title: "Cyberbullying: Tips for Teachers", note: "StopBullying.gov", host: "stopbullying.gov/cyberbullying/tips-for-teachers", url: "https://www.stopbullying.gov/cyberbullying/tips-for-teachers" },
           { title: "Parent Guide to Cyberbullying and Digital Awareness", note: "StopBullying.gov", host: "stopbullying.gov/cyberbullying/digital-awareness-for-parents", url: "https://www.stopbullying.gov/cyberbullying/digital-awareness-for-parents" },
           { title: "Cyberbullying Warning Signs", note: "Cyberbullying Research Center", host: "cyberbullying.org/cyberbullying-warning-signs", url: "https://cyberbullying.org/cyberbullying-warning-signs" },
-          { title: "Conflict vs. Bullying", note: "PACER's National Bullying Prevention Center", host: "pacer.org", url: "https://www.pacer.org/bullying/info/questions-answered/conflict-vs-bullying/" },
+          { title: "Conflict vs. Bullying: What’s the Difference?", note: "PACER's National Bullying Prevention Center", host: "pacer.org", url: "https://www.pacer.org/bullying/info/questions-answered/conflict-vs-bullying/" },
           { title: "Bystanders Are Essential to Bullying Prevention and Intervention", note: "StopBullying.gov", host: "stopbullying.gov", url: "https://www.stopbullying.gov/resources/research-resources/bystanders-are-essential" },
           { title: "How to Prevent Cyberbullying (for Parents)", note: "Nemours KidsHealth", host: "kidshealth.org", url: "https://kidshealth.org/en/parents/cyberbullying.html" },
-          { title: "CyberChat launch / New Partnership (children's online safety in Armenia)", note: "UNICEF Armenia", host: "unicef.org/armenia", url: "https://www.unicef.org/armenia/en/press-releases/first-online-cybersecurity-platform-children-and-adolescents-launched-armenia" },
-          { title: "Hotline (Cybercrime Dept. 011 52 52 52)", note: "Police of the Republic of Armenia", host: "police.am", url: "https://www.police.am/en/hotline.html" },
+          { title: "Նյութեր ծնողների և մանկավարժների համար", note: "UNICEF Հայաստան", host: "unicef.org/armenia", url: "https://www.unicef.org/armenia/" },
+          { title: "Կիբեռանվտանգություն", note: "ՀՀ Ներքին գործերի նախարարություն | Ոստիկանություն", host: "police.am", url: "https://police.mia.gov.am/cybersecurity" },
           { title: "Safer Internet Day Armenia", note: "Better Internet for Kids (European Commission) / Council of Europe", host: "better-internet-for-kids.europa.eu", url: "https://better-internet-for-kids.europa.eu/en/saferinternetday/armenia" },
           { title: "Warning Signs for Bullying", note: "StopBullying.gov", host: "stopbullying.gov/bullying/warning-signs", url: "https://www.stopbullying.gov/bullying/warning-signs" },
-          { title: "How to stop cyberbullying (10 things teens want to know)", note: "UNICEF", host: "unicef.org/stories", url: "https://www.unicef.org/stories/how-to-stop-cyberbullying" },
-          { title: "Armenia steps up child online safety efforts (psychologist guidance on parental approach)", note: "Armenpress", host: "armenpress.am", url: "https://armenpress.am/en/article/1250194/amp" },
+          { title: "Cyberbullying: What is it and how to stop it", note: "UNICEF", host: "unicef.org/stories", url: "https://www.unicef.org/stories/how-to-stop-cyberbullying" },
+          { title: "Armenia steps up child online safety efforts, moves toward launch of YouTube Kids", note: "Armenpress", host: "armenpress.am", url: "https://armenpress.am/en/article/1250194/amp" },
           { title: "Teachers' Essential Guide to Cyberbullying Prevention", note: "Common Sense Education", host: "commonsense.org/education", url: "https://www.commonsense.org/education/articles/teachers-essential-guide-to-cyberbullying-prevention" },
-          { title: "Questions Answered: bullying, conflict and harassment", note: "PACER", host: "pacer.org/questions-answered", url: "https://www.pacer.org/bullying/info/questions-answered/" },
-          { title: "Responding to Cyberbullying: Top Ten Tips for Educators", note: "Cyberbullying Research Center (Hinduja & Patchin)", host: "cyberbullying.org", url: "https://cyberbullying.org/responding-to-cyberbullying-top-ten-tips-for-educators" },
-          { title: "Preventing Cyberbullying: Top Ten Tips for Educators", note: "Cyberbullying Research Center (Hinduja & Patchin)", host: "cyberbullying.org", url: "https://cyberbullying.org/preventing-cyberbullying-top-ten-tips-for-educators" },
+          { title: "Questions Answered: bullying, conflict and harassment", note: "National Bullying Prevention Center", host: "pacer.org/questions-answered", url: "https://www.pacer.org/bullying/info/questions-answered/" },
+          { title: "Responding to Cyberbullying: Top Ten Tips for Educators", note: "Cyberbullying Research Center", host: "cyberbullying.org", url: "https://cyberbullying.org/responding-to-cyberbullying-top-ten-tips-for-educators" },
+          { title: "Preventing Cyberbullying: Top Ten Tips for Educators", note: "Cyberbullying Research Center", host: "cyberbullying.org", url: "https://cyberbullying.org/preventing-cyberbullying-top-ten-tips-for-educators" },
           { title: "Fact Sheet: Taking Screenshots and Screen Recordings to Preserve Evidence", note: "Cyberbullying Research Center", host: "cyberbullying.org", url: "https://cyberbullying.org/cyberbullying-fact-sheet-how-to-preserve-cyberbullying-evidence-through-screenshots" },
           { title: "Helping Students Deal With Cyberbullies", note: "NEA (National Education Association)", host: "nea.org", url: "https://www.nea.org/professional-excellence/student-engagement/tools-tips/helping-students-deal-cyberbullies" },
-          { title: "The STAC Bystander Bullying Intervention Teacher Module", note: "JMIR / NIH", host: "ncbi.nlm.nih.gov", url: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9386582/" },
-          { title: "Preventing violence against children online through awareness of cybersecurity", note: "UNICEF Armenia", host: "unicef.org/armenia/stories", url: "https://www.unicef.org/armenia/en/stories/preventing-violence-against-children-online-through-awareness-cybersecurity" },
-          { title: "Responding to Cyberbullying: Strategies for School Counselors (private meetings, evidence, no retaliation)", note: "Cyberbullying Research Center", host: "cyberbullying.org", url: "https://cyberbullying.org/responding-to-cyberbullying-strategies-for-school-counselors" },
-          { title: "Cyberbullying & Online Harassment: tips for educators (informed reporting, monitoring online interactions)", note: "Equal Rights Advocates", host: "equalrights.org", url: "https://www.equalrights.org/issue/covid-cyberbullying/" },
-          { title: "Digital Citizenship Curriculum & Family Engagement (ongoing conversations, classroom norms)", note: "Common Sense Education", host: "commonsense.org/education", url: "https://www.commonsense.org/education/digital-citizenship" },
+          { title: "STAC Bystander Bullying Intervention Teacher Module: Mixed Methods Study", note: "JMIR Formative Research", host: "ncbi.nlm.nih.gov", url: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9386582/" },
+          { title: "Preventing violence against children online through awareness of cybersecurity", note: "UNICEF Հայաստան", host: "unicef.org/armenia/stories", url: "https://www.unicef.org/armenia/en/stories/preventing-violence-against-children-online-through-awareness-cybersecurity" },
+          { title: "Responding to Cyberbullying: Strategies for School Counselors", note: "Cyberbullying Research Center", host: "cyberbullying.org", url: "https://cyberbullying.org/responding-to-cyberbullying-strategies-for-school-counselors" },
+          { title: "Cyberbullying & Online Harassment", note: "Equal Rights Advocates", host: "equalrights.org", url: "https://www.equalrights.org/issue/covid-cyberbullying/" },
+          { title: "Digital Citizenship Curriculum", note: "Common Sense Education", host: "commonsense.org/education", url: "https://www.commonsense.org/education/digital-citizenship" },
           { title: "Balancing Online Safety and Independence: Parental Monitoring by Age", note: "American Academy of Pediatrics (AAP)", host: "aap.org", url: "https://www.aap.org/en/patient-care/media-and-children/center-of-excellence-on-social-media-and-youth-mental-health/qa-portal/qa-portal-library/qa-portal-library-questions/balancing-online-safety-and-independence-parental-monitoring-by-age/" },
-          { title: "Impact of Cyberbullying (causes & effects)", note: "American SPCC", host: "americanspcc.org", url: "https://americanspcc.org/impact-of-cyberbullying/" },
-          { title: "Effects of Bullying (short- and long-term consequences into adulthood)", note: "StopBullying.gov", host: "stopbullying.gov", url: "https://www.stopbullying.gov/bullying/effects" },
-          { title: "Online safety for schools (responding to disclosures, who to inform)", note: "NSPCC Learning", host: "learning.nspcc.org.uk", url: "https://learning.nspcc.org.uk/online-safety/online-safety-for-schools" },
+          { title: "The Effects of Cyberbullying on Children and Teens", note: "American SPCC", host: "americanspcc.org", url: "https://americanspcc.org/impact-of-cyberbullying/" },
+          { title: "Effects of Bullying", note: "StopBullying.gov", host: "stopbullying.gov", url: "https://www.stopbullying.gov/bullying/effects" },
+          { title: "Online safety for schools", note: "NSPCC Learning", host: "learning.nspcc.org.uk", url: "https://learning.nspcc.org.uk/online-safety/online-safety-for-schools" },
           { title: "Time to Think: Using Restorative Questions", note: "IIRP (International Institute for Restorative Practices)", host: "iirp.edu", url: "https://www.iirp.edu/news/time-to-think-using-restorative-questions" }
         ] }
       ] }
