@@ -320,14 +320,25 @@ export const M1 = {
         { k: "note", big: true, title: "Ոսկե կանոնը", text: "Տեխնոլոգիան միշտ ավելի արագ է զարգանում, քան ցանկացած վերահսկողության համակարգ։ Երեխան, ով հասկանում է կանոնների պատճառը, ավելի լավ է պաշտպանված, քան նա, ում սարքը պարզապես կողպված է. զրույցն ավելի կարևոր է, քան կարգավորումը։ Կարևոր է նաև, որ ծնողն ինքը տեղյակ լինի, թե ինչ հարթակներ և հավելվածներ է օգտագործում երեխան։" }
       ] },
       { label: "Օգտակար աղբյուրներ", title: "Օգտակար աղբյուրներ", blocks: [
+        // Карточки по документу «Լինկեր» (13.11). Первыми — CyberChat и
+        // UNICEF: «Բոլոր մոդուլներում օգտակար աղբյուրների սկզբում թողել եմ
+        // Կիբեռչատը, որպես օգտակար նյութերի տեղ, ոչ որպես կոնտակտ, ու
+        // յունիսեֆ». ⚠ CyberChat здесь НЕ контакт — телефона в нём нет,
+        // он контакт только в красной кнопке.
+        // Адреса из текстов описаний убраны: «լինկերը տեքստերից հանենք».
         { k: "links", items: [
-          { title: "UNICEF Հայաստան — «Երեխաները և թվային աշխարհը»", meta: "Ծնողների համար նախատեսված բաժին՝ բաց երկխոսության, սահմանների և առցանց անվտանգության շուրջ։ unicef.org/armenia", url: "https://www.unicef.org/armenia/%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%A8-%D6%87-%D5%A9%D5%BE%D5%A1%D5%B5%D5%AB%D5%B6-%D5%A1%D5%B7%D5%AD%D5%A1%D6%80%D5%B0%D5%A8" },
-          { title: "ЮНИСЕФ (ECA) — «Защита детей в интернете»", meta: "О балансе доверия и контроля, рисках и онлайн-безопасности. unicef.org/eca/ru", url: "https://www.unicef.org/eca/ru/%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B0-%D0%B4%D0%B5%D1%82%D0%B5%D0%B9-%D0%B2-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%D0%B5" },
-          { title: "Kaspersky — «Руководство по родительскому контролю»", meta: "Пошаговая настройка для iPhone, Android, Windows и YouTube. kaspersky.ru", url: "https://www.kaspersky.ru/resource-center/preemptive-safety/family-guide-to-parental-controls" },
-          // ⚠ Тот же дефект, что у карточки блога ниже: `url` стоял снаружи
-          // массива, на уровне блока, — карточка не была ссылкой. Адрес не
-          // менялся (ссылками занимается Анаит), поправлена только структура.
-          { title: "Линия помощи «Дети онлайн» / Фонд Развития Интернет", meta: "Материалы для родителей (телефон 8-800-25-000-15 — только для России). detionline.com", url: "https://www.detionline.com" }
+          { title: "CyberChat", meta: "Հայաստանյան հարթակ՝ տեխնիկական, իրավական և հոգեբանական աջակցությամբ երեխաների և դեռահասների հարցերով։", url: "https://chat.cyberhub.am/hy" },
+          { title: "UNICEF Հայաստան — «Երեխաները և թվային աշխարհը»", meta: "Ծնողների համար նախատեսված բաժին՝ բաց երկխոսության, սահմանների և առցանց անվտանգության շուրջ։", url: "https://www.unicef.org/armenia/%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%A8-%D6%87-%D5%A9%D5%BE%D5%A1%D5%B5%D5%AB%D5%B6-%D5%A1%D5%B7%D5%AD%D5%A1%D6%80%D5%B0%D5%A8" },
+          // Добавлена 13.11: «UNICEF (Հայաստան) — Երեխաները ինչպե՞ս կարող
+          // են պաշտպանվել համացանցում (սա էլ ավելացնենք)».
+          { title: "UNICEF (Հայաստան) — Երեխաները ինչպե՞ս կարող են պաշտպանվել համացանցում", meta: "Խորհուրդներ երեխաներին և դեռահասներին՝ ինչպես անվտանգ մնալ համացանցում, զգույշ շփվել անծանոթների հետ, պաշտպանել անձնական տվյալները և խուսափել կիբեռբուլինգից։", url: "https://www.unicef.org/armenia/%D5%BA%D5%A1%D5%BF%D5%B4%D5%B8%D6%82%D5%A9%D5%B5%D5%B8%D6%82%D5%B6%D5%B6%D5%A5%D6%80/%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%A8-%D5%AB%D5%B6%D5%B9%D5%BA%D5%A5%D5%9E%D5%BD-%D5%AF%D5%A1%D6%80%D5%B8%D5%B2-%D5%A5%D5%B6-%D5%BA%D5%A1%D5%B7%D5%BF%D5%BA%D5%A1%D5%B6%D5%BE%D5%A5%D5%AC-%D5%B0%D5%A1%D5%B4%D5%A1%D6%81%D5%A1%D5%B6%D6%81%D5%B8%D6%82%D5%B4" },
+          // Было ЮНИСЕФ (ECA) — на её скриншоте помечено «404». Заменено
+          // на узбекский материал, который она дала взамен.
+          { title: "ЮНИСЕФ (Узбекистан) — Защита детей в интернете", meta: "О рисках и угрозах в сети и мерах по их предотвращению.", url: "https://www.unicef.org/uzbekistan/%D0%9D%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%BD%D1%8B%D0%B5-%D0%B7%D0%B0%D0%BC%D0%B5%D1%82%D0%BA%D0%B8/%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B0-%D0%B4%D0%B5%D1%82%D0%B5%D0%B9-%D0%B2-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%D0%B5" },
+          { title: "Kaspersky — «Руководство по родительскому контролю»", meta: "Пошаговая настройка для iPhone, Android, Windows и YouTube.", url: "https://www.kaspersky.ru/resource-center/preemptive-safety/family-guide-to-parental-controls" },
+          // ⚠ `url` когда-то стоял снаружи массива — карточка не была
+          // ссылкой, об этом её пометка «Չկա լինկ». Исправлено 09.11.
+          { title: "Линия помощи «Дети онлайн» / Фонд Развития Интернет", meta: "Материалы для родителей (телефон 8-800-25-000-15 — только для России).", url: "https://www.detionline.com" }
         ] },
         { k: "h", text: "Աջակցող նյութեր" },
         // Ревью Анаит 2026-11-08: «1֊ին մոդուլի մեջ աջակցող նյութերի կողքի
@@ -337,7 +348,7 @@ export const M1 = {
         // внутри своего пункта — поэтому ссылки у него не было.
         { k: "links", items: [
           { title: "🎧 1. ԿիբեռՉատի փոդքաստ. Երեխաները կիբեռհարձակումների թիրախում", meta: "Սամվել Մարտիրոսյան, Հայկ Մկրտչյան — դիտել փոդքաստը", url: "https://www.youtube.com/watch?v=N5jyTij3d5E&list=PLFA9PMsS4npfe8rxtfwm-18RR0M2OhEuy&index=2" },
-          { title: "📚 2. Ծնողական վերահսկման հավելվածների բացասական կողմը․ առողջ սահմաններ", meta: "Կարդալ բլոգը", url: "https://cyberhub.am/hy/blog/2026/02/19/psy3/" }
+          { title: "📚 2. CyberChat (2026). Ծնողական վերահսկման հավելվածների բացասական կողմը․ առողջ սահմաններ", meta: "Կարդալ բլոգը", url: "https://cyberhub.am/hy/blog/2026/02/19/psy3/" }
         ] },
         { k: "p", text: "Մոդուլի յուրաքանչյուր հիմնական պնդում հիմնված է ստորև բերված աղբյուրների վրա։" },
         // №39 — источники раскрываются по наведению, а не занимают экран
@@ -345,34 +356,33 @@ export const M1 = {
         // в документе каждый источник был живой ссылкой.
         { k: "sources", items: [
           { title: "Balancing Online Safety and Independence: Parental Monitoring by Age", note: "American Academy of Pediatrics (AAP)", host: "aap.org", url: "https://www.aap.org/en/patient-care/media-and-children/center-of-excellence-on-social-media-and-youth-mental-health/qa-portal/qa-portal-library/qa-portal-library-questions/balancing-online-safety-and-independence-parental-monitoring-by-age/" },
-          { title: "Why Age-Appropriate Online Safety Conversations Matter (developmental stages)", note: "Our Rescue", host: "ourrescue.org", url: "https://ourrescue.org/resources/child-exploitation/online-exploitation/why-age-appropriate-online-safety-conversations-matter" },
+          { title: "Why Age-Appropriate Online Safety Conversations Matter", note: "Our Rescue", host: "ourrescue.org", url: "https://ourrescue.org/resources/child-exploitation/online-exploitation/why-age-appropriate-online-safety-conversations-matter" },
           { title: "Child Safety at Home and Online", note: "National Parenting Authority", host: "nationalparentingauthority.com", url: "https://nationalparentingauthority.com/child-safety-at-home-and-online" },
           { title: "Kids Online Health and Safety report 2024", note: "NTIA (US Dept. of Commerce)", host: "ntia.gov (PDF)", url: "https://www.ntia.gov/sites/default/files/reports/kids-online-health-safety/2024-kohs-report.pdf" },
-          { title: "Parental controls hub (step-by-step guides, all platforms)", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/" },
-          { title: "Use parental controls on your child's iPhone or iPad", note: "Apple Support", host: "support.apple.com", url: "https://support.apple.com/en-us/105121" },
+          { title: "Parental controls guides", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/" },
+          { title: "Set up parental controls to manage your child's iPhone or iPad", note: "Apple Support", host: "support.apple.com", url: "https://support.apple.com/en-us/105121" },
           { title: "Apple iPhone & iPad parental controls guide", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/smartphones-and-other-devices/apple-iphone-and-ipad-parental-control-guide/" },
-          { title: "Use Screen Time on Mac, iPhone & iPad", note: "Apple Support", host: "support.apple.com", url: "https://support.apple.com/en-us/108806" },
-          { title: "Android smartphone parental controls (Android 16 built-in)", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/smartphones-and-other-devices/android-smartphone/" },
-          { title: "Google Family Link setup guide", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/smartphones-and-other-devices/google-family-link/" },
-          { title: "Family Link (family safety & parental control tools)", note: "Google", host: "families.google", url: "https://families.google/familylink/" },
-          { title: "Windows 11 parental controls guide (Microsoft Family Safety)", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/smartphones-and-other-devices/windows-11-parental-controls/" },
+          { title: "Use Screen Time to manage your child's iPhone or iPad", note: "Apple Support", host: "support.apple.com", url: "https://support.apple.com/en-us/108806" },
+          { title: "Android smartphone parental controls", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/smartphones-and-other-devices/android-smartphone/" },
+          { title: "Google Family Link guide", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/smartphones-and-other-devices/google-family-link/" },
+          { title: "Help keep your family safer online", note: "Google Family Link", host: "families.google", url: "https://families.google/familylink/" },
+          { title: "Windows 11 parental controls", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/smartphones-and-other-devices/windows-11-parental-controls/" },
           { title: "Family Safety", note: "Microsoft", host: "microsoft.com", url: "https://www.microsoft.com/en-us/microsoft-365/family-safety" },
-          { title: "TikTok privacy & safety settings (Family Pairing)", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/social-media/tiktok-privacy-and-safety-settings/" },
-          { title: "Family Center — Instagram Teen Accounts & supervision", note: "Meta", host: "familycenter.meta.com", url: "https://familycenter.meta.com/our-products/instagram/" },
-          { title: "Roblox parental controls guide", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/gaming-consoles/roblox-parental-controls/" },
-          { title: "PlayStation 5 parental controls guide", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/gaming-consoles/playstation-5-ps5/" },
-          { title: "Xbox Series X|S parental controls guide", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/gaming-consoles/xbox-series-x-s-parental-controls/" },
+          { title: "TikTok parental controls", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/social-media/tiktok-privacy-and-safety-settings/" },
+          { title: "Creating safe, age-appropriate experiences on Instagram", note: "Meta", host: "familycenter.meta.com", url: "https://familycenter.meta.com/our-products/instagram/" },
+          { title: "Roblox parental controls", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/gaming-consoles/roblox-parental-controls/" },
+          { title: "PlayStation 5 (PS5) parental controls", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/gaming-consoles/playstation-5-ps5/" },
+          { title: "Xbox Series X|S parental controls", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/gaming-consoles/xbox-series-x-s-parental-controls/" },
           { title: "How to set up, adjust or remove parental controls on Nintendo Switch", note: "Nintendo Support", host: "nintendo.com", url: "https://www.nintendo.com/en-gb/Support/Parental-Controls/How-to-Set-Up-Adjust-or-Remove-Parental-Controls-on-Nintendo-Switch-1494771.html" },
           { title: "Discord app safety settings guide", note: "Internet Matters", host: "internetmatters.org", url: "https://www.internetmatters.org/parental-controls/gaming-consoles/discord-app/" },
           { title: "Family Center for Parents and Guardians", note: "Discord Support", host: "support.discord.com", url: "https://support.discord.com/hc/en-us/articles/14155043715735-Family-Center-for-Parents-and-Guardians" },
-          { title: "HealthyChildren.org — Family Media Plan (evolving rules, shared agreement)", note: "AAP", host: "healthychildren.org", url: "https://www.healthychildren.org/English/family-life/Media/Pages/helping-kids-thrive-in-a-digital-world-AAP-policy-explained.aspx" },
-          { title: "Digital Citizenship (conversation starters, family engagement)", note: "Common Sense Education", host: "commonsense.org/education", url: "https://www.commonsense.org/education/digital-citizenship" },
-          { title: "«Երեխաները և թվային աշխարհը» (ծնողահեն հանգույց)", note: "UNICEF Armenia", host: "unicef.org/armenia", url: "https://www.unicef.org/armenia/%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%A8-%D6%87-%D5%A9%D5%BE%D5%A1%D5%B5%D5%AB%D5%B6-%D5%A1%D5%B7%D5%AD%D5%A1%D6%80%D5%B0%D5%A8" },
-          { title: "CyberChat launch (Armenia's first online support platform for children)", note: "CyberHUB-AM", host: "cyberhub.am", url: "https://cyberhub.am" },
-          { title: "«Защита детей в интернете»", note: "UNICEF (ECA, рус.)", host: "unicef.org/eca/ru", url: "https://www.unicef.org/eca/ru/%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B0-%D0%B4%D0%B5%D1%82%D0%B5%D0%B9-%D0%B2-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%D0%B5" },
-          { title: "Руководство по родительскому контролю (iPhone, Android, Windows, YouTube)", note: "Kaspersky (рус.)", host: "kaspersky.ru", url: "https://www.kaspersky.ru/resource-center/preemptive-safety/family-guide-to-parental-controls" },
-          { title: "материалы для родителей", note: "Линия помощи «Дети онлайн» / Фонд Развития Интернет (рус.)", host: "detionline.com", url: "https://www.detionline.com" },
-          { title: "Թեժ գիծ / hotline", note: "ՀՀ Ոստիկանություն", host: "police.am", url: "https://www.police.am/hotline" }
+          { title: "Helping Kids Thrive in a Digital World", note: "American Academy of Pediatrics (AAP)", host: "healthychildren.org", url: "https://www.healthychildren.org/English/family-life/Media/Pages/helping-kids-thrive-in-a-digital-world-AAP-policy-explained.aspx" },
+          { title: "Digital Citizenship Curriculum", note: "Common Sense Education", host: "commonsense.org/education", url: "https://www.commonsense.org/education/digital-citizenship" },
+          { title: "Երեխաները և թվային աշխարհը", note: "UNICEF Հայաստան", host: "unicef.org/armenia", url: "https://www.unicef.org/armenia/%D5%A5%D6%80%D5%A5%D5%AD%D5%A1%D5%B6%D5%A5%D6%80%D5%A8-%D6%87-%D5%A9%D5%BE%D5%A1%D5%B5%D5%AB%D5%B6-%D5%A1%D5%B7%D5%AD%D5%A1%D6%80%D5%B0%D5%A8" },
+          { title: "Երեխաների և դեռահասների հարցերով աջակցության հարթակ", note: "CyberChat / CyberHUB-AM", host: "cyberhub.am", url: "https://chat.cyberhub.am/hy" },
+          { title: "Защита детей в интернете", note: "ЮНИСЕФ (Узбекистан)", host: "unicef.org/eca/ru", url: "https://www.unicef.org/uzbekistan/%D0%9D%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%BD%D1%8B%D0%B5-%D0%B7%D0%B0%D0%BC%D0%B5%D1%82%D0%BA%D0%B8/%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B0-%D0%B4%D0%B5%D1%82%D0%B5%D0%B9-%D0%B2-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82%D0%B5" },
+          { title: "Семейное руководство по родительскому контролю", note: "Kaspersky", host: "kaspersky.ru", url: "https://www.kaspersky.ru/resource-center/preemptive-safety/family-guide-to-parental-controls" },
+          { title: "112 օպերատիվ կառավարման կենտրոն", note: "ՀՀ Ներքին գործերի նախարարություն", host: "police.am", url: "https://mia.gov.am/" }
         ] },
       ] }
     ]
