@@ -540,7 +540,7 @@ export const M2 = {
           { title: "Bystanders Are Essential to Bullying Prevention and Intervention", note: "StopBullying.gov", host: "stopbullying.gov", url: "https://www.stopbullying.gov/resources/research-resources/bystanders-are-essential" },
           { title: "How to Prevent Cyberbullying (for Parents)", note: "Nemours KidsHealth", host: "kidshealth.org", url: "https://kidshealth.org/en/parents/cyberbullying.html" },
           { title: "Նյութեր ծնողների և մանկավարժների համար", note: "UNICEF Հայաստան", host: "unicef.org/armenia", url: "https://www.unicef.org/armenia/" },
-          { title: "Կիբեռանվտանգություն", note: "ՀՀ Ներքին գործերի նախարարություն | Ոստիկանություն", host: "police.am", url: "https://police.mia.gov.am/cybersecurity" },
+          { title: "Կիբեռանվտանգություն", note: "ՀՀ Ներքին գործերի նախարարություն | Ոստիկանություն", host: "police.mia.gov.am", url: "https://police.mia.gov.am/cybersecurity" },
           { title: "Safer Internet Day Armenia", note: "Better Internet for Kids (European Commission) / Council of Europe", host: "better-internet-for-kids.europa.eu", url: "https://better-internet-for-kids.europa.eu/en/saferinternetday/armenia" },
           { title: "Warning Signs for Bullying", note: "StopBullying.gov", host: "stopbullying.gov/bullying/warning-signs", url: "https://www.stopbullying.gov/bullying/warning-signs" },
           { title: "Cyberbullying: What is it and how to stop it", note: "UNICEF", host: "unicef.org/stories", url: "https://www.unicef.org/stories/how-to-stop-cyberbullying" },
